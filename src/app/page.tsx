@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
+"use client";
 
-export default function Home() {
-  return (
-    <>
-      <Button variant={"default"}>Click me</Button>
-    </>
-  );
+import Tiptap from "../components/TipTap";
+
+export default function Editor() {
+  return <Tiptap />;
 }
