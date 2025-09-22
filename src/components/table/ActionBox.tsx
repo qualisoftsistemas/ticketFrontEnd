@@ -7,7 +7,7 @@ type Props = {
 
 const ActionBox: React.FC<Props> = ({ onToggleFilter }) => {
   return (
-    <div className="flex rounded gap-2 bg-[var(--secondary)] p-1">
+    <div className="flex rounded gap-2 bg-[var(--secondary)] p-0.5">
       <Button variant="ghost" onClick={onToggleFilter}>
         <img src="/icons/filter.svg" alt="Filtrar" className="w-6 h-6" />
       </Button>

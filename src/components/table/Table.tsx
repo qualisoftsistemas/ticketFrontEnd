@@ -32,9 +32,11 @@ function Table<T extends Record<string, any>>({
   }, [searchTerm, data]);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-0.5">
       <div className="flex justify-between items-center w-full">
-        <ActionBox onToggleFilter={toggleFilters} />
+        <div className="flex self-end">
+          <ActionBox onToggleFilter={toggleFilters} />
+        </div>
         <div className="flex gap-2 pb-3">
           <Input
             icon={

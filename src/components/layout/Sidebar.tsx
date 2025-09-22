@@ -6,10 +6,10 @@ const Sidebar: React.FC = () => {
     <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--extra)] flex flex-col shadow-lg   items-center ">
       <nav className="flex-1 mt-24 p-4 space-y-2 w-full">
         <Link
-          href="/"
+          href="/Setores"
           className="block px-4 py-2 rounded-md hover:bg-[var(--secondary)] hover:text-[var(--secondary-foreground)] transition"
         >
-          Início
+          Setor
         </Link>
         <Link
           href="/dashboard"

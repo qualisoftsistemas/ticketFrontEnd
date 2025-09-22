@@ -1,8 +1,7 @@
-// actions/login.ts
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers"; // Importe a função corretamente
+import { cookies } from "next/headers";
 import { API_BASE_URL } from "@/service/api";
 
 export async function loginAction(formData: FormData) {
@@ -21,23 +20,22 @@ export async function loginAction(formData: FormData) {
       cache: "no-store",
     });
 
-    if (!res.ok) {
-      const errData = await res.json();
-      throw new Error(errData.message || "Erro ao logar.");
-    }
-
     const data = await res.json();
+
+    console.log(data);
+
     const token = data.login.access_token;
     const empresa_id = String(data.login.empresa_id);
 
-    (await cookies()).set("token", token, {
+    const cookieStore = cookies();
+    (await cookieStore).set("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
       maxAge: 60 * 60 * 24,
       path: "/",
     });
 
-    (await cookies()).set("empresa_id", empresa_id, {
+    (await cookieStore).set("empresa_id", empresa_id, {
       httpOnly: false,
       secure: process.env.NODE_ENV !== "development",
       maxAge: 60 * 60 * 24,

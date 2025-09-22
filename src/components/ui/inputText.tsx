@@ -1,11 +1,12 @@
+// components/ui/inputText.tsx
 import React, { ChangeEvent } from "react";
 import { Label } from "./label";
 import { Input } from "./input";
 
 type InputTextProps = {
   label?: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  value?: string; // Propriedade opcional para inputs controlados
+  onChange?: (value: string) => void; // Propriedade opcional para inputs controlados
   placeholder?: string;
   name?: string;
   id?: string;
@@ -19,8 +20,8 @@ type InputTextProps = {
 
 const InputText: React.FC<InputTextProps> = ({
   label,
-  value = "",
-  onChange,
+  value, // Recebe o valor opcional
+  onChange, // Recebe a função opcional
   placeholder = "",
   name,
   id,
@@ -41,10 +42,10 @@ const InputText: React.FC<InputTextProps> = ({
       <Input
         id={id}
         type={type}
-        value={value}
-        onChange={handleChange}
         placeholder={placeholder}
         name={name}
+        {...(value !== undefined && { value })}
+        {...(onChange && { onChange: handleChange })}
         disabled={disabled}
         icon={icon}
         iconPosition={iconPosition}

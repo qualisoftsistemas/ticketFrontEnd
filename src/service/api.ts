@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 export const API_BASE_URL = "http://192.168.5.43:8000/api";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
@@ -9,18 +11,14 @@ interface ApiFetchOptions {
   contentType?: string;
 }
 
-/**
- * Função genérica para chamadas API usando fetch padrão do Next.js.
- * Faz cacheamento usando 'next: { revalidate: 60 }' para SSR/ISR.
- */
-const apiFetch = async <T>({
+const apiFetchServer = async <T>({
   method,
   endpoint,
   data,
   contentType = "application/json",
 }: ApiFetchOptions): Promise<T> => {
-  const empresaId = sessionStorage.getItem("empresa_id");
-  const token = sessionStorage.getItem("token");
+  const token = (await cookies()).get("token")?.value;
+  const empresaId = (await cookies()).get("empresa_id")?.value;
 
   const url =
     `${API_BASE_URL}${endpoint}` +
@@ -36,21 +34,17 @@ const apiFetch = async <T>({
       method,
       headers,
       body: method !== "GET" && data ? JSON.stringify(data) : undefined,
-      cache: method === "GET" ? "force-cache" : "no-store",
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
 
     if (res.status === 401) {
-      window.location.href = "/login";
-      throw new Error("unauthorized");
+      redirect("/login");
     }
 
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      const status = errorData?.status;
       throw {
-        title: status?.title || "Erro",
-        message: status?.message?.body || res.statusText,
+        message: res.statusText,
         originalError: errorData,
       };
     }
@@ -62,4 +56,4 @@ const apiFetch = async <T>({
   }
 };
 
-export default apiFetch;
+export default apiFetchServer;

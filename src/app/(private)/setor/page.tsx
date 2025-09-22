@@ -1,17 +1,8 @@
-// app/setor/page.tsx
-import React from "react";
+// page.tsx
 import Table from "@/components/table/Table";
-import apiFetch from "@/service/api";
-
-type Setor = {
-  id: number;
-  nome: string;
-  descricao?: string;
-};
-
-interface SetorPageProps {
-  setores: Setor[];
-}
+import { Column } from "@/components/table/TableGeneric";
+import apiFetchServer from "@/service/api";
+import { Setor, SetorApiResponse } from "@/types/Setor";
 
 const SetorPage = async ({
   searchParams,
@@ -22,29 +13,28 @@ const SetorPage = async ({
     ? `?q=${encodeURIComponent(searchParams.q)}`
     : "";
 
-  const setores: Setor[] = await apiFetch<Setor[]>({
-    method: "GET",
-    endpoint: `setor${query}`,
-  });
+  let setores: Setor[] = [];
 
-  const columns = [
-    { header: "ID", render: (row: Setor) => row.id },
-    { header: "Nome", render: (row: Setor) => row.nome },
-    { header: "Descrição", render: (row: Setor) => row.descricao },
-    {
-      header: "Ações",
-      render: (row: Setor) => (
-        <select className="bg-gray-200 text-black p-1 rounded">
-          <option>Editar</option>
-          <option>Deletar</option>
-        </select>
-      ),
-    },
+  try {
+    const response = await apiFetchServer<SetorApiResponse>({
+      method: "GET",
+      endpoint: `/setor${query}`,
+    });
+
+    setores = response.setores || [];
+  } catch (err) {
+    console.error("API fetch error:", err);
+  }
+
+  const columns: Column<Setor>[] = [
+    { header: "ID", key: "id" },
+    { header: "Nome", key: "nome" },
   ];
 
   return (
-    <div className="p-6">
-      <Table nomeCadastro="Setor" columns={columns} data={setores} />
+    <div>
+      <h1 className="text-3xl font-bold mb-4 text-[var(--primary)]">Setores</h1>
+      <Table columns={columns} data={setores} nomeCadastro="Setor" />
     </div>
   );
 };

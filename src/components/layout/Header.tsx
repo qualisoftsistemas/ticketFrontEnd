@@ -14,9 +14,9 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
         className="absolute left-0 top-1/2 -translate-y-1/2 px-4 cursor-pointer "
       >
         {isOpen ? (
-          <img src="/icons/close.svg" alt="menu" className="  w-8 h-8" />
+          <img src="/icons/close.svg" alt="menu" className="w-8 h-8" />
         ) : (
-          <img src="/icons/open.svg" alt="menu" className="  w-7 h-7" />
+          <img src="/icons/open.svg" alt="menu" className="w-7 h-7" />
         )}
       </button>
 

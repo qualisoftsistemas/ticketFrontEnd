@@ -1,54 +1,42 @@
+// TableGeneric.tsx (Server Component)
 import React from "react";
 
-export type Column<T> = {
+export interface Column<T> {
   header: string;
-  render: (row: T) => React.ReactNode;
-};
+  key: keyof T;
+}
 
-type TableGenericProps<T> = {
+interface TableGenericProps<T> {
   columns: Column<T>[];
   data: T[];
-};
+}
 
-function TableGeneric<T extends Record<string, any>>({
+export default function TableGeneric<T>({
   columns,
   data,
 }: TableGenericProps<T>) {
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full border-collapse border">
-        <thead className="bg-[var(--secondary)] text-white">
-          <tr>
-            {columns.map((col, idx) => (
-              <th
-                key={idx}
-                className="px-4 py-2 text-left font-medium border-b border-gray-200"
-              >
-                {col.header}
-              </th>
+    <table className="table-auto w-full border-collapse  ">
+      <thead className="bg-[var(--secondary)]">
+        <tr>
+          {columns.map((col) => (
+            <th key={String(col.key)} className="py-1 px-2 text-center">
+              {col.header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="bg-[var(--primary)]">
+        {data.map((row, i) => (
+          <tr key={i}>
+            {columns.map((col) => (
+              <td key={String(col.key)} className="py-1 px-2 text-center">
+                {String(row[col.key])}
+              </td>
             ))}
           </tr>
-        </thead>
-        <tbody className="bg-[var(--primary)] text-white">
-          {data.map((row, rowIndex) => (
-            <tr
-              key={rowIndex}
-              className="hover:bg-[var(--primary)]/80 transition-colors"
-            >
-              {columns.map((col, colIndex) => (
-                <td
-                  key={colIndex}
-                  className="px-4 py-2 border-b border-gray-200"
-                >
-                  {col.render(row)}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   );
 }
-
-export default TableGeneric;
