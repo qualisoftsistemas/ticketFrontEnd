@@ -7,7 +7,7 @@ const TicketPage = (props: Props) => {
   return (
     <div>
       {" "}
-      <Table />{" "}
+ 
     </div>
   );
 };

@@ -3,11 +3,11 @@
 :root {
   --primary: #203b45;
   --primary-foreground: #fbe9d0;
-  --secondary: #e64833;
+  --secondary: #ff5646;
   --secondary-foreground: #ffffff;
   --destructive: #ca0303;
   --foreground: #c0dedd;
-  --neutral: #c0dedd;
+  --neutral: #CACDCD;
   --success: #6fc900;
   --extra: #fbe9d0;
 }

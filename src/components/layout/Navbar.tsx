@@ -14,7 +14,6 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
 
   return (
     <div className="flex h-screen w-full">
-      {/* Sidebar */}
       <aside
         className={`
           fixed top-0 left-0 h-screen w-64 bg-[var(--primary)] text-[var(--extra)] shadow-lg
@@ -25,16 +24,14 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
         <Sidebar />
       </aside>
 
-      {/* Conteúdo principal */}
-      <div
-        className={`
-          flex flex-col flex-1 transition-all duration-300
-          ${isOpen ? "ml-64" : "ml-0"}
-        `}
-      >
-        <Header toggleSidebar={toggleSidebar} />
+      <div className="flex flex-col flex-1">
+        <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
 
-        <main className="flex-1 p-6 bg-gray-50 overflow-y-auto">
+        <main
+          className={`flex-1 p-6 bg-gray-50 overflow-y-auto transition-all duration-300 ${
+            isOpen ? "ml-64" : "ml-0"
+          }`}
+        >
           {children}
         </main>
       </div>

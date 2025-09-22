@@ -7,12 +7,14 @@ type InputTextProps = {
   value?: string;
   onChange?: (value: string) => void;
   placeholder?: string;
+  name?: string;
   id?: string;
   type?: string;
   disabled?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
   bgIcon?: string;
+  textColor?: string;
 };
 
 const InputText: React.FC<InputTextProps> = ({
@@ -20,12 +22,14 @@ const InputText: React.FC<InputTextProps> = ({
   value = "",
   onChange,
   placeholder = "",
+  name,
   id,
   type = "text",
   disabled = false,
   icon,
   iconPosition = "left",
   bgIcon = "bg-[var(--extra)]",
+  textColor = "text-[var(--primary)]",
 }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (onChange) onChange(e.target.value);
@@ -40,10 +44,12 @@ const InputText: React.FC<InputTextProps> = ({
         value={value}
         onChange={handleChange}
         placeholder={placeholder}
+        name={name}
         disabled={disabled}
         icon={icon}
         iconPosition={iconPosition}
         bgInput={bgIcon}
+        textColor={textColor}
       />
     </div>
   );

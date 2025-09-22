@@ -6,54 +6,35 @@ import { Button } from "@/components/ui/button";
 import ActionBox from "./ActionBox";
 import Image from "next/image";
 
-type User = {
-  id: number;
-  name: string;
-  email: string;
-};
-
-interface ButtonProps {
-  children?: React.ReactNode;
-  onClick?: () => void;
+interface TableProps<T> {
   nomeCadastro?: string;
+  columns: Column<T>[];
+  data: T[];
 }
 
-const Table = ({ nomeCadastro = "Cadastro" }: ButtonProps) => {
+function Table<T extends Record<string, any>>({
+  nomeCadastro = "Cadastro",
+  columns,
+  data,
+}: TableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
 
-  const columns: Column<User>[] = [
-    { header: "ID", render: (row) => row.id },
-    { header: "Nome", render: (row) => row.name },
-    { header: "Email", render: (row) => row.email },
-    {
-      header: "Ações",
-      render: (row) => (
-        <select className="bg-gray-200 text-black p-1 rounded">
-          <option>Editar</option>
-          <option>Deletar</option>
-        </select>
-      ),
-    },
-  ];
-
-  const data: User[] = [
-    { id: 1, name: "Rodrigo", email: "rodrigo@email.com" },
-    { id: 2, name: "Maria", email: "maria@email.com" },
-  ];
+  const toggleFilters = () => setShowFilters((prev) => !prev);
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return data;
-    return data.filter((user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    return data.filter((row) =>
+      String(row[Object.keys(row)[1]])
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     );
   }, [searchTerm, data]);
 
   return (
-    <div>
-      <div className="flex justify-between items-center ">
-        <div className="flex self-end">
-          <ActionBox />
-        </div>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between items-center w-full">
+        <ActionBox onToggleFilter={toggleFilters} />
         <div className="flex gap-2 pb-3">
           <Input
             icon={
@@ -65,7 +46,7 @@ const Table = ({ nomeCadastro = "Cadastro" }: ButtonProps) => {
               />
             }
             iconPosition="left"
-            placeholder="Buscar por nome..."
+            placeholder="Buscar..."
             value={searchTerm}
             bgInput="bg-[var(--primary)]"
             bgIcon="bg-[var(--secondary)]"
@@ -76,9 +57,15 @@ const Table = ({ nomeCadastro = "Cadastro" }: ButtonProps) => {
         </div>
       </div>
 
+      {showFilters && (
+        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]">
+          {/* filtros */}
+        </div>
+      )}
+
       <TableGeneric columns={columns} data={filteredData} />
     </div>
   );
-};
+}
 
 export default Table;
