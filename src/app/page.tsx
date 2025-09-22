@@ -1,7 +1,11 @@
-"use client";
+import Navbar from "@/components/layout/Navbar";
+import InputFile from "@/components/ui/inputFile";
+import React from "react";
 
-import Tiptap from "../components/TipTap";
+type Props = {};
 
-export default function Editor() {
-  return <Tiptap />;
-}
+const HomePage = (props: Props) => {
+  return <div></div>;
+};
+
+export default HomePage;
