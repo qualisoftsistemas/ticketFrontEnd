@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useCategoriaStore } from "@/store/categoriaStore";
-import TableGeneric, { Column } from "@/components/table/TableGeneric";
+import { Column } from "@/components/table/TableGeneric";
 import { Categoria } from "@/types/Categoria";
 import ModalCadastroCategoria from "./CadastroCategoria";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import Table from "../table/Table";
 
 export default function CategoriaPageClient() {
   const {
@@ -44,7 +45,11 @@ export default function CategoriaPageClient() {
 
   const columns: Column<Categoria>[] = [
     { header: "ID", key: "id" },
-    { header: "Setor ID", key: "setor_id" },
+    {
+      header: "Setor",
+      key: "setor",
+      render: (categoria: Categoria) => categoria.setor?.nome ?? "-",
+    },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
@@ -69,14 +74,21 @@ export default function CategoriaPageClient() {
     fetchCategorias();
   }, [fetchCategorias]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleSubmit = async (data: Partial<Categoria>) => {
-    if (data?.id) {
-      await updateCategoria(data);
-    } else {
-      await createCategoria(data);
+    setIsSubmitting(true);
+    try {
+      if (data?.id) {
+        await updateCategoria(data);
+      } else {
+        await createCategoria(data);
+      }
+      await fetchCategorias();
+    } finally {
+      setIsSubmitting(false);
+      setShowModal(false);
     }
-    setShowModal(false);
-    await fetchCategorias();
   };
 
   const handleEdit = (categoria: Categoria) => {
@@ -84,12 +96,18 @@ export default function CategoriaPageClient() {
     setShowModal(true);
   };
 
-  if (loading) return <p>Carregando categorias...</p>;
+  if (loading)
+    return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <>
-      <TableGeneric columns={columns} data={categorias} />
+      <Table
+        columns={columns}
+        data={categorias}
+        showCadastro={() => setShowModal(true)}
+        loading={isSubmitting}
+      />
 
       {showModal && (
         <ModalCadastroCategoria

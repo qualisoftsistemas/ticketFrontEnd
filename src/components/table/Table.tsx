@@ -11,6 +11,7 @@ interface TableProps<T> {
   columns: Column<T>[];
   data: T[];
   showCadastro?: () => void;
+  loading?: boolean;
 }
 
 function Table<T extends Record<string, any>>({
@@ -18,6 +19,7 @@ function Table<T extends Record<string, any>>({
   columns,
   data,
   showCadastro,
+  loading,
 }: TableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -67,7 +69,7 @@ function Table<T extends Record<string, any>>({
         </div>
       )}
 
-      <TableGeneric columns={columns} data={filteredData} />
+      <TableGeneric loading={loading} columns={columns} data={filteredData} />
     </div>
   );
 }

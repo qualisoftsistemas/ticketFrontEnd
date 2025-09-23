@@ -14,9 +14,9 @@ function Input({
   type,
   icon,
   iconPosition = "left",
-  bgInput = "bg-zinc-800", // Cor de fundo do input (exemplo)
-  bgIcon = "bg-red-600", // Cor de fundo do ícone (exemplo)
-  textColor = "text-white", // Cor do texto e ícone (exemplo)
+  bgInput = "bg-zinc-800",
+  bgIcon = "bg-red-600",
+  textColor = "text-white",
   ...props
 }: InputProps) {
   return (
@@ -38,8 +38,11 @@ function Input({
         data-slot="input"
         className={cn(
           "h-9 w-full min-w-0 border-none px-3 py-1 text-base shadow-xs outline-none transition-colors",
-          iconPosition === "left" ? "rounded-r-md" : "rounded-l-md",
-          "placeholder:text-gray-400 focus:outline-none",
+          iconPosition === "left"
+            ? "rounded-r-md"
+            : iconPosition === "right"
+            ? "rounded-l-md"
+            : "rounded",
           bgInput,
           textColor,
           className

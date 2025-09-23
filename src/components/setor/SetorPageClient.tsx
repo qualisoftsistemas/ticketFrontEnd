@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import { useSetorStore } from "@/store/setorStore";
-import TableGeneric, { Column } from "@/components/table/TableGeneric";
+import { Column } from "@/components/table/TableGeneric";
 import { Setor } from "@/types/Setor";
 import ModalCadastroSetor from "./CadastroSetor";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
 import { FaEdit, FaTrash, FaTag, FaLightbulb } from "react-icons/fa";
+import Table from "../table/Table";
 
 export default function SetorPageClient() {
   const {
@@ -85,12 +86,17 @@ export default function SetorPageClient() {
     setShowModal(true);
   };
 
-  if (loading) return <p>Carregando setores...</p>;
+  if (loading)
+    return <p className="text-[var(--primary)]">Carregando setores...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <>
-      <TableGeneric columns={columns} data={setores} />
+      <Table
+        columns={columns}
+        data={setores}
+        showCadastro={() => setShowModal(true)}
+      />
 
       {showModal && (
         <ModalCadastroSetor

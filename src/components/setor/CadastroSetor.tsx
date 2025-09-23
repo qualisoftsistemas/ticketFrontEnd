@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../ui/modal";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Setor } from "@/types/Setor";
 import { Button } from "../ui/button";
+import InputText from "../ui/inputText";
 
 const schema = z.object({
   id: z.number().optional(),
@@ -30,10 +31,21 @@ export default function CadastroSetor({
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: initialData ?? { nome: "" },
   });
+
+  useEffect(() => {
+    reset({
+      nome: initialData?.nome || "",
+    });
+  }, [initialData, reset]);
+
+  const nomeValue = watch("nome");
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -41,17 +53,15 @@ export default function CadastroSetor({
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
         {initialData?.id && <input type="hidden" {...register("id")} />}
 
-        <div>
-          <label>Nome</label>
-          <input
-            type="text"
-            {...register("nome")}
-            className="border p-2 w-full"
-          />
-          {errors.nome && (
-            <p className="text-red-500 text-sm">{errors.nome.message}</p>
-          )}
-        </div>
+        <InputText
+          label="Nome"
+          value={nomeValue}
+          onChange={(val) => setValue("nome", val)}
+          placeholder="Digite o nome do setor"
+        />
+        {errors.nome && (
+          <p className="text-red-500 text-sm">{errors.nome.message}</p>
+        )}
 
         <Button variant={"confirm"} type="submit">
           Salvar
