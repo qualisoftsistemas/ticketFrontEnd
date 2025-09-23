@@ -6,7 +6,7 @@ type Props = {
 
 const ActionBox: React.FC<Props> = ({ onToggleFilter }) => {
   return (
-    <div className="flex gap-6 rounded-t-md px-4 py-1 bg-[var(--secondary)] border-b border-[var(--secondary-foreground)]">
+    <div className="flex gap-6 rounded-t-md px-4 py-1 bg-[var(--secondary)]">
       <img
         src="/Icons/Filter.svg"
         alt="Filtrar"

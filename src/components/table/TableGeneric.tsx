@@ -23,7 +23,7 @@ export default function TableGeneric<T>({
   skeletonRows = 5,
 }: TableGenericProps<T>) {
   return (
-    <table className="table-auto w-full">
+    <table className="table-auto w-full border border-[var(--secondary-foreground)]">
       <thead className="bg-[var(--secondary)]">
         <tr>
           {columns.map((col) => (
