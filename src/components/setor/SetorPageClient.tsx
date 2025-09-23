@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useSetorStore } from "@/store/setorStore";
 import { Column } from "@/components/table/TableGeneric";
 import { Setor } from "@/types/Setor";
@@ -19,13 +19,27 @@ export default function SetorPageClient() {
     deleteSetor,
     loading,
     error,
+    pagination,
   } = useSetorStore();
 
   const [showModal, setShowModal] = useState(false);
   const [editSetor, setEditSetor] = useState<Setor | null>(null);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteSetorId, setDeleteSetorId] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Memoriza fetchTableData para não criar nova função a cada render
+  const fetchTableData = useCallback(
+    (page: number, search?: string) => {
+      return fetchSetores({ page, withPagination: true });
+    },
+    [fetchSetores]
+  );
+
+  useEffect(() => {
+    fetchTableData(1, ""); // Busca primeira página
+  }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
     setDeleteSetorId(id);
@@ -37,8 +51,38 @@ export default function SetorPageClient() {
       await deleteSetor(deleteSetorId);
       setShowDeleteModal(false);
       setDeleteSetorId(null);
-      await fetchSetores();
+      await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    fetchTableData(page, searchTerm);
+  };
+
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    fetchTableData(1, term); // Sempre volta para página 1
+  };
+
+  const handleSubmit = async (data: Partial<Setor>) => {
+    setIsSubmitting(true);
+    try {
+      if (data?.id) {
+        await updateSetor(data);
+      } else {
+        await createSetor(data);
+      }
+      await fetchTableData(pagination?.current_page || 1, searchTerm);
+    } finally {
+      setIsSubmitting(false);
+      setShowModal(false);
+      setEditSetor(null);
+    }
+  };
+
+  const handleEdit = (setor: Setor) => {
+    setEditSetor(setor);
+    setShowModal(true);
   };
 
   const columns: Column<Setor>[] = [
@@ -66,27 +110,7 @@ export default function SetorPageClient() {
     },
   ];
 
-  useEffect(() => {
-    fetchSetores();
-  }, [fetchSetores]);
-
-  const handleSubmit = async (data: Partial<Setor>) => {
-    if (data?.id) {
-      await updateSetor(data);
-    } else {
-      await createSetor(data);
-    }
-    console.log(data.id);
-    setShowModal(false);
-    await fetchSetores();
-  };
-
-  const handleEdit = (setor: Setor) => {
-    setEditSetor(setor);
-    setShowModal(true);
-  };
-
-  if (loading)
+  if (loading && setores.length === 0)
     return <p className="text-[var(--primary)]">Carregando setores...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -96,6 +120,11 @@ export default function SetorPageClient() {
         columns={columns}
         data={setores}
         showCadastro={() => setShowModal(true)}
+        loading={loading || isSubmitting}
+        pagination={pagination}
+        onPageChange={handlePageChange}
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
       />
 
       {showModal && (
@@ -103,7 +132,10 @@ export default function SetorPageClient() {
           isOpen={showModal}
           initialData={editSetor}
           onSubmit={handleSubmit}
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setEditSetor(null);
+          }}
         />
       )}
 

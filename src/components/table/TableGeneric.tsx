@@ -34,7 +34,7 @@ export default function TableGeneric<T>({
         </tr>
       </thead>
 
-      <tbody className="bg-[var(--primary)]">
+      <tbody className="bg-[var(--primary)] text-[var(--extra)]">
         {loading
           ? Array.from({ length: skeletonRows }).map((_, i) => (
               <tr key={i} className="animate-pulse">

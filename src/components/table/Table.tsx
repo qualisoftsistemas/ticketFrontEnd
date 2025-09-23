@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import TableGeneric, { Column } from "./TableGeneric";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ActionBox from "./ActionBox";
 import Image from "next/image";
+import Pagination from "@/components/ui/pagination";
 
 interface TableProps<T> {
   nomeCadastro?: string;
@@ -12,6 +13,10 @@ interface TableProps<T> {
   data: T[];
   showCadastro?: () => void;
   loading?: boolean;
+  pagination: any;
+  onPageChange: (page: number) => void;
+  searchTerm: string; // Adiciona prop para o termo de pesquisa
+  onSearchChange: (term: string) => void;
 }
 
 function Table<T extends Record<string, any>>({
@@ -20,26 +25,21 @@ function Table<T extends Record<string, any>>({
   data,
   showCadastro,
   loading,
+  pagination,
+  onPageChange,
+  searchTerm,
+  onSearchChange,
 }: TableProps<T>) {
-  const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
   const toggleFilters = () => setShowFilters((prev) => !prev);
 
-  const filteredData = useMemo(() => {
-    if (!searchTerm) return data;
-    return data.filter((row) =>
-      String(row[Object.keys(row)[1]])
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm, data]);
-
   return (
     <div className="flex flex-col gap-0.5">
+      {" "}
       <div className="flex justify-between items-center w-full">
         <div className="flex self-end">
-          <ActionBox onToggleFilter={toggleFilters} />
+          <ActionBox onToggleFilter={toggleFilters} /> {" "}
         </div>
         <div className="flex gap-2 pb-3">
           <Input
@@ -57,19 +57,23 @@ function Table<T extends Record<string, any>>({
             bgInput="bg-[var(--primary)]"
             bgIcon="bg-[var(--secondary)]"
             textColor="text-[var(--extra)]"
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => onSearchChange(e.target.value)} // Usa o manipulador de pesquisa do pai
           />
-          <Button onClick={showCadastro}>Novo {nomeCadastro}</Button>
-        </div>
-      </div>
-
+          <Button onClick={showCadastro}>Novo {nomeCadastro}</Button> {" "}
+        </div>{" "}
+      </div>{" "}
       {showFilters && (
-        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]">
-          {/* filtros */}
-        </div>
+        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]"></div>
       )}
-
-      <TableGeneric loading={loading} columns={columns} data={filteredData} />
+      <TableGeneric loading={loading} columns={columns} data={data} />   
+      {pagination && (
+        <Pagination
+          currentPage={pagination.current_page}
+          lastPage={pagination.last_page}
+          onPageChange={onPageChange}
+        />
+      )}
+         {" "}
     </div>
   );
 }

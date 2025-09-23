@@ -2,14 +2,19 @@
 import { create } from "zustand";
 import { Setor } from "@/types/Setor";
 import apiFetchClient from "@/service/api";
+import { Pagination } from "@/types/Pagination";
 
 interface SetorState {
   setores: Setor[];
   loading: boolean;
   error: string | null;
   setorSelecionado: Setor | null;
+  pagination: Pagination | null;
 
-  fetchSetores: () => Promise<void>;
+  fetchSetores: (options?: {
+    page?: number;
+    withPagination?: boolean;
+  }) => Promise<void>;
   fetchSetorById: (id: number) => Promise<void>;
   createSetor: (data: Partial<Setor>) => Promise<void>;
   updateSetor: (data: Partial<Setor>) => Promise<void>;
@@ -22,18 +27,36 @@ export const useSetorStore = create<SetorState>((set, get) => ({
   loading: false,
   error: null,
   setorSelecionado: null,
+  pagination: null,
 
-  fetchSetores: async () => {
+  fetchSetores: async (options = { page: 1, withPagination: true }) => {
     set({ loading: true, error: null });
     try {
-      const response = await apiFetchClient<{ setores: Setor[] }>({
+      let endpoint = "/setor";
+
+      if (options.withPagination) {
+        endpoint += `?page=${options.page}`;
+      }
+
+      const response = await apiFetchClient<{
+        setores: Setor[];
+        pagination?: Pagination;
+      }>({
         method: "GET",
-        endpoint: "/setor",
+        endpoint: endpoint,
       });
-      set({ setores: response.setores || [], loading: false });
+
+      set({
+        setores: response.setores || [],
+        pagination: response.pagination || null,
+        loading: false,
+      });
     } catch (err: any) {
       console.error(err);
-      set({ error: err.message || "Erro ao buscar setores", loading: false });
+      set({
+        error: err.message || "Erro ao buscar setores",
+        loading: false,
+      });
     }
   },
 

@@ -1,4 +1,5 @@
-"use client";
+// components/pagination/Pagination.tsx
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 
@@ -8,31 +9,36 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
 }
 
-export default function Pagination({
+const Pagination: React.FC<PaginationProps> = ({
   currentPage,
   lastPage,
   onPageChange,
-}: PaginationProps) {
-  const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
+}) => {
+  const pages = [];
+  for (let i = 1; i <= lastPage; i++) {
+    pages.push(i);
+  }
 
   return (
-    <div className="flex gap-2 justify-center py-2">
+    <div className="flex items-center justify-center gap-2 my-4">
       <Button
+        variant="default"
         disabled={currentPage === 1}
         onClick={() => onPageChange(currentPage - 1)}
       >
         Anterior
       </Button>
-      {pages.map((p) => (
+      {pages.map((page) => (
         <Button
-          key={p}
-          variant={p === currentPage ? "confirm" : "ghost"}
-          onClick={() => onPageChange(p)}
+          key={page}
+          variant={page === currentPage ? "default" : "confirm"}
+          onClick={() => onPageChange(page)}
         >
-          {p}
+          {page}
         </Button>
       ))}
       <Button
+        variant="default"
         disabled={currentPage === lastPage}
         onClick={() => onPageChange(currentPage + 1)}
       >
@@ -40,4 +46,6 @@ export default function Pagination({
       </Button>
     </div>
   );
-}
+};
+
+export default Pagination;

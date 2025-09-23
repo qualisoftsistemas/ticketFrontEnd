@@ -1,15 +1,18 @@
-// stores/categoriaStore.ts
 import { create } from "zustand";
 import { Categoria } from "@/types/Categoria";
 import apiFetchClient from "@/service/api";
+import { Pagination } from "@/types/Pagination";
 
 interface CategoriaState {
   categorias: Categoria[];
   loading: boolean;
   error: string | null;
   categoriaSelecionada: Categoria | null;
-
-  fetchCategorias: () => Promise<void>;
+  pagination: Pagination | null;
+  fetchCategorias: (options?: {
+    page?: number;
+    search?: string;
+  }) => Promise<void>;
   fetchCategoriaById: (id: number) => Promise<void>;
   createCategoria: (data: Partial<Categoria>) => Promise<void>;
   updateCategoria: (data: Partial<Categoria>) => Promise<void>;
@@ -22,15 +25,29 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
   loading: false,
   error: null,
   categoriaSelecionada: null,
+  pagination: null,
 
-  fetchCategorias: async () => {
+  fetchCategorias: async (options = { page: 1, search: "" }) => {
     set({ loading: true, error: null });
     try {
-      const response = await apiFetchClient<{ categorias: Categoria[] }>({
+      let endpoint = `/categoria?page=${options.page}`;
+      if (options.search) {
+        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      }
+
+      const response = await apiFetchClient<{
+        categorias: Categoria[];
+        pagination: Pagination;
+      }>({
         method: "GET",
-        endpoint: "/categoria",
+        endpoint,
       });
-      set({ categorias: response.categorias || [], loading: false });
+
+      set({
+        categorias: response.categorias || [],
+        pagination: response.pagination || null,
+        loading: false,
+      });
     } catch (err: any) {
       console.error(err);
       set({
@@ -79,8 +96,8 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         data,
       });
       set({
-        categorias: get().categorias.map((s) =>
-          s.id === response.id ? response : s
+        categorias: get().categorias.map((c) =>
+          c.id === response.id ? response : c
         ),
         loading: false,
       });
@@ -101,7 +118,7 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         endpoint: `/categoria/${id}`,
       });
       set({
-        categorias: get().categorias.filter((s) => s.id !== id),
+        categorias: get().categorias.filter((c) => c.id !== id),
         loading: false,
       });
     } catch (err: any) {

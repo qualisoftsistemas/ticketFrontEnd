@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useCategoriaStore } from "@/store/categoriaStore";
 import { Column } from "@/components/table/TableGeneric";
 import { Categoria } from "@/types/Categoria";
@@ -19,6 +19,7 @@ export default function CategoriaPageClient() {
     deleteCategoria,
     loading,
     error,
+    pagination,
   } = useCategoriaStore();
 
   const [showModal, setShowModal] = useState(false);
@@ -28,6 +29,18 @@ export default function CategoriaPageClient() {
   const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
     null
   );
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchTableData = useCallback(
+    (page: number, search = "") => fetchCategorias({ page, search }),
+    [fetchCategorias]
+  );
+
+  useEffect(() => {
+    fetchTableData(1);
+  }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
     setDeleteCategoriaId(id);
@@ -39,17 +52,43 @@ export default function CategoriaPageClient() {
       await deleteCategoria(deleteCategoriaId);
       setShowDeleteModal(false);
       setDeleteCategoriaId(null);
-      await fetchCategorias();
+      await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    fetchTableData(page, searchTerm);
+  };
+
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    fetchTableData(1, term);
+  };
+
+  const handleSubmit = async (data: Partial<Categoria>) => {
+    setIsSubmitting(true);
+    try {
+      if (data?.id) {
+        await updateCategoria(data);
+      } else {
+        await createCategoria(data);
+      }
+      await fetchTableData(pagination?.current_page || 1, searchTerm);
+    } finally {
+      setIsSubmitting(false);
+      setShowModal(false);
+      setEditCategoria(null);
+    }
+  };
+
+  const handleEdit = (categoria: Categoria) => {
+    setEditCategoria(categoria);
+    setShowModal(true);
   };
 
   const columns: Column<Categoria>[] = [
     { header: "ID", key: "id" },
-    {
-      header: "Setor",
-      key: "setor",
-      render: (categoria: Categoria) => categoria.setor?.nome ?? "-",
-    },
+    { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
@@ -70,33 +109,7 @@ export default function CategoriaPageClient() {
     },
   ];
 
-  useEffect(() => {
-    fetchCategorias();
-  }, [fetchCategorias]);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const handleSubmit = async (data: Partial<Categoria>) => {
-    setIsSubmitting(true);
-    try {
-      if (data?.id) {
-        await updateCategoria(data);
-      } else {
-        await createCategoria(data);
-      }
-      await fetchCategorias();
-    } finally {
-      setIsSubmitting(false);
-      setShowModal(false);
-    }
-  };
-
-  const handleEdit = (categoria: Categoria) => {
-    setEditCategoria(categoria);
-    setShowModal(true);
-  };
-
-  if (loading)
+  if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
@@ -106,7 +119,11 @@ export default function CategoriaPageClient() {
         columns={columns}
         data={categorias}
         showCadastro={() => setShowModal(true)}
-        loading={isSubmitting}
+        loading={loading || isSubmitting}
+        pagination={pagination}
+        onPageChange={handlePageChange}
+        searchTerm={searchTerm}
+        onSearchChange={handleSearchChange}
       />
 
       {showModal && (
