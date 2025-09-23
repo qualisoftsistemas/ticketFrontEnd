@@ -1,8 +1,7 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+// service/apiClient.ts
 export const API_BASE_URL = "http://192.168.5.43:8000/api";
 
-export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
 interface ApiFetchOptions {
   method: HttpMethod;
@@ -11,18 +10,22 @@ interface ApiFetchOptions {
   contentType?: string;
 }
 
-const apiFetchServer = async <T>({
+const apiFetchClient = async <T>({
   method,
   endpoint,
   data,
   contentType = "application/json",
 }: ApiFetchOptions): Promise<T> => {
-  const token = (await cookies()).get("token")?.value;
-  const empresaId = (await cookies()).get("empresa_id")?.value;
+  const token =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+  const empresaId =
+    typeof window !== "undefined" ? localStorage.getItem("empresa_id") : null;
 
-  const url =
-    `${API_BASE_URL}${endpoint}` +
-    (empresaId ? `?empresa_id=${empresaId}` : "");
+  let url = `${API_BASE_URL}${endpoint}`;
+  if (empresaId) {
+    const separator = url.includes("?") ? "&" : "?";
+    url += `${separator}empresa_id=${empresaId}`;
+  }
 
   const headers: Record<string, string> = {
     "Content-Type": contentType,
@@ -34,11 +37,10 @@ const apiFetchServer = async <T>({
       method,
       headers,
       body: method !== "GET" && data ? JSON.stringify(data) : undefined,
-      cache: "no-store",
     });
 
     if (res.status === 401) {
-      redirect("/login");
+      throw new Error("Não autorizado. Faça login novamente.");
     }
 
     if (!res.ok) {
@@ -51,9 +53,9 @@ const apiFetchServer = async <T>({
 
     return res.json();
   } catch (error: any) {
-    console.error("API fetch error:", error);
+    console.error("API fetch client error:", error);
     throw error;
   }
 };
 
-export default apiFetchServer;
+export default apiFetchClient;

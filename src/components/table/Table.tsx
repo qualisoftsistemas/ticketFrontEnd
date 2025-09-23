@@ -10,12 +10,14 @@ interface TableProps<T> {
   nomeCadastro?: string;
   columns: Column<T>[];
   data: T[];
+  showCadastro?: () => void;
 }
 
 function Table<T extends Record<string, any>>({
   nomeCadastro = "Cadastro",
   columns,
   data,
+  showCadastro,
 }: TableProps<T>) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
@@ -55,7 +57,7 @@ function Table<T extends Record<string, any>>({
             textColor="text-[var(--extra)]"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button>Novo {nomeCadastro}</Button>
+          <Button onClick={showCadastro}>Novo {nomeCadastro}</Button>
         </div>
       </div>
 

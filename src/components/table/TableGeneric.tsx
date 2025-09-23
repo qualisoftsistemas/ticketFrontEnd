@@ -1,9 +1,10 @@
-// TableGeneric.tsx (Server Component)
+// TableGeneric.tsx
 import React from "react";
 
 export interface Column<T> {
   header: string;
   key: keyof T;
+  render?: (row: T) => React.ReactNode; 
 }
 
 interface TableGenericProps<T> {
@@ -16,7 +17,7 @@ export default function TableGeneric<T>({
   data,
 }: TableGenericProps<T>) {
   return (
-    <table className="table-auto w-full border-collapse  ">
+    <table className="table-auto w-full border-collapse">
       <thead className="bg-[var(--secondary)]">
         <tr>
           {columns.map((col) => (
@@ -31,7 +32,7 @@ export default function TableGeneric<T>({
           <tr key={i}>
             {columns.map((col) => (
               <td key={String(col.key)} className="py-1 px-2 text-center">
-                {String(row[col.key])}
+                {col.render ? col.render(row) : String(row[col.key])}
               </td>
             ))}
           </tr>
