@@ -54,24 +54,19 @@ export default function CategoriaPageClient() {
       header: "Ações",
       key: "actions" as keyof Categoria,
       render: (categoria: Categoria) => (
-        <div className="flex justify-center gap-2">
-          <Button variant="ghost" onClick={() => handleEdit(categoria)}>
-            <img
-              src="/Icons/Edit.svg"
-              alt="Editar"
-              className="w-5 h-5 cursor-pointer"
-            />
-          </Button>
-          <Button
-            variant="ghost"
+        <div className="flex justify-start gap-4 py-1">
+          <img
+            src="/Icons/Edit.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleEdit(categoria)}
+          />
+          <img
+            src="/Icons/Trash.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
             onClick={() => handleDeleteClick(categoria.id)}
-          >
-            <img
-              src="/Icons/Trash.svg"
-              alt="Editar"
-              className="w-5 h-5 cursor-pointer"
-            />
-          </Button>
+          />
         </div>
       ),
     },
