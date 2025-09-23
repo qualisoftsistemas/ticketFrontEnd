@@ -51,7 +51,7 @@ const InputFile: React.FC<InputFileProps> = ({
         htmlFor={id}
         className="flex items-center gap-2 cursor-pointer bg-[var(--primary)] text-[var(--extra)] px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition"
       >
-        <img src="/icons/fileUpload.svg" alt="" className="w-6 h-6" />
+        <img src="/Icons/UploadFile.svg" alt="" className="w-6 h-6" />
         {label}
       </label>
 

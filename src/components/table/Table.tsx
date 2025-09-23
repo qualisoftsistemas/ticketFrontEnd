@@ -45,7 +45,7 @@ function Table<T extends Record<string, any>>({
           <Input
             icon={
               <Image
-                src="/icons/search.svg"
+                src="/Icons/Search.svg"
                 alt="Search"
                 width={24}
                 height={24}
