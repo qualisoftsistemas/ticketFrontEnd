@@ -3,30 +3,25 @@ import Link from "next/link";
 
 const Sidebar: React.FC = () => {
   return (
-    <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--extra)] flex flex-col shadow-lg   items-center ">
-      <nav className="flex-1 mt-24 p-4 space-y-2 w-full">
+    <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col shadow-lg   items-center ">
+      <nav className="flex flex-col gap-2 w-full mt-18 p-1">
         <Link
           href="/Setores"
-          className="block px-4 py-2 rounded-md hover:bg-[var(--secondary)] hover:text-[var(--secondary-foreground)] transition"
+          className="px-4 py-2 hover:text-[var(--secondary-foreground)] transition flex gap-2"
         >
-          Setor
+          <p>Setor</p>
         </Link>
         <Link
-          href="/dashboard"
-          className="block px-4 py-2 rounded-md hover:bg-[var(--secondary)] hover:text-[var(--secondary-foreground)] transition"
+          href="/Setores"
+          className="px-4 py-2 hover:text-[var(--secondary-foreground)] transition flex gap-2"
         >
-          Dashboard
-        </Link>
-        <Link
-          href="/config"
-          className="block px-4 py-2 rounded-md hover:bg-[var(--secondary)] hover:text-[var(--secondary-foreground)] transition"
-        >
-          Configurações
+          <span>icon</span>
+          <p>Chamados</p>
         </Link>
       </nav>
 
       {/* Footer da sidebar */}
-      <div className="p-4 border-t border-[var(--extra)]/20 text-sm">
+      <div className="w-full py-3 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
         &copy; {new Date().getFullYear()} - By{" "}
         <a
           href="https://www.qualisoftsistemas.com.br/"
