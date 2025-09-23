@@ -16,6 +16,7 @@ type InputTextProps = {
   iconPosition?: "left" | "right";
   bgIcon?: string;
   textColor?: string;
+  labelColor?: string;
 };
 
 const InputText: React.FC<InputTextProps> = ({
@@ -31,14 +32,15 @@ const InputText: React.FC<InputTextProps> = ({
   iconPosition = "left",
   bgIcon = "bg-[var(--extra)]",
   textColor = "text-[var(--primary)]",
+  labelColor= ""
 }) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (onChange) onChange(e.target.value);
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      {label && <Label htmlFor={id}>{label}</Label>}
+    <div className="flex flex-col gap-2 w-full">
+      {label && <Label htmlFor={id} className={`${labelColor}`}>{label}</Label>}
       <Input
         id={id}
         type={type}
