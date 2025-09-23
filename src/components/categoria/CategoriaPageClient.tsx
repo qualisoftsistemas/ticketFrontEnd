@@ -7,7 +7,6 @@ import { Categoria } from "@/types/Categoria";
 import ModalCadastroCategoria from "./CadastroCategoria";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import Table from "../table/Table";
 
 export default function CategoriaPageClient() {
@@ -94,16 +93,19 @@ export default function CategoriaPageClient() {
       header: "Ações",
       key: "actions" as keyof Categoria,
       render: (categoria: Categoria) => (
-        <div className="flex justify-center gap-2">
-          <Button variant="ghost" onClick={() => handleEdit(categoria)}>
-            <FaEdit />
-          </Button>
-          <Button
-            variant="ghost"
+        <div className="flex justify-start gap-4 py-1">
+          <img
+            src="/Icons/Edit.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleEdit(categoria)}
+          />
+          <img
+            src="/Icons/Trash.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
             onClick={() => handleDeleteClick(categoria.id)}
-          >
-            <FaTrash />
-          </Button>
+          />
         </div>
       ),
     },
@@ -111,7 +113,7 @@ export default function CategoriaPageClient() {
 
   if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>

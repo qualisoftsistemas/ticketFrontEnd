@@ -60,7 +60,7 @@ export default function CadastroSetor({
           placeholder="Digite o nome do setor"
         />
         {errors.nome && (
-          <p className="text-red-500 text-sm">{errors.nome.message}</p>
+          <p className="text-[var(--destructive)] text-sm">{errors.nome.message}</p>
         )}
 
         <Button variant={"confirm"} type="submit">

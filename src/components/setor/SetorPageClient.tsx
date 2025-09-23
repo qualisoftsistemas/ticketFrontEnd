@@ -92,19 +92,31 @@ export default function SetorPageClient() {
       header: "Ações",
       key: "actions" as keyof Setor,
       render: (setor: Setor) => (
-        <div className="flex justify-center gap-2">
-          <Button variant="ghost" onClick={() => handleEdit(setor)}>
-            <FaEdit />
-          </Button>
-          <Button variant="ghost" onClick={() => handleDeleteClick(setor.id)}>
-            <FaTrash />
-          </Button>
-          <Button variant="ghost" onClick={() => console.log("Tag", setor)}>
-            <FaTag />
-          </Button>
-          <Button variant="ghost" onClick={() => console.log("Bulb", setor)}>
-            <FaLightbulb />
-          </Button>
+        <div className="flex justify-start gap-4 py-1">
+          <img
+            src="/Icons/Edit.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleEdit(setor)}
+          />
+          <img
+            src="/Icons/LightOff.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => console.log("Desativou", setor)}
+          />
+          <img
+            src="/Icons/Trash.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleDeleteClick(setor.id)}
+          />
+          <img
+            src="/Icons/CategoryTag.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => console.log("Tag", setor)}
+          />
         </div>
       ),
     },
@@ -112,7 +124,7 @@ export default function SetorPageClient() {
 
   if (loading && setores.length === 0)
     return <p className="text-[var(--primary)]">Carregando setores...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>

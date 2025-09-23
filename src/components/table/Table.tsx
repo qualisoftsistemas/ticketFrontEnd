@@ -15,7 +15,7 @@ interface TableProps<T> {
   loading?: boolean;
   pagination: any;
   onPageChange: (page: number) => void;
-  searchTerm: string; // Adiciona prop para o termo de pesquisa
+  searchTerm: string;
   onSearchChange: (term: string) => void;
 }
 
@@ -36,16 +36,15 @@ function Table<T extends Record<string, any>>({
 
   return (
     <div className="flex flex-col gap-0.5">
-      {" "}
       <div className="flex justify-between items-center w-full">
         <div className="flex self-end">
           <ActionBox onToggleFilter={toggleFilters} /> {" "}
         </div>
-        <div className="flex gap-2 pb-3">
+        <div className="flex gap-2 pb-2">
           <Input
             icon={
               <Image
-                src="/icons/search.svg"
+                src="/Icons/Search.svg"
                 alt="Search"
                 width={24}
                 height={24}
@@ -63,7 +62,20 @@ function Table<T extends Record<string, any>>({
         </div>{" "}
       </div>{" "}
       {showFilters && (
-        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]"></div>
+        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]">
+          <div className="flex justify-start gap-3 w-full">
+            <Button variant="confirm" type="submit" className="px-2 text-xs">
+              Aplicar Filtros
+            </Button>
+            <Button
+              variant="destructive"
+              type="button"
+              className="px-2 text-xs"
+            >
+              Limpar Tudo
+            </Button>
+          </div>
+        </div>
       )}
       <TableGeneric loading={loading} columns={columns} data={data} />   
       {pagination && (
@@ -73,7 +85,6 @@ function Table<T extends Record<string, any>>({
           onPageChange={onPageChange}
         />
       )}
-         {" "}
     </div>
   );
 }

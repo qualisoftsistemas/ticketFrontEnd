@@ -75,7 +75,7 @@ const LoginForm: React.FC = () => {
           placeholder="..."
           labelColor="text-[var(--extra)]"
         />
-        {error && <p className="text-red-500 text-center text-sm">{error}</p>}
+        {error && <p className="text-[var(--destructive)] text-center text-sm">{error}</p>}
 
         <InputText
           label="Senha"
