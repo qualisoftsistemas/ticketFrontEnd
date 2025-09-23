@@ -100,7 +100,7 @@ export default function SetorPageClient() {
 
   if (loading)
     return <p className="text-[var(--primary)]">Carregando setores...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>

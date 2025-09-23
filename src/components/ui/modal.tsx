@@ -48,10 +48,10 @@ export default function Modal({
           <button
             onClick={onClose}
             className={`sticky flex items-center justify-end w-full ${
-              closeButtonColor ?? "text-red-500"
+              closeButtonColor ?? "text-[var(--destructive)]"
             } hover:opacity-80 cursor-pointer`}
           >
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6 text-[var(--destructive)]" />
           </button>
 
           {children}

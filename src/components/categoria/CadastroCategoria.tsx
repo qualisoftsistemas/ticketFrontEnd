@@ -72,8 +72,8 @@ export default function CadastroCategoria({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-lg font-semibold">Cadastro de Categoria</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+      <h2 className="text-xl text-[var(--primary-foreground)] mb-4">Cadastro de Categoria</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
@@ -99,22 +99,28 @@ export default function CadastroCategoria({
           }}
         />
         {errors.setor_id && (
-          <p className="text-red-500 text-sm">{errors.setor_id.message}</p>
+          <p className="text-[var(--destructive)] text-sm">{errors.setor_id.message}</p>
         )}
 
         <InputText
           label="Nome"
+          labelColor="text-[var(--extra)]"
           value={nomeValue}
           onChange={(val) => setValue("nome", val, { shouldValidate: true })}
           placeholder="Digite o nome da categoria"
         />
         {errors.nome && (
-          <p className="text-red-500 text-sm">{errors.nome.message}</p>
+          <p className="text-[var(--destructive)] text-sm">{errors.nome.message}</p>
         )}
 
-        <Button variant="confirm" type="submit">
-          Salvar
-        </Button>
+        <div className="flex justify-end gap-3 w-full">
+          <Button variant="confirm" type="submit">
+            Salvar
+          </Button>
+          <Button variant="destructive" type="button">
+            Cancelar
+          </Button>
+        </div>
       </form>
     </Modal>
   );

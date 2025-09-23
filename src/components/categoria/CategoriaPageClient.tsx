@@ -100,7 +100,7 @@ export default function CategoriaPageClient() {
 
   if (loading)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>
