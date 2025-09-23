@@ -46,7 +46,7 @@ export default function TableGeneric<T>({
               </tr>
             ))
           : data.map((row, i) => (
-              <tr key={i}>
+              <tr key={i} className="hover:bg-[var(--extra)]/10">
                 {columns.map((col, j) => (
                   <td key={j} className="px-2 text-sm text-left border border-[var(--primary-foreground)]/50">
                     {col.render ? col.render(row) : String(row[col.key])}

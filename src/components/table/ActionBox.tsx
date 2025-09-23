@@ -10,11 +10,11 @@ const ActionBox: React.FC<Props> = ({ onToggleFilter }) => {
       <img
         src="/Icons/Filter.svg"
         alt="Filtrar"
-        className="w-5 h-5 cursor-pointer"
+        className="w-5 h-5 cursor-pointer hover:scale-105"
         onClick={onToggleFilter}
       />
-      <img src="/Icons/FilePDF.svg" alt="Exportar PDF" className="w-5 h-5 cursor-pointer" />
-      <img src="/Icons/FileCSV.svg" alt="Exportar CSV" className="w-5 h-5 cursor-pointer" />
+      <img src="/Icons/FilePDF.svg" alt="Exportar PDF" className="w-5 h-5 cursor-pointer hover:scale-105" />
+      <img src="/Icons/FileCSV.svg" alt="Exportar CSV" className="w-5 h-5 cursor-pointer hover:scale-105" />
     </div>
   );
 };
