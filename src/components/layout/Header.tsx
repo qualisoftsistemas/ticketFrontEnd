@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
             <p className="text-xs">CNPJ: 00</p>
           </div>
           <div
-            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)]"
+            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)] cursor-pointer"
             style={{
               WebkitMask:
                 "url(/Icons/ArrowDown.svg) no-repeat center / contain",
@@ -52,17 +52,17 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
           </Link>
         </div>
 
-        <Link href="/perfil" className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <img src="/Icons/UserCircle.svg" alt="user" className="w-10 h-10" />
           <h1 className="font-bold">Eu sou o Usuário</h1>
           <div
-            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)]"
+            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)] cursor-pointer"
             style={{
               WebkitMask:
                 "url(/Icons/ArrowDown.svg) no-repeat center / contain",
             }}
           ></div>
-        </Link>
+        </div>
       </div>
     </header>
   );
