@@ -1,20 +1,25 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #203b45;
-  --primary-foreground: #fbe9d0;
+  --primary: #052A37;
+  --primary-foreground: #CACDCD;
   --secondary: #ff5646;
-  --secondary-foreground: #ffffff;
+  --secondary-foreground: #FBE9D0;
   --destructive: #ca0303;
   --foreground: #c0dedd;
   --neutral: #CACDCD;
   --success: #6fc900;
-  --extra: #fbe9d0;
+  --extra: #FBE9D0;
+}
+
+.font1 {
+  font-family: "Sansation", sans-serif;
 }
 
 body {
-  background-color: var(--primary);
-  color: var(--extra);
+  background-color: #fff;
+  color: var(--primary);
+  font-family: "Sansation", sans-serif;
 }
 
 /* src/app/globals.css */
