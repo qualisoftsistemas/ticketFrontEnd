@@ -23,23 +23,23 @@ export default function TableGeneric<T>({
   skeletonRows = 5,
 }: TableGenericProps<T>) {
   return (
-    <table className="table-auto w-full border-collapse">
+    <table className="table-auto w-full">
       <thead className="bg-[var(--secondary)]">
         <tr>
           {columns.map((col) => (
-            <th key={String(col.key)} className="py-1 px-2 text-center">
+            <th key={String(col.key)} className="py-1 px-2 text-left text-lg text-[var(--secondary-foreground)] border-r border-l border-[var(--secondary-foreground)]">
               {col.header}
             </th>
           ))}
         </tr>
       </thead>
 
-      <tbody className="bg-[var(--primary)]">
+      <tbody className="bg-[var(--primary)] text-[var(--primary-foreground)]">
         {loading
           ? Array.from({ length: skeletonRows }).map((_, i) => (
               <tr key={i} className="animate-pulse">
                 {columns.map((col, j) => (
-                  <td key={j} className="py-1 px-2 text-center">
+                  <td key={j} className="px-2 text-center">
                     <Skeleton className="h-4 w-full" />
                   </td>
                 ))}
@@ -48,7 +48,7 @@ export default function TableGeneric<T>({
           : data.map((row, i) => (
               <tr key={i}>
                 {columns.map((col, j) => (
-                  <td key={j} className="py-1 px-2 text-center">
+                  <td key={j} className="px-2 text-sm text-left border border-[var(--primary-foreground)]/50">
                     {col.render ? col.render(row) : String(row[col.key])}
                   </td>
                 ))}

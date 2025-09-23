@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "../ui/button";
 
 type Props = {
   onToggleFilter?: () => void;
@@ -7,16 +6,15 @@ type Props = {
 
 const ActionBox: React.FC<Props> = ({ onToggleFilter }) => {
   return (
-    <div className="flex rounded gap-2 bg-[var(--secondary)] p-0.5">
-      <Button variant="ghost" onClick={onToggleFilter}>
-        <img src="/Icons/Filter.svg" alt="Filtrar" className="w-6 h-6" />
-      </Button>
-      <Button variant="ghost">
-        <img src="/Icons/FilePDF.svg" alt="Exportar PDF" className="w-6 h-6" />
-      </Button>
-      <Button variant="ghost">
-        <img src="/Icons/FileCSV.svg" alt="Exportar CSV" className="w-6 h-6" />
-      </Button>
+    <div className="flex gap-6 rounded-t-md px-4 py-1 bg-[var(--secondary)] border-b border-[var(--secondary-foreground)]">
+      <img
+        src="/Icons/Filter.svg"
+        alt="Filtrar"
+        className="w-5 h-5 cursor-pointer"
+        onClick={onToggleFilter}
+      />
+      <img src="/Icons/FilePDF.svg" alt="Exportar PDF" className="w-5 h-5 cursor-pointer" />
+      <img src="/Icons/FileCSV.svg" alt="Exportar CSV" className="w-5 h-5 cursor-pointer" />
     </div>
   );
 };
