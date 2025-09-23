@@ -7,7 +7,6 @@ import { Categoria } from "@/types/Categoria";
 import ModalCadastroCategoria from "./CadastroCategoria";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
-import { FaEdit, FaTrash } from "react-icons/fa";
 import Table from "../table/Table";
 
 export default function CategoriaPageClient() {
@@ -57,13 +56,21 @@ export default function CategoriaPageClient() {
       render: (categoria: Categoria) => (
         <div className="flex justify-center gap-2">
           <Button variant="ghost" onClick={() => handleEdit(categoria)}>
-            <FaEdit />
+            <img
+              src="/Icons/Edit.svg"
+              alt="Editar"
+              className="w-5 h-5 cursor-pointer"
+            />
           </Button>
           <Button
             variant="ghost"
             onClick={() => handleDeleteClick(categoria.id)}
           >
-            <FaTrash />
+            <img
+              src="/Icons/Trash.svg"
+              alt="Editar"
+              className="w-5 h-5 cursor-pointer"
+            />
           </Button>
         </div>
       ),
