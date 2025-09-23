@@ -12,9 +12,17 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
       <div className="flex items-center justify-center border-r px-12 py-3 border-[var(--secondary-foreground)]">
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (
-            <img src="/Icons/CloseSidebar.svg" alt="menu" className="w-10 h-10" />
+            <img
+              src="/Icons/CloseSidebar.svg"
+              alt="menu"
+              className="w-10 h-10"
+            />
           ) : (
-            <img src="/icons/OpenSidebar.svg" alt="menu" className="w-10 h-10" />
+            <img
+              src="/icons/OpenSidebar.svg"
+              alt="menu"
+              className="w-10 h-10"
+            />
           )}
         </button>
       </div>
@@ -26,7 +34,13 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
             <h1 className="font-bold">Empresa</h1>
             <p className="text-xs">CNPJ: 00</p>
           </div>
-          <img src="/Icons/ArrowDown.svg" alt="config" className="ml-4 w-4 h-4" />
+          <div
+            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)]"
+            style={{
+              WebkitMask:
+                "url(/Icons/ArrowDown.svg) no-repeat center / contain",
+            }}
+          ></div>
         </div>
 
         <div className="flex items-center gap-6">
@@ -38,13 +52,16 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen }) => {
           </Link>
         </div>
 
-        <Link
-          href="/perfil"
-          className="flex items-center gap-2 hover:text-[var(--secondary)] transition"
-        >
+        <Link href="/perfil" className="flex items-center gap-2">
           <img src="/Icons/UserCircle.svg" alt="user" className="w-10 h-10" />
           <h1 className="font-bold">Eu sou o Usuário</h1>
-          <img src="/Icons/ArrowDown.svg" alt="user" className="ml-2 w-4 h-4" />
+          <div
+            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)]"
+            style={{
+              WebkitMask:
+                "url(/Icons/ArrowDown.svg) no-repeat center / contain",
+            }}
+          ></div>
         </Link>
       </div>
     </header>
