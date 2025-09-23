@@ -7,28 +7,37 @@ const LoginForm: React.FC = () => {
   return (
     <form
       action={loginAction}
-      className="max-w-md w-full mx-auto flex flex-col gap-4 p-8 rounded-lg shadow-md bg-[var(--neutral)]"
+      className="max-w-md w-full mx-auto rounded-lg bg-[var(--primary)]"
     >
-      <h2 className="text-center text-2xl font-semibold text-[var(--primary)]">
-        Login
-      </h2>
+      <div className="bg-[var(--secondary)] p-3 rounded-t-md">
+        <h1 className="text-center text-2xl font-bold text-[var(--secondary-foreground)]">
+          Autenticar
+        </h1>
+      </div>
+      <div className="p-8 flex flex-col gap-4 items-center">
+        <h2 className="text-center text-lg text-[var(--primary-foreground)]">
+          Informe Suas Credenciais
+        </h2>
 
-      <InputText
-        label="Nome de Usuário"
-        name="login"
-        placeholder="Digite seu usuário"
-      />
+        <InputText
+          label="Login"
+          name="login"
+          placeholder="..."
+          labelColor="text-[var(--extra)]"
+        />
 
-      <InputText
-        label="Senha"
-        type="password"
-        name="senha"
-        placeholder="Digite sua senha"
-      />
+        <InputText
+          label="Senha"
+          type="password"
+          name="senha"
+          placeholder="..."
+          labelColor="text-[var(--extra)]"
+        />
 
-      <Button type="submit" variant={"confirm"}>
-        Entrar
-      </Button>
+        <Button type="submit" variant={"default"}>
+          Entrar
+        </Button>
+      </div>
     </form>
   );
 };
