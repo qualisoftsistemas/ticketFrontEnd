@@ -17,7 +17,7 @@
 }
 
 body {
-  background-color: #fff;
+  background-color: #CACDCD !important;
   color: var(--primary);
   font-family: "Sansation", sans-serif;
 }
