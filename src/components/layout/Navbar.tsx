@@ -28,7 +28,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
       </aside>
 
       <div className="flex flex-col flex-1">
-        <Header toggleSidebar={toggleSidebar} isOpen={isOpen} />
+        <Header role={role} toggleSidebar={toggleSidebar} isOpen={isOpen} />
 
         <main
           className={`flex-1 p-6 bg-gray-50 overflow-y-auto transition-all duration-300 ${

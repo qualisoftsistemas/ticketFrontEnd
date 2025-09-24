@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
-
-type Role = "Funcionario" | "Admin" | "Operador" | "Master";
+import { Role } from "@/hooks/useUserRole";
+import Icon from "../ui/icon";
 
 interface SidebarProps {
   role: Role;
@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
     {
       label: "Funcionários",
       href: "/funcionarios",
-      icon: "/Icons/User.svg",
+      icon: "/Icons/Employee.svg",
     },
   ];
 
@@ -73,11 +73,8 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
               className="w-full px-4 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
             >
               <div className="flex items-center gap-3">
-                <img
-                  src="/Icons/Master.svg"
-                  alt="Master"
-                  className="w-7 h-7 cursor-pointer"
-                />
+                <Icon icon="/Icons/Master.svg" />
+
                 <p className="text-lg">Master</p>
               </div>
               <img
@@ -120,11 +117,9 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
                 className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
               >
                 {item.icon && (
-                  <img
-                    src={item.icon}
-                    alt={item.label}
-                    className="w-7 h-7 cursor-pointer"
-                  />
+                  <>
+                    <Icon icon={item.icon} />
+                  </>
                 )}
                 <p className="text-lg">{item.label}</p>
               </Link>
