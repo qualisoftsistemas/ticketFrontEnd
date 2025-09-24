@@ -1,31 +1,32 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useCategoriaStore } from "@/store/categoriaStore";
+import { useFuncionarioStore } from "@/store/funcionarioStore";
 import { Column } from "@/components/table/TableGeneric";
-import { Categoria } from "@/types/Categoria";
-import ModalCadastroCategoria from "./CadastroCategoria";
+import { Funcionario } from "@/types/Funcionario";
+import ModalCadastroFuncionario from "./CadastroFuncionario";
 import ModalDeletar from "@/components/ui/modalDelete";
-import { Button } from "@/components/ui/button";
 import Table from "../table/Table";
 
-export default function CategoriaPageClient() {
+export default function FuncionarioPageClient() {
   const {
-    categorias,
-    fetchCategorias,
-    createCategoria,
-    updateCategoria,
-    deleteCategoria,
+    funcionarios,
+    fetchFuncionarios,
+    createFuncionario,
+    updateFuncionario,
+    deleteFuncionario,
     loading,
     error,
     pagination,
-  } = useCategoriaStore();
+  } = useFuncionarioStore();
 
   const [showModal, setShowModal] = useState(false);
-  const [editCategoria, setEditCategoria] = useState<Categoria | null>(null);
+  const [editFuncionario, setEditFuncionario] = useState<Funcionario | null>(
+    null
+  );
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
+  const [deleteFuncionarioId, setDeleteFuncionarioId] = useState<number | null>(
     null
   );
 
@@ -33,8 +34,8 @@ export default function CategoriaPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchCategorias({ page, search }),
-    [fetchCategorias]
+    (page: number, search = "") => fetchFuncionarios({ page, search }),
+    [fetchFuncionarios]
   );
 
   useEffect(() => {
@@ -42,15 +43,15 @@ export default function CategoriaPageClient() {
   }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
-    setDeleteCategoriaId(id);
+    setDeleteFuncionarioId(id);
     setShowDeleteModal(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (deleteCategoriaId !== null) {
-      await deleteCategoria(deleteCategoriaId);
+    if (deleteFuncionarioId !== null) {
+      await deleteFuncionario(deleteFuncionarioId);
       setShowDeleteModal(false);
-      setDeleteCategoriaId(null);
+      setDeleteFuncionarioId(null);
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
   };
@@ -64,64 +65,63 @@ export default function CategoriaPageClient() {
     fetchTableData(1, term);
   };
 
-  const handleSubmit = async (data: Partial<Categoria>) => {
+  const handleSubmit = async (data: Partial<Funcionario>) => {
     setIsSubmitting(true);
     try {
       if (data?.id) {
-        await updateCategoria(data);
+        await updateFuncionario(data);
       } else {
-        await createCategoria(data);
+        await createFuncionario(data);
       }
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     } finally {
       setIsSubmitting(false);
       setShowModal(false);
-      setEditCategoria(null);
+      setEditFuncionario(null);
     }
   };
 
-  const handleEdit = (categoria: Categoria) => {
-    setEditCategoria(categoria);
+  const handleEdit = (funcionario: Funcionario) => {
+    setEditFuncionario(funcionario);
     setShowModal(true);
   };
 
-  const columns: Column<Categoria>[] = [
+  const columns: Column<Funcionario>[] = [
     { header: "ID", key: "id" },
-    { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
-      key: "actions" as keyof Categoria,
-      render: (categoria: Categoria) => (
+      key: "actions" as keyof Funcionario,
+      render: (funcionario: Funcionario) => (
         <div className="flex justify-start gap-4 py-1">
           <img
             src="/Icons/Edit.svg"
             alt="Editar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleEdit(categoria)}
+            onClick={() => handleEdit(funcionario)}
           />
           <img
             src="/Icons/Trash.svg"
-            alt="Editar"
+            alt="Excluir"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleDeleteClick(categoria.id)}
+            onClick={() => handleDeleteClick(funcionario.id)}
           />
         </div>
       ),
     },
   ];
 
-  if (loading && categorias.length === 0)
-    return <p className="text-[var(--primary)]">Carregando categorias...</p>;
+  if (loading && funcionarios.length === 0)
+    return <p className="text-[var(--primary)]">Carregando funcionários...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>
       <Table
         columns={columns}
-        data={categorias}
+        data={funcionarios}
         showCadastro={() => {
-          setEditCategoria(null);
+          setEditFuncionario(null);
           setShowModal(true);
         }}
         loading={loading || isSubmitting}
@@ -132,9 +132,9 @@ export default function CategoriaPageClient() {
       />
 
       {showModal && (
-        <ModalCadastroCategoria
+        <ModalCadastroFuncionario
           isOpen={showModal}
-          initialData={editCategoria}
+          initialData={editFuncionario}
           onSubmit={handleSubmit}
           onClose={() => setShowModal(false)}
         />
@@ -145,7 +145,9 @@ export default function CategoriaPageClient() {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleConfirmDelete}
-          itemName={categorias.find((c) => c.id === deleteCategoriaId)?.nome}
+          itemName={
+            funcionarios.find((f) => f.id === deleteFuncionarioId)?.nome
+          }
         />
       )}
     </>

@@ -1,40 +1,38 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useCategoriaStore } from "@/store/categoriaStore";
+import { useEmpresaStore } from "@/store/empresaStore";
 import { Column } from "@/components/table/TableGeneric";
-import { Categoria } from "@/types/Categoria";
-import ModalCadastroCategoria from "./CadastroCategoria";
+import { Empresa } from "@/types/Empresa";
+import ModalCadastroEmpresa from "./CadastroEmpresa";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
 import Table from "../table/Table";
 
-export default function CategoriaPageClient() {
+export default function EmpresaPageClient() {
   const {
-    categorias,
-    fetchCategorias,
-    createCategoria,
-    updateCategoria,
-    deleteCategoria,
+    empresas,
+    fetchEmpresas,
+    createEmpresa,
+    updateEmpresa,
+    deleteEmpresa,
     loading,
     error,
     pagination,
-  } = useCategoriaStore();
+  } = useEmpresaStore();
 
   const [showModal, setShowModal] = useState(false);
-  const [editCategoria, setEditCategoria] = useState<Categoria | null>(null);
+  const [editEmpresa, setEditEmpresa] = useState<Empresa | null>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
-    null
-  );
+  const [deleteEmpresaId, setDeleteEmpresaId] = useState<number | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchCategorias({ page, search }),
-    [fetchCategorias]
+    (page: number, search = "") => fetchEmpresas({ page, search }),
+    [fetchEmpresas]
   );
 
   useEffect(() => {
@@ -42,15 +40,15 @@ export default function CategoriaPageClient() {
   }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
-    setDeleteCategoriaId(id);
+    setDeleteEmpresaId(id);
     setShowDeleteModal(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (deleteCategoriaId !== null) {
-      await deleteCategoria(deleteCategoriaId);
+    if (deleteEmpresaId !== null) {
+      await deleteEmpresa(deleteEmpresaId);
       setShowDeleteModal(false);
-      setDeleteCategoriaId(null);
+      setDeleteEmpresaId(null);
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
   };
@@ -64,65 +62,64 @@ export default function CategoriaPageClient() {
     fetchTableData(1, term);
   };
 
-  const handleSubmit = async (data: Partial<Categoria>) => {
+  const handleSubmit = async (data: Partial<Empresa>) => {
     setIsSubmitting(true);
     try {
       if (data?.id) {
-        await updateCategoria(data);
+        await updateEmpresa(data);
       } else {
-        await createCategoria(data);
+        await createEmpresa(data);
       }
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     } finally {
       setIsSubmitting(false);
       setShowModal(false);
-      setEditCategoria(null);
+      setEditEmpresa(null);
     }
   };
 
-  const handleEdit = (categoria: Categoria) => {
-    setEditCategoria(categoria);
+  const handleEdit = (empresa: Empresa) => {
+    setEditEmpresa(empresa);
     setShowModal(true);
   };
 
-  const columns: Column<Categoria>[] = [
+  const columns: Column<Empresa>[] = [
     { header: "ID", key: "id" },
-    { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
-      key: "actions" as keyof Categoria,
-      render: (categoria: Categoria) => (
+      key: "actions" as keyof Empresa,
+      render: (empresa: Empresa) => (
         <div className="flex justify-start gap-4 py-1">
           <img
             src="/Icons/Edit.svg"
             alt="Editar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleEdit(categoria)}
+            onClick={() => handleEdit(empresa)}
           />
           <img
             src="/Icons/Trash.svg"
             alt="Editar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleDeleteClick(categoria.id)}
+            onClick={() => handleDeleteClick(empresa.id)}
           />
         </div>
       ),
     },
   ];
 
-  if (loading && categorias.length === 0)
-    return <p className="text-[var(--primary)]">Carregando categorias...</p>;
+  if (loading && empresas.length === 0)
+    return <p className="text-[var(--primary)]">Carregando empresas...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>
       <Table
         columns={columns}
-        data={categorias}
+        data={empresas}
         showCadastro={() => {
-          setEditCategoria(null);
           setShowModal(true);
+          setEditEmpresa(null);
         }}
         loading={loading || isSubmitting}
         pagination={pagination}
@@ -132,9 +129,9 @@ export default function CategoriaPageClient() {
       />
 
       {showModal && (
-        <ModalCadastroCategoria
+        <ModalCadastroEmpresa
           isOpen={showModal}
-          initialData={editCategoria}
+          initialData={editEmpresa}
           onSubmit={handleSubmit}
           onClose={() => setShowModal(false)}
         />
@@ -145,7 +142,7 @@ export default function CategoriaPageClient() {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleConfirmDelete}
-          itemName={categorias.find((c) => c.id === deleteCategoriaId)?.nome}
+          itemName={empresas.find((e) => e.id === deleteEmpresaId)?.nome}
         />
       )}
     </>
