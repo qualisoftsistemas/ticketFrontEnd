@@ -1,8 +1,17 @@
 "use client";
+import apiFetchClient from "@/service/api";
 import React, { ChangeEvent, useState } from "react";
 
+export type UploadedFile = {
+  id: number;
+  url?: string;
+  name?: string;
+  extension?: string;
+  mimeType?: string;
+};
+
 type InputFileProps = {
-  onChange?: (file: File | File[] | null) => void;
+  onUpload?: (files: UploadedFile[]) => void;
   accept?: string;
   multiple?: boolean;
   id?: string;
@@ -10,30 +19,55 @@ type InputFileProps = {
 };
 
 const InputFile: React.FC<InputFileProps> = ({
-  onChange,
+  onUpload,
   accept,
   multiple = false,
   id = "fileUpload",
   label = "Escolher arquivo",
 }) => {
-  const [fileName, setFileName] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
-      ? multiple
-        ? Array.from(e.target.files)
-        : e.target.files[0]
-      : null;
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
 
-    if (!multiple && files instanceof File) {
-      setFileName(files.name);
-    } else {
-      setFileName(
-        multiple && Array.isArray(files) ? `${files.length} arquivos` : ""
-      );
+    const selectedFiles = Array.from(e.target.files);
+    setLoading(true);
+
+    try {
+      const uploadedFiles: UploadedFile[] = [];
+
+      for (const file of selectedFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await apiFetchClient<{
+          id: number;
+          url?: string;
+          name?: string;
+          extension?: string;
+          mime_type?: string;
+        }>({
+          method: "POST",
+          endpoint: "/arquivo/upload",
+          data: formData,
+        });
+
+        uploadedFiles.push({
+          id: res.id,
+          url: res?.url,
+          name: res?.name,
+          extension: res?.extension,
+          mimeType: res?.mime_type,
+        });
+      }
+
+      if (onUpload) onUpload(uploadedFiles);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+      e.target.value = "";
     }
-
-    if (onChange) onChange(files);
   };
 
   return (
@@ -49,15 +83,13 @@ const InputFile: React.FC<InputFileProps> = ({
 
       <label
         htmlFor={id}
-        className="flex items-center gap-2 cursor-pointer bg-[var(--primary)] text-[var(--extra)] px-4 py-2 rounded-md text-sm font-medium hover:opacity-90 transition"
+        className="flex items-center gap-2 cursor-pointer bg-[var(--primary)] text-[var(--extra)] px-4 py-2 rounded-md text-lg hover:opacity-90 transition"
       >
-        <img src="/Icons/UploadFile.svg" alt="" className="w-6 h-6" />
-        {label}
+        <div className="bg-[var(--secondary)] text-[var(--extra)] p-2 rounded">
+          <img src="/Icons/UploadFile.svg" alt="" className="w-8 h-8" />
+        </div>
+        {loading ? "Enviando..." : label}
       </label>
-
-      {fileName && (
-        <span className="text-xs text-[var(--primary)]">{fileName}</span>
-      )}
     </div>
   );
 };

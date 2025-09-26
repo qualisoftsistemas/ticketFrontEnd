@@ -86,13 +86,13 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
             {masterOpen && (
               <div className="pl-10 flex flex-col gap-1">
                 {[
-                  { label: "Setor", href: "/Setores" },
-                  { label: "Categoria", href: "/Categorias" },
-                  { label: "Empresa", href: "/Empresas" },
-                  { label: "Admin", href: "/Admins" },
-                  { label: "Funcionário", href: "/Funcionarios" },
-                  { label: "Operador", href: "/Operadores" },
-                  { label: "Conglomerado", href: "/Conglomerados" },
+                  { label: "Setor", href: "/setor" },
+                  { label: "Categoria", href: "/categoria" },
+                  { label: "Empresa", href: "/empresa" },
+                  { label: "Admin", href: "/admin" },
+                  { label: "Funcionário", href: "/funcionario" },
+                  { label: "Operador", href: "/operador" },
+                  { label: "Conglomerado", href: "/conglomerado" },
                 ].map((subItem, idx) => (
                   <Link
                     key={idx}

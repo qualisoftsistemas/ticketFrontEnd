@@ -13,6 +13,7 @@ interface TableGenericProps<T> {
   columns: Column<T>[];
   data: T[];
   loading?: boolean;
+  onRowClick?: (row: T) => void;
   skeletonRows?: number;
 }
 
@@ -20,6 +21,7 @@ export default function TableGeneric<T>({
   columns,
   data,
   loading = false,
+  onRowClick,
   skeletonRows = 5,
 }: TableGenericProps<T>) {
   return (
@@ -49,11 +51,17 @@ export default function TableGeneric<T>({
               </tr>
             ))
           : data.map((row, i) => (
-              <tr key={i} className="hover:bg-[var(--extra)]/10">
+              <tr
+                onClick={() => onRowClick?.(row)}
+                key={i}
+                className="hover:bg-[var(--extra)]/10"
+              >
                 {columns.map((col, j) => (
                   <td
                     key={j}
-                    className="px-2 text-sm text-left border border-[var(--primary-foreground)]/50"
+                    className={`px-2 py-1 text-sm text-left border border-[var(--primary-foreground)]/50 ${
+                      onRowClick ? "cursor-pointer" : ""
+                    }`}
                   >
                     {col.render ? col.render(row) : String(row[col.key])}
                   </td>

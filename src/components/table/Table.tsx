@@ -16,6 +16,7 @@ interface TableProps<T> {
   pagination: any;
   onPageChange: (page: number) => void;
   searchTerm: string;
+  onRowClick?: (id: number) => void;
   onSearchChange: (term: string) => void;
 }
 
@@ -28,6 +29,7 @@ function Table<T extends Record<string, any>>({
   pagination,
   onPageChange,
   searchTerm,
+  onRowClick,
   onSearchChange,
 }: TableProps<T>) {
   const [showFilters, setShowFilters] = useState(false);
@@ -56,7 +58,7 @@ function Table<T extends Record<string, any>>({
             bgInput="bg-[var(--primary)]"
             bgIcon="bg-[var(--secondary)]"
             textColor="text-[var(--extra)]"
-            onChange={(e) => onSearchChange(e.target.value)} // Usa o manipulador de pesquisa do pai
+            onChange={(e) => onSearchChange(e.target.value)}
           />
           <Button onClick={showCadastro}>Novo {nomeCadastro}</Button> {" "}
         </div>{" "}
@@ -77,7 +79,12 @@ function Table<T extends Record<string, any>>({
           </div>
         </div>
       )}
-      <TableGeneric loading={loading} columns={columns} data={data} />   
+      <TableGeneric
+        onRowClick={onRowClick ? (row) => onRowClick(row.id) : undefined}
+        loading={loading}
+        columns={columns}
+        data={data}
+      />  
       {pagination && (
         <Pagination
           currentPage={pagination.current_page}
