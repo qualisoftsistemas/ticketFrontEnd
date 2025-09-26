@@ -1,3 +1,4 @@
+"use client";
 import React, { useState } from "react";
 import Link from "next/link";
 import { Role } from "@/hooks/useUserRole";
@@ -9,32 +10,74 @@ interface SidebarProps {
 
 interface NavItem {
   label: string;
-  href: string;
+  href?: string;
   icon?: string;
   subItems?: NavItem[];
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
-  const [masterOpen, setMasterOpen] = useState(false);
+interface DropdownNavItemProps {
+  item: NavItem;
+}
 
+const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
+  const [open, setOpen] = useState(false);
+
+  if (!item.subItems) {
+    return (
+      <Link
+        href={item.href ?? "#"}
+        className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
+      >
+        {item.icon && <Icon icon={item.icon} />}
+        <p className="text-lg">{item.label}</p>
+      </Link>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full px-4 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
+      >
+        <div className="flex items-center gap-3">
+          {item.icon && <Icon icon={item.icon} />}
+          <p className="text-lg">{item.label}</p>
+        </div>
+        <img
+          src={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
+          alt="Dropdown Arrow"
+          className="w-4 h-4"
+        />
+      </button>
+      {open && (
+        <div className="pl-10 flex flex-col gap-1">
+          {item.subItems.map((subItem, idx) => (
+            <Link
+              key={idx}
+              href={subItem.href ?? "#"}
+              className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition"
+            >
+              {subItem.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   const links: NavItem[] = [
-    {
-      label: "Chamados",
-      href: "/chamados",
-      icon: "/Icons/Message.svg",
-    },
-    {
-      label: "Arquivos",
-      href: "/arquivos",
-      icon: "/Icons/FileAnalytics.svg",
-    },
+    { label: "Chamados", href: "/chamados", icon: "/Icons/Message.svg" },
+    { label: "Arquivos", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
   ];
 
   const adminLinks: NavItem[] = [
     ...links,
     {
       label: "Funcionários",
-      href: "/funcionarios",
+      href: "/funcionario",
       icon: "/Icons/Employee.svg",
     },
   ];
@@ -43,7 +86,6 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
     ...adminLinks,
     {
       label: "Master",
-      href: "#",
       icon: "/Icons/Master.svg",
       subItems: [
         { label: "Setor", href: "/setor" },
@@ -57,77 +99,42 @@ const Sidebar: React.FC<SidebarProps> = ({ role = "Master" }) => {
     },
   ];
 
-  let navItems: NavItem[] = [];
-  if (role === "Funcionario" || role === "Operador") navItems = links;
-  if (role === "Admin") navItems = adminLinks;
-  if (role === "Master") navItems = masterLinks;
+  const sistemaLinks: NavItem[] = [
+    {
+      label: "Sistema",
+      icon: "/Icons/Master.svg",
+      subItems: [
+        { label: "Prestadores", href: "/prestador" },
+        { label: "Master", href: "/master" },
+      ],
+    },
+  ];
+
+  const navItems: NavItem[] = (() => {
+    switch (role) {
+      case "Master":
+        return masterLinks;
+      case "Admin":
+        return adminLinks;
+      case "Sistema":
+        return sistemaLinks;
+      case "Funcionario":
+      case "Operador":
+        return links;
+      default:
+        return [];
+    }
+  })();
 
   return (
-    <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col shadow-lg items-center">
+    <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col shadow-lg">
       <nav className="flex flex-col gap-2 w-full mt-18 p-1">
-        {/* Renderiza Master no topo, se houver */}
-        {role === "Master" && (
-          <div className="w-full">
-            <button
-              onClick={() => setMasterOpen(!masterOpen)}
-              className="w-full px-4 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
-            >
-              <div className="flex items-center gap-3">
-                <Icon icon="/Icons/Master.svg" />
-
-                <p className="text-lg">Master</p>
-              </div>
-              <img
-                src={masterOpen ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
-                alt="Dropdown Arrow"
-                className="w-4 h-4"
-              />
-            </button>
-            {masterOpen && (
-              <div className="pl-10 flex flex-col gap-1">
-                {[
-                  { label: "Setor", href: "/setor" },
-                  { label: "Categoria", href: "/categoria" },
-                  { label: "Empresa", href: "/empresa" },
-                  { label: "Admin", href: "/admin" },
-                  { label: "Funcionário", href: "/funcionario" },
-                  { label: "Operador", href: "/operador" },
-                  { label: "Conglomerado", href: "/conglomerado" },
-                ].map((subItem, idx) => (
-                  <Link
-                    key={idx}
-                    href={subItem.href}
-                    className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition"
-                  >
-                    {subItem.label}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Renderiza o resto dos links normalmente */}
-        {navItems
-          .filter((item) => item.label !== "Master")
-          .map((item, idx) => (
-            <div key={idx} className="w-full">
-              <Link
-                href={item.href}
-                className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
-              >
-                {item.icon && (
-                  <>
-                    <Icon icon={item.icon} />
-                  </>
-                )}
-                <p className="text-lg">{item.label}</p>
-              </Link>
-            </div>
-          ))}
+        {navItems.map((item, idx) => (
+          <DropdownNavItem key={idx} item={item} />
+        ))}
       </nav>
 
-      <div className="w-full py-3 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
+      <div className="mt-auto w-full py-3 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
         &copy; {new Date().getFullYear()} - By{" "}
         <a
           href="https://www.qualisoftsistemas.com.br/"

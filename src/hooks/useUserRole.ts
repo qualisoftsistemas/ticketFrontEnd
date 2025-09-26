@@ -1,7 +1,7 @@
 // hooks/useUserRole.ts
 import { useEffect, useState } from "react";
 
-export type Role = "Funcionario" | "Admin" | "Operador" | "Master";
+export type Role = "Funcionario" | "Admin" | "Operador" | "Master" | "Sistema";
 
 export const useUserRole = (): Role | null => {
   const [role, setRole] = useState<Role | null>(null);
@@ -24,6 +24,9 @@ export const useUserRole = (): Role | null => {
               break;
             case "FUNCIONARIO":
               setRole("Funcionario");
+              break;
+            case "SISTEMA":
+              setRole("Sistema");
               break;
             default:
               setRole(null);
