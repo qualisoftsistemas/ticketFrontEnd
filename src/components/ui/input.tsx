@@ -13,7 +13,7 @@ function Input({
   className,
   type,
   icon,
-  iconPosition = "left",
+  iconPosition,
   bgInput = "bg-zinc-800",
   bgIcon = "bg-red-600",
   textColor = "text-white",

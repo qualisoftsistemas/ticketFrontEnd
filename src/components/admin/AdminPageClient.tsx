@@ -1,40 +1,37 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useCategoriaStore } from "@/store/categoriaStore";
+import { useAdminStore } from "@/store/adminStore";
 import { Column } from "@/components/table/TableGeneric";
-import { Categoria } from "@/types/Categoria";
-import ModalCadastroCategoria from "./CadastroCategoria";
+import { Admin } from "@/types/Admin";
+import ModalCadastroAdmin from "./CadastroAdmin";
 import ModalDeletar from "@/components/ui/modalDelete";
-import { Button } from "@/components/ui/button";
 import Table from "../table/Table";
 
-export default function CategoriaPageClient() {
+export default function AdminPageClient() {
   const {
-    categorias,
-    fetchCategorias,
-    createCategoria,
-    updateCategoria,
-    deleteCategoria,
+    admins,
+    fetchAdmins,
+    createAdmin,
+    updateAdmin,
+    deleteAdmin,
     loading,
     error,
     pagination,
-  } = useCategoriaStore();
+  } = useAdminStore();
 
   const [showModal, setShowModal] = useState(false);
-  const [editCategoria, setEditCategoria] = useState<Categoria | null>(null);
+  const [editAdmin, setEditAdmin] = useState<Admin | null>(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
-    null
-  );
+  const [deleteAdminId, setDeleteAdminId] = useState<number | null>(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchCategorias({ page, search }),
-    [fetchCategorias]
+    (page: number, search = "") => fetchAdmins({ page, search }),
+    [fetchAdmins]
   );
 
   useEffect(() => {
@@ -42,15 +39,15 @@ export default function CategoriaPageClient() {
   }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
-    setDeleteCategoriaId(id);
+    setDeleteAdminId(id);
     setShowDeleteModal(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (deleteCategoriaId !== null) {
-      await deleteCategoria(deleteCategoriaId);
+    if (deleteAdminId !== null) {
+      await deleteAdmin(deleteAdminId);
       setShowDeleteModal(false);
-      setDeleteCategoriaId(null);
+      setDeleteAdminId(null);
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
   };
@@ -64,64 +61,63 @@ export default function CategoriaPageClient() {
     fetchTableData(1, term);
   };
 
-  const handleSubmit = async (data: Partial<Categoria>) => {
+  const handleSubmit = async (data: Partial<Admin>) => {
     setIsSubmitting(true);
     try {
       if (data?.id) {
-        await updateCategoria(data);
+        await updateAdmin(data);
       } else {
-        await createCategoria(data);
+        await createAdmin(data);
       }
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     } finally {
       setIsSubmitting(false);
       setShowModal(false);
-      setEditCategoria(null);
+      setEditAdmin(null);
     }
   };
 
-  const handleEdit = (categoria: Categoria) => {
-    setEditCategoria(categoria);
+  const handleEdit = (admin: Admin) => {
+    setEditAdmin(admin);
     setShowModal(true);
   };
 
-  const columns: Column<Categoria>[] = [
+  const columns: Column<Admin>[] = [
     { header: "ID", key: "id" },
-    { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
-      key: "actions" as keyof Categoria,
-      render: (categoria: Categoria) => (
+      key: "actions" as keyof Admin,
+      render: (admin: Admin) => (
         <div className="flex justify-start gap-4 py-1">
           <img
             src="/Icons/Edit.svg"
             alt="Editar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleEdit(categoria)}
+            onClick={() => handleEdit(admin)}
           />
           <img
             src="/Icons/Trash.svg"
-            alt="Editar"
+            alt="Excluir"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleDeleteClick(categoria.id)}
+            onClick={() => handleDeleteClick(admin.id)}
           />
         </div>
       ),
     },
   ];
 
-  if (loading && categorias.length === 0)
-    return <p className="text-[var(--primary)]">Carregando categorias...</p>;
+  if (loading && admins.length === 0)
+    return <p className="text-[var(--primary)]">Carregando admins...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>
       <Table
         columns={columns}
-        data={categorias}
+        data={admins}
         showCadastro={() => {
-          setEditCategoria(null);
+          setEditAdmin(null);
           setShowModal(true);
         }}
         loading={loading || isSubmitting}
@@ -132,9 +128,9 @@ export default function CategoriaPageClient() {
       />
 
       {showModal && (
-        <ModalCadastroCategoria
+        <ModalCadastroAdmin
           isOpen={showModal}
-          initialData={editCategoria}
+          initialData={editAdmin}
           onSubmit={handleSubmit}
           onClose={() => setShowModal(false)}
         />
@@ -145,7 +141,7 @@ export default function CategoriaPageClient() {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleConfirmDelete}
-          itemName={categorias.find((c) => c.id === deleteCategoriaId)?.nome}
+          itemName={admins.find((a) => a.id === deleteAdminId)?.nome}
         />
       )}
     </>

@@ -1,40 +1,41 @@
 "use client";
 
 import React, { useEffect, useState, useCallback } from "react";
-import { useCategoriaStore } from "@/store/categoriaStore";
+import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import { Column } from "@/components/table/TableGeneric";
-import { Categoria } from "@/types/Categoria";
-import ModalCadastroCategoria from "./CadastroCategoria";
+import { Conglomerado } from "@/types/Conglomerado";
+import ModalCadastroConglomerado from "./CadastroConglomerado";
 import ModalDeletar from "@/components/ui/modalDelete";
-import { Button } from "@/components/ui/button";
 import Table from "../table/Table";
 
-export default function CategoriaPageClient() {
+export default function ConglomeradoPageClient() {
   const {
-    categorias,
-    fetchCategorias,
-    createCategoria,
-    updateCategoria,
-    deleteCategoria,
+    conglomerados,
+    fetchConglomerados,
+    createConglomerado,
+    updateConglomerado,
+    deleteConglomerado,
     loading,
     error,
     pagination,
-  } = useCategoriaStore();
+  } = useConglomeradoStore();
 
   const [showModal, setShowModal] = useState(false);
-  const [editCategoria, setEditCategoria] = useState<Categoria | null>(null);
-
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
+  const [editConglomerado, setEditConglomerado] = useState<Conglomerado | null>(
     null
   );
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConglomeradoId, setDeleteConglomeradoId] = useState<
+    number | null
+  >(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchCategorias({ page, search }),
-    [fetchCategorias]
+    (page: number, search = "") => fetchConglomerados({ page, search }),
+    [fetchConglomerados]
   );
 
   useEffect(() => {
@@ -42,15 +43,15 @@ export default function CategoriaPageClient() {
   }, [fetchTableData]);
 
   const handleDeleteClick = (id: number) => {
-    setDeleteCategoriaId(id);
+    setDeleteConglomeradoId(id);
     setShowDeleteModal(true);
   };
 
   const handleConfirmDelete = async () => {
-    if (deleteCategoriaId !== null) {
-      await deleteCategoria(deleteCategoriaId);
+    if (deleteConglomeradoId !== null) {
+      await deleteConglomerado(deleteConglomeradoId);
       setShowDeleteModal(false);
-      setDeleteCategoriaId(null);
+      setDeleteConglomeradoId(null);
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     }
   };
@@ -64,64 +65,64 @@ export default function CategoriaPageClient() {
     fetchTableData(1, term);
   };
 
-  const handleSubmit = async (data: Partial<Categoria>) => {
+  const handleSubmit = async (data: Partial<Conglomerado>) => {
     setIsSubmitting(true);
     try {
       if (data?.id) {
-        await updateCategoria(data);
+        await updateConglomerado(data);
       } else {
-        await createCategoria(data);
+        await createConglomerado(data);
       }
+      console.log(data);
       await fetchTableData(pagination?.current_page || 1, searchTerm);
     } finally {
       setIsSubmitting(false);
       setShowModal(false);
-      setEditCategoria(null);
+      setEditConglomerado(null);
     }
   };
 
-  const handleEdit = (categoria: Categoria) => {
-    setEditCategoria(categoria);
+  const handleEdit = (conglomerado: Conglomerado) => {
+    setEditConglomerado(conglomerado);
     setShowModal(true);
   };
 
-  const columns: Column<Categoria>[] = [
+  const columns: Column<Conglomerado>[] = [
     { header: "ID", key: "id" },
-    { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",
-      key: "actions" as keyof Categoria,
-      render: (categoria: Categoria) => (
+      key: "actions" as keyof Conglomerado,
+      render: (conglomerado: Conglomerado) => (
         <div className="flex justify-start gap-4 py-1">
           <img
             src="/Icons/Edit.svg"
             alt="Editar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleEdit(categoria)}
+            onClick={() => handleEdit(conglomerado)}
           />
           <img
             src="/Icons/Trash.svg"
-            alt="Editar"
+            alt="Deletar"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleDeleteClick(categoria.id)}
+            onClick={() => handleDeleteClick(conglomerado.id)}
           />
         </div>
       ),
     },
   ];
 
-  if (loading && categorias.length === 0)
-    return <p className="text-[var(--primary)]">Carregando categorias...</p>;
+  if (loading && conglomerados.length === 0)
+    return <p className="text-[var(--primary)]">Carregando conglomerados...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
 
   return (
     <>
       <Table
         columns={columns}
-        data={categorias}
+        data={conglomerados}
         showCadastro={() => {
-          setEditCategoria(null);
+          setEditConglomerado(null);
           setShowModal(true);
         }}
         loading={loading || isSubmitting}
@@ -132,9 +133,9 @@ export default function CategoriaPageClient() {
       />
 
       {showModal && (
-        <ModalCadastroCategoria
+        <ModalCadastroConglomerado
           isOpen={showModal}
-          initialData={editCategoria}
+          initialData={editConglomerado}
           onSubmit={handleSubmit}
           onClose={() => setShowModal(false)}
         />
@@ -145,7 +146,9 @@ export default function CategoriaPageClient() {
           isOpen={showDeleteModal}
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleConfirmDelete}
-          itemName={categorias.find((c) => c.id === deleteCategoriaId)?.nome}
+          itemName={
+            conglomerados.find((c) => c.id === deleteConglomeradoId)?.nome
+          }
         />
       )}
     </>

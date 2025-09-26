@@ -131,7 +131,10 @@ export default function SetorPageClient() {
       <Table
         columns={columns}
         data={setores}
-        showCadastro={() => setShowModal(true)}
+        showCadastro={() => {
+          setShowModal(true);
+          setEditSetor(null);
+        }}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

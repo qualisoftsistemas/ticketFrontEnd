@@ -29,7 +29,7 @@ const InputText: React.FC<InputTextProps> = ({
   type = "text",
   disabled = false,
   icon,
-  iconPosition = "left",
+  iconPosition,
   bgIcon = "bg-[var(--extra)]",
   textColor = "text-[var(--primary)]",
   labelColor= ""
