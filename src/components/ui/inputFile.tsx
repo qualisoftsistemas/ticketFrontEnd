@@ -23,7 +23,7 @@ const InputFile: React.FC<InputFileProps> = ({
   accept,
   multiple = false,
   id = "fileUpload",
-  label = "Escolher arquivo",
+  label = "Anexar Arquivo",
 }) => {
   const [loading, setLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
