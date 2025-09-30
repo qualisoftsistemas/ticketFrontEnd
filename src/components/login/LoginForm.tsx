@@ -49,7 +49,11 @@ const LoginForm: React.FC = () => {
         localStorage.setItem("user", JSON.stringify(user));
       }
 
-      router.push("/setor");
+      if (user.tipo === "ADMIN" || user.tipo === "FUNCIONÁRIO") {
+        router.push("/selecionar-empresa");
+      } else {
+        router.push("/setor");
+      }
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Erro desconhecido");

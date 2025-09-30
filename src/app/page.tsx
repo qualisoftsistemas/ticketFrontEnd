@@ -18,7 +18,7 @@ const HomePage = (props: Props) => {
           <div className="py-6 px-8 flex flex-col items-center">
             <h2 className="text-[var(--primary-foreground)] text-lg mb-4">Seu Acesso</h2>
 
-            <Link href="/">
+            <Link href="/login">
               <Button className="text-lg" size={"lg"}>
                 Sou usuário do sistema
               </Button>

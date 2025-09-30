@@ -1,14 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import InputText from "../ui/inputText";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import Tiptap from "../ui/richText";
 import Select, { SelectOption } from "../ui/select";
-import { useEmpresaStore } from "@/store/empresaStore";
-import { useSetorStore } from "@/store/setorStore";
-import { useCategoriaStore } from "@/store/categoriaStore";
-import { useOperadorStore } from "@/store/operadorStore";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, FieldErrors } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
@@ -25,6 +21,12 @@ const schema = z.object({
   arquivos_ids: z.array(z.number()).optional(),
 });
 
+interface SelectsData {
+  setores: { id: number; nome: string }[];
+  categorias: { id: number; nome: string }[];
+  empresas: { id: number; nome: string }[];
+  operadores: { id: number; nome: string; foto?: string | null }[];
+}
 type FormData = z.infer<typeof schema>;
 
 const CadastroChamado = () => {
@@ -41,16 +43,30 @@ const CadastroChamado = () => {
     },
   });
 
-  const { empresas, fetchEmpresas } = useEmpresaStore();
-  const { setores, fetchSetores } = useSetorStore();
-  const { categorias, fetchCategorias } = useCategoriaStore();
-  const { operadores, fetchOperadores } = useOperadorStore();
+  const [empresas, setEmpresas] = useState<any[]>([]);
+  const [setores, setSetores] = useState<any[]>([]);
+  const [categorias, setCategorias] = useState<any[]>([]);
+  const [operadores, setOperadores] = useState<any[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   useEffect(() => {
-    fetchEmpresas();
-    fetchSetores();
-    fetchCategorias();
-    fetchOperadores();
+    const fetchSelectsData = async () => {
+      try {
+        const data = await apiFetchClient<SelectsData>({
+          method: "GET",
+          endpoint: "/abrir_chamado_selects",
+        });
+
+        setEmpresas(data.empresas || []);
+        setSetores(data.setores || []);
+        setCategorias(data.categorias || []);
+        setOperadores(data.operadores || []);
+      } catch (err) {
+        console.error("Erro ao buscar selects:", err);
+      }
+    };
+
+    fetchSelectsData();
   }, []);
 
   const empresasOptions: SelectOption[] = empresas.map((s) => ({
@@ -73,24 +89,22 @@ const CadastroChamado = () => {
     label: s.nome,
   }));
 
-  const [uploadedFiles, setUploadedFiles] = React.useState<UploadedFile[]>([]);
-
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await apiFetchClient({
+      await apiFetchClient({
         method: "POST",
         endpoint: "/chamado",
         data,
       });
       reset();
       setUploadedFiles([]);
-    } catch (err: any) {
-      console.error(err);
+    } catch (err) {
+      console.error("Erro ao abrir chamado:", err);
     }
   };
 
-  const onInvalid = (errors: any) => {
-    console.log(errors);
+  const onInvalid = (errors: FieldErrors<FormData>) => {
+    console.log("Erros de validação:", errors);
   };
 
   return (
@@ -98,8 +112,9 @@ const CadastroChamado = () => {
       onSubmit={handleSubmit(onSubmit, onInvalid)}
       className="bg-[var(--primary)] p-6 rounded-lg shadow-md space-y-4"
     >
-      <div className="flex gap-4">
-        <div className="flex-1">
+      {/* Selects */}
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex-1 min-w-[200px]">
           <Controller
             name="empresa_id"
             control={control}
@@ -122,7 +137,7 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-[200px]">
           <Controller
             name="setor_id"
             control={control}
@@ -145,7 +160,7 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-[200px]">
           <Controller
             name="categoria_id"
             control={control}
@@ -168,7 +183,7 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 min-w-[200px]">
           <Controller
             name="operador_id"
             control={control}
@@ -192,12 +207,20 @@ const CadastroChamado = () => {
         </div>
       </div>
 
-      <InputText
-        label="Assunto"
-        labelColor="text-[var(--extra)]"
+      {/* Assunto */}
+      <Controller
         name="assunto"
-        onChange={(val) => setValue("assunto", val, { shouldValidate: true })}
-        placeholder="Digite o assunto do chamado"
+        control={control}
+        render={({ field }) => (
+          <InputText
+            label="Assunto"
+            labelColor="text-[var(--extra)]"
+            name="assunto"
+            value={field.value}
+            onChange={(val) => field.onChange(val)}
+            placeholder="Digite o assunto do chamado"
+          />
+        )}
       />
       {errors.assunto && (
         <p className="text-[var(--destructive)] text-sm">
@@ -205,6 +228,7 @@ const CadastroChamado = () => {
         </p>
       )}
 
+      {/* Mensagem */}
       <Controller
         name="mensagem"
         control={control}
@@ -220,6 +244,8 @@ const CadastroChamado = () => {
           {errors.mensagem.message}
         </p>
       )}
+
+      {/* Arquivos */}
       <Controller
         name="arquivos_ids"
         control={control}
@@ -243,8 +269,7 @@ const CadastroChamado = () => {
             key={file.id}
             file={file}
             fileIcon={
-              file?.extension &&
-              file.extension.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
+              file?.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
                 <img
                   src="/icons/Eye.svg"
                   alt="Eye"

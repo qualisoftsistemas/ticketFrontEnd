@@ -8,6 +8,7 @@ interface EmpresaState {
   empresas: Empresa[];
   loading: boolean;
   error: string | null;
+  conglomeradoId: number | null;
   empresaSelecionada: Empresa | null;
   pagination: Pagination | null;
 
@@ -23,6 +24,7 @@ interface EmpresaState {
 
   setEmpresaSelecionada: (empresa: Empresa | null) => void;
   setEmpresaSelecionadaAndReload: (empresa: Empresa | null) => void;
+  setConglomeradoId: (id: number | null) => void;
 }
 
 export const useEmpresaStore = create<EmpresaState>()(
@@ -33,6 +35,7 @@ export const useEmpresaStore = create<EmpresaState>()(
       error: null,
       empresaSelecionada: null,
       pagination: null,
+      conglomeradoId: null,
 
       fetchEmpresas: async (options = { page: 1, search: "" }) => {
         set({ loading: true, error: null });
@@ -153,11 +156,14 @@ export const useEmpresaStore = create<EmpresaState>()(
           window.location.reload();
         }
       },
+
+      setConglomeradoId: (id) => set({ conglomeradoId: id }),
     }),
     {
       name: "empresa-store",
       partialize: (state) => ({
         empresaSelecionada: state.empresaSelecionada,
+        conglomeradoId: state.conglomeradoId,
       }),
     }
   )
