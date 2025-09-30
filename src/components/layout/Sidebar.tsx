@@ -83,7 +83,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   ];
 
   const masterLinks: NavItem[] = [
-    ...adminLinks,
+    ...links,
     {
       label: "Master",
       icon: "/Icons/Master.svg",
@@ -92,7 +92,6 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         { label: "Categoria", href: "/categoria" },
         { label: "Empresa", href: "/empresa" },
         { label: "Admin", href: "/admin" },
-        { label: "Funcionário", href: "/funcionario" },
         { label: "Operador", href: "/operador" },
         { label: "Conglomerado", href: "/conglomerado" },
       ],

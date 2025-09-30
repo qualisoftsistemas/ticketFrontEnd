@@ -2,6 +2,9 @@
 
 import { formatDate } from "@/app/utils/formatDate";
 import React from "react";
+import FileBadge from "../ui/fileBadge";
+import { UploadedFile } from "../ui/inputFile";
+import { API_BASE_URL } from "@/service/api";
 
 interface User {
   id: number;
@@ -11,8 +14,7 @@ interface User {
 
 interface Anexo {
   id: number;
-  nome: string;
-  url: string;
+  arquivo: UploadedFile;
 }
 
 interface MensagemType {
@@ -29,6 +31,49 @@ interface MensagemProps {
 }
 
 const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
+  const downloadAnexo = async (anexo: Anexo) => {
+    if (!anexo.arquivo && !anexo.id) {
+      throw new Error("Anexo inválido");
+    }
+
+    const token = localStorage.getItem("token");
+
+    try {
+      if (anexo.arquivo?.url) {
+        window.open(anexo.arquivo.url, "_blank"); 
+        return;
+      }
+
+      if (anexo.id) {
+        const res = await fetch(
+          `${API_BASE_URL}/arquivo/download/${anexo.id}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error("Falha ao baixar o arquivo");
+
+        const blob = await res.blob();
+        const fileUrl = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = fileUrl;
+        link.download = anexo.arquivo?.nome || "arquivo";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(fileUrl);
+      }
+    } catch (error) {
+      console.error("Erro ao baixar anexo:", error);
+    }
+  };
+
   return (
     <div className="bg-[var(--extra)] p-4 rounded  shadow-md space-y-2   text-[var(--primary)]">
       <div className="flex flex-col gap-4">
@@ -63,15 +108,30 @@ const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
       {mensagem.anexos.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {mensagem.anexos.map((anexo) => (
-            <a
-              key={anexo.id}
-              href={anexo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-2 py-1 bg-[var(--secondary)] rounded hover:bg-[var(--extra)] transition text-sm"
-            >
-              {anexo.nome}
-            </a>
+            <div className="flex flex-wrap gap-2">
+              <FileBadge
+                key={anexo.id}
+                file={anexo.arquivo}
+                onClick={() => downloadAnexo(anexo)}
+                fileIcon={
+                  anexo?.arquivo?.extension?.match(
+                    /(jpg|jpeg|png|gif|bmp|webp)$/i
+                  ) ? (
+                    <img
+                      src="/Icons/Eye.svg"
+                      alt="Eye"
+                      className="w-6 h-6 object-contain"
+                    />
+                  ) : (
+                    <img
+                      src="/Icons/Download.svg"
+                      alt="Download"
+                      className="w-6 h-6 object-contain"
+                    />
+                  )
+                }
+              />
+            </div>
           ))}
         </div>
       )}

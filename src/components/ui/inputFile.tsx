@@ -5,7 +5,7 @@ import React, { ChangeEvent, useState } from "react";
 export type UploadedFile = {
   id: number;
   url?: string;
-  name?: string;
+  nome?: string;
   extension?: string;
   mimeType?: string;
 };
@@ -55,7 +55,7 @@ const InputFile: React.FC<InputFileProps> = ({
         uploadedFiles.push({
           id: res.id,
           url: res?.url,
-          name: res?.name,
+          nome: res?.name,
           extension: res?.extension,
           mimeType: res?.mime_type,
         });
