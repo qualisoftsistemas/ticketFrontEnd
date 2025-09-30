@@ -7,8 +7,13 @@ type Props = {};
 const HomePage = (props: Props) => {
   return (
     <div>
-      <div className="min-h-screen flex justify-between bg-[var(--neutral)]">
-        <div className="my-auto ml-12 rounded-md bg-[var(--primary)]">
+      <div className="relative min-h-screen flex flex-col items-center justify-center gap-8">
+        <img
+          src="Images/landing_page.webp"
+          alt="Imagem de Fundo"
+          className="absolute inset-0 w-full h-full -z-50"
+        />
+        <div className="rounded-md bg-[var(--primary)]">
           <div className="p-3 rounded-t-md bg-[var(--secondary)]">
             <h1 className="text-[var(--secondary-foreground)] text-3xl text-center">
               Acesso Credenciado
@@ -16,7 +21,9 @@ const HomePage = (props: Props) => {
           </div>
 
           <div className="py-6 px-8 flex flex-col items-center">
-            <h2 className="text-[var(--primary-foreground)] text-lg mb-4">Seu Acesso</h2>
+            <h2 className="text-[var(--primary-foreground)] text-lg mb-4">
+              Seu Acesso
+            </h2>
 
             <Link href="/login">
               <Button className="text-lg" size={"lg"}>
@@ -32,12 +39,6 @@ const HomePage = (props: Props) => {
               </Button>
             </Link>
           </div>
-        </div>
-        <div className="p-8 my-auto">
-          <img src="Images/qualisoft1.png" className="w-md object-cover my-8" />
-          <h1 className="text-2xl text-center text-[var(--primary)]">
-            Qualisoft Informática
-          </h1>
         </div>
       </div>
     </div>
