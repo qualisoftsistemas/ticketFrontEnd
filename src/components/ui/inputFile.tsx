@@ -44,7 +44,7 @@ const InputFile: React.FC<InputFileProps> = ({
         const res = await apiFetchClient<{
           id: number;
           url?: string;
-          name?: string;
+          nome?: string;
           extension?: string;
           mime_type?: string;
         }>({
@@ -56,7 +56,7 @@ const InputFile: React.FC<InputFileProps> = ({
         uploadedFiles.push({
           id: res.id,
           url: res?.url,
-          nome: res?.name,
+          nome: res?.nome,
           extension: res?.extension,
           mimeType: res?.mime_type,
         });

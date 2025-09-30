@@ -20,7 +20,7 @@ const FileBadge: React.FC<FileBadgeProps> = ({ fileIcon, file, onClick }) => {
         <div className="w-22 h-22 rounded-lg overflow-hidden border border-gray-300">
           <img
             src={file.url}
-            alt={file.nome || "Imagem"}
+            alt={file.nome || "Uploaded File"}
             className="w-full h-full object-cover"
           />
           <div className="w-full bg-[var(--extra)] text-sm text-[var(--primary)] text-center rounded-b-lg py-1">
