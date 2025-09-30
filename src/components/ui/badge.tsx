@@ -9,13 +9,13 @@ interface BadgeProps {
 
 const Badge: React.FC<BadgeProps> = ({
   label,
-  bgColor = "bg-[var(--primary)]",
+  bgColor = "bg-[var(--secondary)]",
   textColor = "text-[var(--extra)]",
   className,
 }) => {
   return (
     <span
-      className={`inline-block px-2 py-1 rounded-full text-sm font-semibold 
+      className={`inline-block px-2 py-1 rounded-full font-semibold 
                   ${bgColor ? bgColor : "bg-[var(--primary)]"} 
                   ${textColor ? textColor : "text-[var(--extra)]"} 
                   ${className ? className : ""}`}

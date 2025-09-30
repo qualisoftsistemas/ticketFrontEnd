@@ -1,7 +1,15 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Role } from "@/hooks/useUserRole";
 import Icon from "../ui/icon";
+import { useEmpresaStore } from "@/store/empresaStore";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 
 type HeaderProps = {
   toggleSidebar: () => void;
@@ -10,6 +18,18 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
+  const [open, setOpen] = useState(false);
+  const {
+    empresas,
+    fetchEmpresas,
+    empresaSelecionada,
+    setEmpresaSelecionadaAndReload,
+  } = useEmpresaStore();
+
+  useEffect(() => {
+    fetchEmpresas();
+  }, [fetchEmpresas]);
+
   return (
     <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] shadow-md z-50">
       <div className="flex items-center justify-center border-r px-12 py-3 border-[var(--secondary-foreground)]">
@@ -31,19 +51,50 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
       </div>
 
       <div className="w-full mx-auto flex items-center justify-between px-8">
-        {role !== "Master" && role !== "Admin" && (
-          <div className="flex gap-2 items-center">
-            <img
-              src="/Icons/BuildingFill.svg"
-              alt="config"
-              className="w-8 h-8"
-            />
-            <div>
-              <h1 className="font-bold">Empresa</h1>
-              <p className="text-xs">CNPJ: 00</p>
-            </div>
-            <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4" />
-          </div>
+        {role !== "Master" && role !== "Operador" && (
+          <DropdownMenu open={open} onOpenChange={setOpen}>
+            <DropdownMenuTrigger asChild>
+              <div className="flex gap-2 items-center cursor-pointer">
+                <img
+                  src="/Icons/BuildingFill.svg"
+                  alt="empresa"
+                  className="w-8 h-8"
+                />
+                <div>
+                  <h1 className="font-bold">
+                    {empresaSelecionada ? empresaSelecionada.nome : "Empresa"}
+                  </h1>
+                  <p className="text-xs">
+                    CNPJ: {empresaSelecionada?.cnpj ?? "--"}
+                  </p>
+                </div>
+                {open ? (
+                  <Icon icon="/Icons/ArrowUp.svg" />
+                ) : (
+                  <Icon icon="/Icons/ArrowDown.svg" />
+                )}
+              </div>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="start"
+              className="bg-[var(--secondary)] text-[var(--extra)]"
+            >
+              {empresas.map((empresa) => (
+                <DropdownMenuItem
+                  key={empresa.id}
+                  onClick={() => setEmpresaSelecionadaAndReload(empresa)}
+                >
+                  <div className="flex flex-col">
+                    <span className="font-bold">{empresa.nome}</span>
+                    <span className="text-xs text-muted-foreground">
+                      CNPJ: {empresa.cnpj}
+                    </span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
 
         <div className="flex items-center gap-6">

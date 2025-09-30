@@ -40,14 +40,10 @@ const LoginForm: React.FC = () => {
 
       const data = await res.json();
 
-      console.log(data);
-
       const token = data.login.access_token;
       const user = data.login.user;
-      const empresa_id = String(data.login.empresa_id);
 
       localStorage.setItem("token", token);
-      localStorage.setItem("empresa_id", empresa_id);
 
       if (user) {
         localStorage.setItem("user", JSON.stringify(user));

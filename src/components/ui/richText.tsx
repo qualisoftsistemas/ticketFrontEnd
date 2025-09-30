@@ -17,7 +17,11 @@ import TaskList from "@tiptap/extension-task-list";
 import TaskItem from "@tiptap/extension-task-item";
 import Placeholder from "@tiptap/extension-placeholder";
 
-// Importe os ícones de alguma biblioteca, como react-icons
+import { useEffect, useState } from "react";
+interface TiptapProps {
+  value?: string;
+  onChange?: (content: string) => void;
+}
 import {
   FaBold,
   FaItalic,
@@ -39,47 +43,65 @@ import {
   FaAlignJustify,
 } from "react-icons/fa";
 
-// Componente da barra de ferramentas
 const MenuBar = ({ editor }: { editor: any }) => {
-  if (!editor) {
-    return null;
-  }
+  const [_, setUpdate] = useState(0);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const updateHandler = () => setUpdate((u) => u + 1);
+
+    editor.on("update", updateHandler);
+    editor.on("selectionUpdate", updateHandler);
+
+    return () => {
+      editor.off("update", updateHandler);
+      editor.off("selectionUpdate", updateHandler);
+    };
+  }, [editor]);
+
+  if (!editor) return null;
 
   return (
-    <div className="flex flex-wrap items-center gap-2 p-2 border-b border-gray-300">
+    <div className="flex flex-wrap items-center gap-2 bg-[var(--primary)]/90 text-[var(--extra)] p-2 border-b border-gray-300">
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
+        type="button"
         className={`p-2 rounded ${
-          editor.isActive("bold") ? "bg-gray-200" : ""
+          editor.isActive("bold") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaBold />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={`p-2 rounded ${
-          editor.isActive("italic") ? "bg-gray-200" : ""
+          editor.isActive("italic") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaItalic />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={`p-2 rounded ${
-          editor.isActive("strike") ? "bg-gray-200" : ""
+          editor.isActive("strike") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaStrikethrough />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleCode().run()}
         className={`p-2 rounded ${
-          editor.isActive("code") ? "bg-gray-200" : ""
+          editor.isActive("code") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaCode />
       </button>
       <button
+        type="button"
         onClick={() => {
           const url = window.prompt("URL");
           if (url) {
@@ -87,23 +109,25 @@ const MenuBar = ({ editor }: { editor: any }) => {
           }
         }}
         className={`p-2 rounded ${
-          editor.isActive("link") ? "bg-gray-200" : ""
+          editor.isActive("link") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaLink />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={`p-2 rounded ${
-          editor.isActive("underline") ? "bg-gray-200" : ""
+          editor.isActive("underline") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaUnderline />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleHighlight().run()}
         className={`p-2 rounded ${
-          editor.isActive("highlight") ? "bg-gray-200" : ""
+          editor.isActive("highlight") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaHighlighter />
@@ -111,76 +135,91 @@ const MenuBar = ({ editor }: { editor: any }) => {
       <button
         onClick={() => editor.chain().focus().setHeading({ level: 1 }).run()}
         className={`p-2 rounded ${
-          editor.isActive("heading", { level: 1 }) ? "bg-gray-200" : ""
+          editor.isActive("heading", { level: 1 })
+            ? "bg-[var(--secondary)]"
+            : ""
         }`}
       >
         <FaHeading /> H1
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={`p-2 rounded ${
-          editor.isActive("bulletList") ? "bg-gray-200" : ""
+          editor.isActive("bulletList") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaListUl />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={`p-2 rounded ${
-          editor.isActive("orderedList") ? "bg-gray-200" : ""
+          editor.isActive("orderedList") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaListOl />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleTaskList().run()}
         className={`p-2 rounded ${
-          editor.isActive("taskList") ? "bg-gray-200" : ""
+          editor.isActive("taskList") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaCheck />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={`p-2 rounded ${
-          editor.isActive("blockquote") ? "bg-gray-200" : ""
+          editor.isActive("blockquote") ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaQuoteLeft />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().setTextAlign("left").run()}
         className={`p-2 rounded ${
-          editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""
+          editor.isActive({ textAlign: "left" }) ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaAlignLeft />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().setTextAlign("center").run()}
         className={`p-2 rounded ${
-          editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""
+          editor.isActive({ textAlign: "center" })
+            ? "bg-[var(--secondary)]"
+            : ""
         }`}
       >
         <FaAlignCenter />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().setTextAlign("right").run()}
         className={`p-2 rounded ${
-          editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""
+          editor.isActive({ textAlign: "right" }) ? "bg-[var(--secondary)]" : ""
         }`}
       >
         <FaAlignRight />
       </button>
       <button
+        type="button"
         onClick={() => editor.chain().focus().setTextAlign("justify").run()}
         className={`p-2 rounded ${
-          editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""
+          editor.isActive({ textAlign: "justify" })
+            ? "bg-[var(--secondary)]"
+            : ""
         }`}
       >
         <FaAlignJustify />
       </button>
       <button
+        type="button"
         onClick={() => {
           const url = window.prompt("URL da imagem");
           if (url) {
@@ -192,6 +231,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
         <FaImage />
       </button>
       <button
+        type="button"
         onClick={() =>
           editor
             .chain()
@@ -207,12 +247,10 @@ const MenuBar = ({ editor }: { editor: any }) => {
   );
 };
 
-// Componente principal do Tiptap
-const Tiptap = () => {
+const Tiptap: React.FC<TiptapProps> = ({ value, onChange }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        // Adicionando funcionalidades que já estão no StarterKit, mas com configurações
         bulletList: {
           keepMarks: true,
           keepAttributes: false,
@@ -250,15 +288,31 @@ const Tiptap = () => {
         placeholder: "Comece a escrever aqui...",
       }),
     ],
-    content: "<p>Hello World! 🌎️</p>",
+    content: "<p>Escreva aqui...</p>",
     immediatelyRender: false,
   });
 
+  useEffect(() => {
+    if (!editor) return;
+
+    const handler = () => {
+      onChange?.(editor.getHTML());
+    };
+
+    editor.on("update", handler);
+
+    return () => {
+      editor.off("update", handler);
+    };
+  }, [editor, onChange]);
+
   return (
-    <div className="border border-gray-300 rounded-md shadow-sm w-full max-w-3xl mx-auto bg-gray-50 text-[var(--secondary)]">
+    <div className="border  border-gray-300 rounded-md shadow-sm w-full  mx-auto bg-gray-50 text-[var(--secondary)]">
       <MenuBar editor={editor} />
-      <div className="p-4 prose max-w-none bg-white">
-        <EditorContent editor={editor} />
+      <div className="p-4 prose max-w-none bg-[var(--extra)] text-[var(--primary)] min-h-[200px]  ">
+        <div className="remove-tailwind">
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </div>
   );

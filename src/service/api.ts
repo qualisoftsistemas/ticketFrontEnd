@@ -7,37 +7,62 @@ interface ApiFetchOptions {
   method: HttpMethod;
   endpoint: string;
   data?: any;
-  contentType?: string;
 }
 
 const apiFetchClient = async <T>({
   method,
   endpoint,
   data,
-  contentType = "application/json",
 }: ApiFetchOptions): Promise<T> => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const empresaId =
-    typeof window !== "undefined" ? localStorage.getItem("empresa_id") : null;
+  const empresaStore =
+    typeof window !== "undefined"
+      ? localStorage.getItem("empresa-store")
+      : null;
 
   let url = `${API_BASE_URL}${endpoint}`;
-  if (empresaId) {
-    const separator = url.includes("?") ? "&" : "?";
-    url += `${separator}empresa_id=${empresaId}`;
+
+  if (empresaStore) {
+    try {
+      const parsed = JSON.parse(empresaStore);
+      const empresaId = parsed?.state?.empresaSelecionada?.id;
+      const conglomeradoId =
+        parsed?.state?.empresaSelecionada?.conglomerado?.id;
+
+      if (empresaId) {
+        const separator = url.includes("?") ? "&" : "?";
+        url += `${separator}empresa_id=${empresaId}`;
+      }
+
+      if (conglomeradoId) {
+        const separator = url.includes("?") ? "&" : "?";
+        url += `${separator}conglomerado_id=${conglomeradoId}`;
+      }
+    } catch (err) {
+      console.error("Erro ao parsear empresa-store:", err);
+    }
   }
 
+  console.log("API Request URL:", url);
+
   const headers: Record<string, string> = {
-    "Content-Type": contentType,
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
+  let body: BodyInit | undefined;
+
+  if (method !== "GET" && data) {
+    if (data instanceof FormData) {
+      body = data;
+    } else {
+      body = JSON.stringify(data);
+      headers["Content-Type"] = "application/json";
+    }
+  }
+
   try {
-    const res = await fetch(url, {
-      method,
-      headers,
-      body: method !== "GET" && data ? JSON.stringify(data) : undefined,
-    });
+    const res = await fetch(url, { method, headers, body });
 
     if (res.status === 401) {
       throw new Error("Não autorizado. Faça login novamente.");
@@ -46,7 +71,7 @@ const apiFetchClient = async <T>({
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
       throw {
-        message: res.statusText,
+        message: errorData.message || res.statusText,
         originalError: errorData,
       };
     }

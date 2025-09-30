@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --primary: #052A37;
-  --primary-foreground: #CACDCD;
+  --primary: #052a37;
+  --primary-foreground: #cacdcd;
   --secondary: #ff5646;
-  --secondary-foreground: #FBE9D0;
-  --destructive: #AC0709;
-  --foreground: #CACDCD;
-  --neutral: #CACDCD;
+  --secondary-foreground: #fbe9d0;
+  --destructive: #ac0709;
+  --foreground: #cacdcd;
+  --neutral: #cacdcd;
   --success: #549604;
-  --extra: #FBE9D0;
+  --extra: #fbe9d0;
 }
 
 .font1 {
@@ -17,7 +17,7 @@
 }
 
 body {
-  background-color: #CACDCD !important;
+  background-color: #cacdcd !important;
   color: var(--primary);
   font-family: "Sansation", sans-serif;
 }
@@ -48,4 +48,77 @@ body {
 .ProseMirror td {
   border: 1px solid #ccc;
   padding: 8px;
+}
+
+.remove-tailwind {
+  color: initial;
+  font-family: initial;
+  line-height: initial;
+  margin: initial;
+  padding: initial;
+  box-sizing: initial; /* Isso pode ser importante */
+}
+
+/* Estilos de Lista (Listas não ordenadas e ordenadas) */
+.remove-tailwind ul,
+.remove-tailwind ol {
+  list-style-type: initial; /* Reintroduz bullet points ou numerais */
+  margin-top: 1em; /* Margens padrão */
+  margin-bottom: 1em;
+  padding-left: 40px; /* Recuo padrão para listas */
+}
+
+/* Estilos para Itens de Lista */
+.remove-tailwind li {
+  display: list-item; /* Garante que o display seja de item de lista */
+  text-align: match-parent; /* Alinhamento padrão */
+}
+
+/* Estilos de Títulos (H1 a H6) */
+.remove-tailwind h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+  font-weight: bold;
+}
+.remove-tailwind h2 {
+  font-size: 1.5em;
+  margin: 0.83em 0;
+  font-weight: bold;
+}
+.remove-tailwind h3 {
+  font-size: 1.17em;
+  margin: 1em 0;
+  font-weight: bold;
+}
+.remove-tailwind h4 {
+  font-size: 1em;
+  margin: 1.33em 0;
+  font-weight: bold;
+}
+.remove-tailwind h5 {
+  font-size: 0.83em;
+  margin: 1.67em 0;
+  font-weight: bold;
+}
+.remove-tailwind h6 {
+  font-size: 0.67em;
+  margin: 2.33em 0;
+  font-weight: bold;
+}
+
+/* Estilos de Parágrafo */
+.remove-tailwind p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+/* Estilos de Link */
+.remove-tailwind a {
+  color: blue; /* Cor padrão */
+  text-decoration: underline; /* Sublinhado padrão */
+}
+
+/* Estilos de Blockquote */
+.remove-tailwind blockquote {
+  margin: 1em 40px;
 }
