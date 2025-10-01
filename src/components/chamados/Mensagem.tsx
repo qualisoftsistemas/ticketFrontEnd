@@ -82,13 +82,13 @@ const Mensagem: React.FC<MensagemProps> = ({
   };
 
   return (
-    <div className="bg-[var(--extra)] p-4 rounded space-y-2   text-[var(--primary)]">
-      <div className="flex flex-col gap-4">
-        <div className="text-lg text-muted-foreground flex items-center gap-2">
-          <span className="w-10 h-10 flex items-center justify-center rounded-full font-bold bg-[var(--secondary)] text-[var(--primary)]">
+    <div className="bg-[var(--extra)] p-2 rounded space-y-2 text-[var(--primary)]">
+      <div className="flex flex-col gap-2">
+        <div className="text-muted-foreground flex items-center gap-2">
+          <span className="text-lg w-7 h-7 flex justify-center items-center rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)]">
             {numero}
           </span>
-          • {formatDate(mensagem.data_envio)}
+          <p className="text-sm">{formatDate(mensagem.data_envio)}</p>
         </div>
 
         <div className="flex items-center gap-2">
@@ -96,19 +96,19 @@ const Mensagem: React.FC<MensagemProps> = ({
             <img
               src={mensagem.user.foto}
               alt={mensagem.user.nome}
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-7 h-7 rounded-full object-cover"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-[var(--neutral)] flex items-center justify-center text-[var(--primary)] font-bold">
+            <div className="w-7 h-7 rounded-full bg-[var(--neutral)] flex items-center justify-center text-[var(--primary)] font-bold">
               {mensagem.user.nome[0]}
             </div>
           )}
-          <span className="font-semibold">{mensagem.user.nome}</span>
+          <span className="font-semibold text-sm">{mensagem.user.nome}</span>
         </div>
       </div>
 
       <div
-        className="prose max-w-full  p-4 rounded  text-[var(--primary)]"
+        className="prose max-w-full p-2 rounded  text-[var(--primary)]"
         dangerouslySetInnerHTML={{ __html: mensagem.mensagem }}
       ></div>
 

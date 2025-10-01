@@ -113,7 +113,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6 w-full">
-        <div className="w-full lg:w-4/5 space-y-4">
+        <div className="w-full space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <DescriptionBox
               type="Solicitante"
@@ -142,28 +142,29 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
             label={chamadoSelecionado?.assunto ?? ""}
           />
 
-          <div className="space-y-4 mt-6 bg-[var(--extra)] p-4 rounded shadow-md">
-            {mensagens.map((msg, index) => (
-              <Mensagem key={msg.id} mensagem={msg} numero={index + 1} />
-            ))}
+          <div className="flex gap-4">
+            <div className="w-full space-y-2 bg-[var(--extra)] p-1 rounded">
+              {mensagens.map((msg, index) => (
+                <Mensagem key={msg.id} mensagem={msg} numero={index + 1} />
+              ))}
 
-            {showRespostaInput && (
-              <div className="mt-4">
-                <RespostaChamado
-                  handleResponder={(data) => handleResponder(data)}
-                />
-              </div>
-            )}
+              {showRespostaInput && (
+                <div className="mt-2">
+                  <RespostaChamado
+                    handleResponder={(data) => handleResponder(data)}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="sticky top-0">
+              <InfoChamado
+                chamado={chamadoSelecionado}
+                showRespostaForm={showRespostaForm}
+                handleResponder={() => setShowRespostaInput(true)}
+                showRespostaInput={showRespostaInput}
+              />
+            </div>
           </div>
-        </div>
-
-        <div className="w-full lg:w-1/5 sticky top-40 self-start ">
-          <InfoChamado
-            chamado={chamadoSelecionado}
-            showRespostaForm={showRespostaForm}
-            handleResponder={() => setShowRespostaInput(true)}
-            showRespostaInput={showRespostaInput}
-          />
         </div>
       </div>
     </div>

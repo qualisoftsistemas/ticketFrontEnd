@@ -34,49 +34,22 @@ const InfoChamado: React.FC<Props> = ({
 
   return (
     <div className="bg-[var(--extra)] shadow-md w-full max-w-md mx-auto rounded-lg overflow-hidden">
-      <div className="flex bg-[var(--secondary)] p-2 justify-between items-center rounded-t-lg">
-        <h3 className="text-lg font-semibold ">{chamado.assunto}</h3>
-        <span
-          className={`px-2 py-1 text-xs rounded ${
-            statusColors[chamado.status] || "bg-gray-200 "
-          }`}
-        >
-          {chamado.status.replace(/_/g, " ")}
-        </span>
+      <div className="bg-[var(--secondary)] text-[var(--secondary-foreground)] p-1 text-lg text-center rounded-t-lg">
+        <h1>{chamado.solicitante?.nome}</h1>
       </div>
-      <div className="p-4">
-        <div className="flex flex-wrap gap-2 mb-2  ">
-          <span
-            className={`px-2 py-1 rounded text-xs ${
-              prioridadeColors[chamado.prioridade] || "bg-gray-100 "
-            }`}
-          >
-            Prioridade: {chamado.prioridade}
-          </span>
-          <span className="px-2 py-1 rounded text-xs bg-blue-100  ">
-            Criado em: {new Date(chamado.created_at).toLocaleDateString()}
-          </span>
-        </div>
-        <div className="space-y-2 mt-2 ">
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Solicitante:</span>
-            <span>{chamado.solicitante?.nome}</span>
+      <div className="p-2">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 bg-[var(--primary)] rounded">
+            <span className="bg-[var(--secondary)] p-1 rounded-l">
+              <img src="/Icons/Whatsapp.svg" alt="Icone de Email" />
+            </span>
+            <p className="p-1">{chamado.operador?.whatsapp}</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Operador:</span>
-            <span>{chamado.operador?.nome}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Empresa:</span>
-            <span>{chamado.empresa?.nome}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Setor:</span>
-            <span>{chamado.setor?.nome}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">Categoria:</span>
-            <span>{chamado.categoria?.nome}</span>
+          <div className="flex items-center bg-[var(--primary)] rounded">
+            <span className="bg-[var(--secondary)] p-1 rounded-l">
+              <img src="/Icons/Mail.svg" alt="Icone de Email" />
+            </span>
+            <p className="p-1">{chamado.operador?.email}</p>
           </div>
         </div>
         {showRespostaForm && !showRespostaInput && (
