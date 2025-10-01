@@ -25,7 +25,7 @@ const DescriptionBox: React.FC<DescriptionBoxProps> = ({
 
       <span
         className={cn(
-          "h-9 w-full min-w-0 border-none px-3 py-1 text-base shadow-xs outline-none transition-colors rounded-r bg-[var(--extra)] text-[var(--primary)]",
+          "h-9 w-full min-w-0 border-none px-3 py-1 text-base outline-none transition-colors rounded-r bg-[var(--extra)] text-[var(--primary)]",
 
           className
         )}

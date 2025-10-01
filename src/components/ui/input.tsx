@@ -37,7 +37,7 @@ function Input({
         type={type}
         data-slot="input"
         className={cn(
-          "h-9 w-full min-w-0 border-none px-3 py-1 text-base shadow-xs outline-none transition-colors",
+          "h-9 w-full min-w-0 border-none px-3 py-1 text-base outline-none transition-colors",
           iconPosition === "left"
             ? "rounded-r-md"
             : iconPosition === "right"

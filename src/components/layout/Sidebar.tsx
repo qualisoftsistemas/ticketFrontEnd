@@ -38,11 +38,11 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
     <div className="w-full">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full px-4 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
+        className="w-full px-1 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
       >
         <div className="flex items-center gap-3">
           {item.icon && <Icon icon={item.icon} />}
-          <p className="text-lg">{item.label}</p>
+          <p>{item.label}</p>
         </div>
         <img
           src={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
@@ -51,12 +51,12 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
         />
       </button>
       {open && (
-        <div className="pl-10 flex flex-col gap-1">
+        <div className="pl-6 flex flex-col gap-1">
           {item.subItems.map((subItem, idx) => (
             <Link
               key={idx}
               href={subItem.href ?? "#"}
-              className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition"
+              className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition text-sm"
             >
               {subItem.label}
             </Link>
@@ -126,14 +126,14 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   })();
 
   return (
-    <aside className="h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col shadow-lg">
-      <nav className="flex flex-col gap-2 w-full mt-18 p-1">
+    <aside className="h-screen w-44 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col">
+      <nav className="flex flex-col gap-1 w-full mt-18 p-1">
         {navItems.map((item, idx) => (
           <DropdownNavItem key={idx} item={item} />
         ))}
       </nav>
 
-      <div className="mt-auto w-full py-3 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
+      <div className="mt-auto w-full py-2 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
         &copy; {new Date().getFullYear()} - By{" "}
         <a
           href="https://www.qualisoftsistemas.com.br/"

@@ -10,11 +10,11 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "bg-[var(--secondary)] text-[var(--extra)] shadow-xs hover:bg-[var(--extra)] hover:text-[var(--secondary)] focus-visible:ring-[var(--secondary)]/20 dark:focus-visible:ring-[var(--secondary)]/40 dark:bg-[var(--secondary)]/60 dark:text-[var(--extra)]",
+          "bg-[var(--secondary)] text-[var(--extra)] hover:bg-[var(--extra)] hover:text-[var(--secondary)] focus-visible:ring-[var(--secondary)]/20 dark:focus-visible:ring-[var(--secondary)]/40 dark:bg-[var(--secondary)]/60 dark:text-[var(--extra)]",
         destructive:
-          "bg-[var(--destructive)] text-[var(--extra)] shadow-xs hover:bg-[var(--extra)] hover:text-[var(--destructive)] focus-visible:ring-[var(--destructive)]/20 dark:focus-visible:ring-[var(--destructive)]/40 dark:bg-[var(--destructive)]/60",
+          "bg-[var(--destructive)] text-[var(--extra)] hover:bg-[var(--extra)] hover:text-[var(--destructive)] focus-visible:ring-[var(--destructive)]/20 dark:focus-visible:ring-[var(--destructive)]/40 dark:bg-[var(--destructive)]/60",
         confirm:
-          "bg-[var(--success)] text-[var(--extra)] shadow-xs hover:bg-[var(--extra)] hover:text-[var(--success)]  focus-visible:ring-[var(--success)]/20 dark:focus-visible:ring-[var(--success)]/40 dark:bg-[var(--success)]/60",
+          "bg-[var(--success)] text-[var(--extra)] hover:bg-[var(--extra)] hover:text-[var(--success)]  focus-visible:ring-[var(--success)]/20 dark:focus-visible:ring-[var(--success)]/40 dark:bg-[var(--success)]/60",
 
         ghost:
           "hover:bg-[var(--accent)] hover:text-[var(--accent-foreground)] dark:hover:bg-[var(--accent)]/50",

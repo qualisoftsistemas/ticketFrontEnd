@@ -31,8 +31,8 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
   }, [fetchEmpresas]);
 
   return (
-    <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] shadow-md z-50">
-      <div className="flex items-center justify-center border-r px-12 py-3 border-[var(--secondary-foreground)]">
+    <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
+      <div className="flex items-center justify-center border-r-2 min-w-44 py-3 border-[var(--secondary-foreground)]">
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (
             <img
@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
         </button>
       </div>
 
-      <div className="w-full mx-auto flex items-center justify-between px-8">
+      <div className="w-full mx-auto flex items-center justify-between px-4">
         {role !== "Master" && role !== "Operador" && (
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
@@ -69,16 +69,16 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
                   </p>
                 </div>
                 {open ? (
-                  <Icon icon="/Icons/ArrowUp.svg" />
+                  <Icon icon="/Icons/ArrowUp.svg" className="w-4 h-4 ml-2" />
                 ) : (
-                  <Icon icon="/Icons/ArrowDown.svg" />
+                  <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2" />
                 )}
               </div>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
               align="start"
-              className="bg-[var(--secondary)] text-[var(--extra)]"
+              className="bg-[var(--secondary)] text-[var(--extra)] mt-1"
             >
               {empresas.map((empresa) => (
                 <DropdownMenuItem
@@ -109,13 +109,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
         <div className="flex items-center gap-2">
           <img src="/Icons/UserCircle.svg" alt="user" className="w-10 h-10" />
           <h1 className="font-bold">Eu sou o Usuário</h1>
-          <div
-            className="ml-2 w-4 h-4 bg-[var(--secondary-foreground)] cursor-pointer"
-            style={{
-              WebkitMask:
-                "url(/Icons/ArrowDown.svg) no-repeat center / contain",
-            }}
-          ></div>
+          <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2" />
         </div>
       </div>
     </header>

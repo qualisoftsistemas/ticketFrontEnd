@@ -68,7 +68,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   };
 
   return (
-    <div className="bg-[var(--primary)] p-6 rounded-lg shadow-md space-y-4">
+    <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <h2 className="text-2xl font-semibold text-[var(--extra)]">
