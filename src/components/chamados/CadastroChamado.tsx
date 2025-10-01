@@ -55,7 +55,7 @@ const CadastroChamado = () => {
         const data = await apiFetchClient<SelectsData>({
           method: "GET",
           endpoint: "/abrir_chamado_selects",
-        });
+        } );
 
         setEmpresas(data.empresas || []);
         setSetores(data.setores || []);

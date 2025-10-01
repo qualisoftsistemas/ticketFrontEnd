@@ -44,8 +44,6 @@ const apiFetchClient = async <T>({
     }
   }
 
-  console.log("API Request URL:", url);
-
   const headers: Record<string, string> = {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };

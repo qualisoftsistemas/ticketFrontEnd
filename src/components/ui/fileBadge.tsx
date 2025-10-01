@@ -12,8 +12,7 @@ const FileBadge: React.FC<FileBadgeProps> = ({ fileIcon, file, onClick }) => {
     file.mimeType?.split("/")[0] === "image" ||
     file.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i);
 
-  console.log("FileBadge - file:", file);
-
+ 
   return (
     <div onClick={onClick} className={onClick ? "cursor-pointer" : ""}>
       {isImage && file.url ? (

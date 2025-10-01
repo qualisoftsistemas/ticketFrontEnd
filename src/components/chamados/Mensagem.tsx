@@ -28,9 +28,15 @@ interface MensagemType {
 interface MensagemProps {
   mensagem: MensagemType;
   numero: number;
+  // mensagens: MensagemType[];
+  showRespostaInput?: boolean;
 }
 
-const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
+const Mensagem: React.FC<MensagemProps> = ({
+  mensagem,
+  numero,
+  showRespostaInput,
+}) => {
   const downloadAnexo = async (anexo: Anexo) => {
     if (!anexo.arquivo && !anexo.id) {
       throw new Error("Anexo inválido");
@@ -40,7 +46,7 @@ const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
 
     try {
       if (anexo.arquivo?.url) {
-        window.open(anexo.arquivo.url, "_blank"); 
+        window.open(anexo.arquivo.url, "_blank");
         return;
       }
 
@@ -75,7 +81,7 @@ const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
   };
 
   return (
-    <div className="bg-[var(--extra)] p-4 rounded  shadow-md space-y-2   text-[var(--primary)]">
+    <div className=" space-y-2   text-[var(--primary)]">
       <div className="flex flex-col gap-4">
         <div className="text-lg text-muted-foreground flex items-center gap-2">
           <span className="w-10 h-10 flex items-center justify-center rounded-full font-bold bg-[var(--secondary)] text-[var(--primary)]">
