@@ -26,10 +26,10 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
     return (
       <Link
         href={item.href ?? "#"}
-        className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
+        className="px-1 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
       >
         {item.icon && <Icon icon={item.icon} />}
-        <p className="text-lg">{item.label}</p>
+        <p>{item.label}</p>
       </Link>
     );
   }
@@ -74,16 +74,15 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   ];
 
   const adminLinks: NavItem[] = [
-    ...links,
     {
       label: "Funcionários",
       href: "/funcionario",
       icon: "/Icons/Employee.svg",
     },
+    ...links,
   ];
 
   const masterLinks: NavItem[] = [
-    ...links,
     {
       label: "Master",
       icon: "/Icons/Master.svg",
@@ -96,6 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         { label: "Conglomerado", href: "/conglomerado" },
       ],
     },
+    ...links,
   ];
 
   const sistemaLinks: NavItem[] = [
@@ -107,6 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         { label: "Master", href: "/master" },
       ],
     },
+    ...links,
   ];
 
   const navItems: NavItem[] = (() => {
