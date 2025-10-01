@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
     <div className="flex h-screen w-full">
       <aside
         className={`
-          fixed top-0 left-0 h-screen w-64 bg-[var(--primary)] text-[var(--extra)] shadow-lg
+          fixed top-0 left-0 h-screen w-44 bg-[var(--primary)] text-[var(--extra)] shadow-lg
           transform transition-transform duration-300 z-40
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}
@@ -31,8 +31,8 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
         <Header role={role} toggleSidebar={toggleSidebar} isOpen={isOpen} />
 
         <main
-          className={`flex-1 p-6 bg-gray-50 overflow-y-auto transition-all duration-300 ${
-            isOpen ? "ml-64" : "ml-0"
+          className={`flex-1 p-4 bg-gray-50 overflow-y-auto transition-all duration-300 ${
+            isOpen ? "ml-44" : "ml-0"
           }`}
         >
           {children}

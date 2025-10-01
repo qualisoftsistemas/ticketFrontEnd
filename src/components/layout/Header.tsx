@@ -31,8 +31,8 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
   }, [fetchEmpresas]);
 
   return (
-    <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] shadow-md z-50">
-      <div className="flex items-center justify-center border-r px-12 py-3 border-[var(--secondary-foreground)]">
+    <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
+      <div className="flex items-center justify-center border-r-2 min-w-44 py-3 border-[var(--secondary-foreground)]">
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (
             <img
@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
         </button>
       </div>
 
-      <div className="w-full mx-auto flex items-center justify-between px-8">
+      <div className="w-full mx-auto flex items-center justify-between px-4">
         {role !== "Master" && role !== "Operador" && (
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
