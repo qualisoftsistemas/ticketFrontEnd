@@ -64,7 +64,7 @@ function Table<T extends Record<string, any>>({
         </div>{" "}
       </div>{" "}
       {showFilters && (
-        <div className="w-full p-4 bg-[var(--primary)] rounded shadow-md border border-[var(--extra)]">
+        <div className="w-full p-4 bg-[var(--primary)] rounded border border-[var(--extra)]">
           <div className="flex justify-start gap-3 w-full">
             <Button variant="confirm" type="submit" className="px-2 text-xs">
               Aplicar Filtros

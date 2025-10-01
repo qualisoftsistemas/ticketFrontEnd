@@ -110,7 +110,7 @@ const CadastroChamado = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit, onInvalid)}
-      className="bg-[var(--primary)] p-6 rounded-lg shadow-md space-y-4"
+      className="bg-[var(--primary)] p-6 rounded-lg space-y-4"
     >
       {/* Selects */}
       <div className="flex gap-4 flex-wrap">

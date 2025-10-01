@@ -307,7 +307,7 @@ const Tiptap: React.FC<TiptapProps> = ({ value, onChange }) => {
   }, [editor, onChange]);
 
   return (
-    <div className="border  border-gray-300 rounded-md shadow-sm w-full  mx-auto bg-gray-50 text-[var(--secondary)]">
+    <div className="border  border-gray-300 rounded-md w-full  mx-auto bg-gray-50 text-[var(--secondary)]">
       <MenuBar editor={editor} />
       <div className="p-4 prose max-w-none bg-[var(--extra)] text-[var(--primary)] min-h-[200px]  ">
         <div className="remove-tailwind">

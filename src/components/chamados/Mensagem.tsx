@@ -75,7 +75,7 @@ const Mensagem: React.FC<MensagemProps> = ({ mensagem, numero }) => {
   };
 
   return (
-    <div className="bg-[var(--extra)] p-4 rounded  shadow-md space-y-2   text-[var(--primary)]">
+    <div className="bg-[var(--extra)] p-4 rounded space-y-2   text-[var(--primary)]">
       <div className="flex flex-col gap-4">
         <div className="text-lg text-muted-foreground flex items-center gap-2">
           <span className="w-10 h-10 flex items-center justify-center rounded-full font-bold bg-[var(--secondary)] text-[var(--primary)]">

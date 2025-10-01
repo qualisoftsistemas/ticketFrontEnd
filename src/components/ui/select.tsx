@@ -78,7 +78,7 @@ const Select: React.FC<SelectProps> = ({
       {isOpen && (
         <Portal>
           <div
-            className="absolute z-50 rounded-lg shadow-lg overflow-hidden bg-[var(--secondary)] text-[var(--extra)]"
+            className="absolute z-50 rounded-lg overflow-hidden bg-[var(--secondary)] text-[var(--extra)]"
             style={{
               top: position.top,
               left: position.left,

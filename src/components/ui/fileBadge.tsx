@@ -28,7 +28,7 @@ const FileBadge: React.FC<FileBadgeProps> = ({ fileIcon, file, onClick }) => {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center rounded-lg w-[8ch] shadow-sm bg-[var(--secondary)]">
+        <div className="flex flex-col items-center rounded-lg w-[8ch] bg-[var(--secondary)]">
           <div className="flex h-12 w-12 items-center justify-center mt-2">
             {fileIcon}
           </div>

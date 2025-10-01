@@ -19,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
     <div className="flex h-screen w-full">
       <aside
         className={`
-          fixed top-0 left-0 h-screen w-44 bg-[var(--primary)] text-[var(--extra)] shadow-lg
+          fixed top-0 left-0 h-screen w-44 bg-[var(--primary)] text-[var(--extra)]
           transform transition-transform duration-300 z-40
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
         `}

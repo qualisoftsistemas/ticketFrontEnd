@@ -126,7 +126,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   })();
 
   return (
-    <aside className="h-screen w-44 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col shadow-lg">
+    <aside className="h-screen w-44 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col">
       <nav className="flex flex-col gap-1 w-full mt-18 p-1">
         {navItems.map((item, idx) => (
           <DropdownNavItem key={idx} item={item} />
