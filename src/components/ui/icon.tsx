@@ -5,10 +5,10 @@ interface IconProps {
   className?: string;
 }
 
-const Icon: React.FC<IconProps> = ({ icon, className = "" }) => {
+const Icon: React.FC<IconProps> = ({ icon, className = "w-6 h-6" }) => {
   return (
     <div
-      className={`w-6 h-6 bg-[var(--secondary-foreground)] cursor-pointer ${className}`}
+      className={`bg-[var(--secondary-foreground)] cursor-pointer ${className}`}
       style={{
         WebkitMask: `url('${icon}') no-repeat center / contain`,
       }}
