@@ -17,18 +17,19 @@ interface Anexo {
   arquivo: UploadedFile;
 }
 
-interface MensagemType {
+export interface MensagemType {
   id: number;
   data_envio: string;
   mensagem: string;
   user: User;
+  reacoes: [];
+  ordenacao: number;
   anexos: Anexo[];
 }
 
 interface MensagemProps {
   mensagem: MensagemType;
   numero: number;
-  // mensagens: MensagemType[];
   showRespostaInput?: boolean;
 }
 

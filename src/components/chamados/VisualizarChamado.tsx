@@ -10,10 +10,12 @@ import { useUserRole } from "@/hooks/useUserRole";
 import RespostaChamado from "./RespostaChamado";
 import apiFetchClient from "@/service/api";
 import type { RespostaFormData } from "./RespostaChamado";
+import { UploadedFile } from "../ui/inputFile";
+import { MensagemType } from "./Mensagem";
 
 export interface VisualizarChamadoProps {
   chamado: ChamadoApiResponse | null;
-}   
+}
 
 const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   if (!chamado) return null;
@@ -22,7 +24,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const role = useUserRole();
   const [showRespostaForm, setShowRespostaForm] = useState(false);
   const [showRespostaInput, setShowRespostaInput] = useState(false);
-  const [mensagens, setMensagens] = useState(
+  const [mensagens, setMensagens] = useState<MensagemType[]>(
     chamadoSelecionado?.mensagens || []
   );
 
@@ -47,23 +49,52 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     console.log("role:", role, "status:", status);
   }, [role, chamadoSelecionado]);
 
-  const handleResponder = async (data?:  RespostaFormData) => {
+  const handleResponder = async (
+    data: RespostaFormData,
+    arquivos?: UploadedFile[]
+  ) => {
+    if (data && "preventDefault" in data) {
+      setShowRespostaInput(true);
+      return;
+    }
+
+    if (!showRespostaForm || !data) {
+      setShowRespostaInput(true);
+      return;
+    }
+
     try {
+      const mensagemTemporaria: Partial<MensagemType> = {
+        id: Date.now(),
+        data_envio: new Date().toISOString(),
+        mensagem: data.mensagem,
+        ordenacao: 0,
+        reacoes: [],
+        user: {
+          id: 0,
+          nome: "Você",
+          foto: null,
+        },
+        anexos: arquivos?.map((file) => ({ id: file.id, arquivo: file })) || [],
+      };
+
+      setMensagens((prev) => [...prev, mensagemTemporaria as MensagemType]);
+
+      setShowRespostaInput(false);
+
       const payload = {
         chamado_id: chamadoSelecionado.id,
         ...data,
       };
 
-      const novaMensagem = await apiFetchClient({
+      await apiFetchClient({
         method: "POST",
         endpoint: "/mensagem",
         data: payload,
       });
-
-      // setMensagens((prev) => [...prev, novaMensagem]);
-      setShowRespostaInput(false);
     } catch (error) {
       console.error("Erro ao enviar resposta:", error);
+      alert("Erro ao enviar resposta. Tente novamente.");
     }
   };
 
@@ -130,7 +161,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
           <InfoChamado
             chamado={chamadoSelecionado}
             showRespostaForm={showRespostaForm}
-            handleResponder={handleResponder}
+            handleResponder={() => setShowRespostaInput(true)}
             showRespostaInput={showRespostaInput}
           />
         </div>

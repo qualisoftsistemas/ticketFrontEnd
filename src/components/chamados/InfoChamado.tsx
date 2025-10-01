@@ -79,16 +79,10 @@ const InfoChamado: React.FC<Props> = ({
             <span>{chamado.categoria?.nome}</span>
           </div>
         </div>
-        {showRespostaForm && !showRespostaInput ? (
+        {showRespostaForm && !showRespostaInput && (
           <div className="flex justify-center mt-4">
             <Button type="button" onClick={handleResponder} variant={"default"}>
               Responder
-            </Button>
-          </div>
-        ) : (
-          <div className="flex justify-center mt-4">
-            <Button type="button" onClick={handleResponder} variant={"default"}>
-              Enviar
             </Button>
           </div>
         )}

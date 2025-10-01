@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import Tiptap from "../ui/richText";
 import FileBadge from "../ui/fileBadge";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "../ui/button";
 
 const schema = z.object({
   mensagem: z.string().min(5, "Mensagem obrigatória"),
@@ -14,7 +15,7 @@ const schema = z.object({
 export type RespostaFormData = z.infer<typeof schema>;
 
 interface RespostaChamadoProps {
-  handleResponder: (data: RespostaFormData) => void;
+  handleResponder: (data: RespostaFormData, arquivos?: UploadedFile[]) => void;
 }
 
 const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
@@ -33,11 +34,14 @@ const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
   });
 
   const onSubmit = (data: RespostaFormData) => {
-    handleResponder(data);
+    handleResponder(data, uploadedFiles); 
     reset();
     setUploadedFiles([]);
   };
 
+  useEffect(() => {
+    console.log(errors);
+  }, [errors]);
   return (
     <form
       className="flex flex-col gap-4 mt-4"
@@ -100,9 +104,7 @@ const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
         ))}
       </div>
 
-      <button type="submit" className="btn btn-primary mt-2">
-        Enviar Resposta
-      </button>
+      <Button type="submit">Enviar</Button>
     </form>
   );
 };
