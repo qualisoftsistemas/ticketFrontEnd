@@ -72,18 +72,17 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
     { label: "Chamados", href: "/chamados", icon: "/Icons/Message.svg" },
     { label: "Arquivos", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
   ];
-  
+
   const adminLinks: NavItem[] = [
-    ...links,
     {
       label: "Funcionários",
       href: "/funcionario",
       icon: "/Icons/Employee.svg",
     },
+    ...links,
   ];
 
   const masterLinks: NavItem[] = [
-    ...links,
     {
       label: "Master",
       icon: "/Icons/Master.svg",
@@ -96,6 +95,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         { label: "Conglomerado", href: "/conglomerado" },
       ],
     },
+    ...links,
   ];
 
   const sistemaLinks: NavItem[] = [
@@ -107,6 +107,7 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
         { label: "Master", href: "/master" },
       ],
     },
+    ...links,
   ];
 
   const navItems: NavItem[] = (() => {
