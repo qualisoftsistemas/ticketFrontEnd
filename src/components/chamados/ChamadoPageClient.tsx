@@ -9,16 +9,28 @@ import { Chamado } from "@/types/Chamado";
 import { Column } from "../table/TableGeneric";
 import { formatDate } from "@/app/utils/formatDate";
 import Badge from "../ui/badge";
+import FilterBox from "./FilterBox";
 
 export default function ChamadoPageClient() {
   const router = useRouter();
 
   const { chamados, loading, fetchChamados, pagination } = useChamadoStore();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState<string[]>([
+    "pendente_pelo_operador",
+    "pendente_pelo_usuario",
+    "aguardando_avaliacao",
+  ]);
+
+  const handleFilterChange = (status: string[]) => {
+    setSelectedStatus(status);
+    fetchTableData(1, searchTerm, status);
+  };
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchChamados({ page, search }),
-    [fetchChamados]
+    (page: number, search = "", status: string[] = selectedStatus) =>
+      fetchChamados({ page, search, status }),
+    [fetchChamados, selectedStatus]
   );
 
   useEffect(() => {
@@ -74,9 +86,10 @@ export default function ChamadoPageClient() {
 
   return (
     <>
+      <FilterBox onFilterChange={handleFilterChange} />
       <Table
         columns={columns}
-        data={chamados}
+        data={chamados}  
         showCadastro={showCadastro}
         loading={loading}
         pagination={pagination}

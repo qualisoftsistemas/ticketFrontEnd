@@ -10,7 +10,7 @@ const NotFoundPage: React.FC = () => {
         Ops! A página que você está procurando não foi encontrada.
       </p>
       <Link
-        href="/login"
+        href="/"
         className="bg-[var(--secondary)] text-[var(--secondary-foreground)] px-6 py-3 rounded-md hover:opacity-90 transition"
       >
         Voltar para Login

@@ -11,14 +11,14 @@ interface Props {
   handleResponder: () => void;
 }
 
-const statusColors: Record<string, string> = {
+export const statusColors: Record<string, string> = {
   pendente_pelo_operador: "bg-yellow-200 text-yellow-800",
   pendente_pelo_cliente: "bg-orange-200 text-orange-800",
   concluido: "bg-green-200 text-green-800",
   cancelado: "bg-red-200 text-red-800",
 };
 
-const prioridadeColors: Record<string, string> = {
+export const prioridadeColors: Record<string, string> = {
   baixa: "bg-green-100 text-green-800",
   média: "bg-yellow-100 text-yellow-800",
   alta: "bg-red-100 text-red-800",

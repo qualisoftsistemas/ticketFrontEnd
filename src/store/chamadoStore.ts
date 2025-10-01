@@ -14,6 +14,7 @@ interface ChamadoState {
   fetchChamados: (options?: {
     page?: number;
     search?: string;
+    status?: string[];
   }) => Promise<void>;
   fetchChamadoById: (id: number) => Promise<void>;
   createChamado: (data: Partial<Chamado>) => Promise<void>;
@@ -29,12 +30,22 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
   chamadoSelecionado: null,
   pagination: null,
 
-  fetchChamados: async (options = { page: 1, search: "" }) => {
+  fetchChamados: async (
+    options = { page: 1, search: "", status: [] as string[] }
+  ) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/chamado?page=${options.page}`;
+
       if (options.search) {
         endpoint += `&search=${encodeURIComponent(options.search)}`;
+      }
+
+      // Se houver status, adiciona cada um como status[]
+      if (options.status && options.status.length > 0) {
+        options.status.forEach((s) => {
+          endpoint += `&status[]=${encodeURIComponent(s)}`;
+        });
       }
 
       const response = await apiFetchClient<{

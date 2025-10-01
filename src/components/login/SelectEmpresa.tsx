@@ -3,13 +3,15 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import Select from "../ui/select";
+import Select, { SelectOption } from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
 
 const SelectEmpresa: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [selectedEmpresa, setSelectedEmpresa] = useState<number | null>(null);
+  const [selectedEmpresa, setSelectedEmpresa] = useState<SelectOption | null>(
+    null
+  );
 
   const { fetchEmpresas, empresas, setEmpresaSelecionada, setConglomeradoId } =
     useEmpresaStore();
@@ -24,13 +26,14 @@ const SelectEmpresa: React.FC = () => {
 
     setLoading(true);
     try {
-      const empresa = empresas.find((e) => e.id === selectedEmpresa) || null;
+      const empresa =
+        empresas.find((e) => e.id === selectedEmpresa?.id) || null;
       if (empresa) {
         setEmpresaSelecionada(empresa);
-        setConglomeradoId(empresa.conglomerado_id || null); // ✅ salva conglomerado_id
+        setConglomeradoId(empresa.conglomerado_id || null);
       }
 
-      router.push("/dashboard"); // ✅ redireciona (ajuste para a rota certa)
+      router.push("/chamados");
     } finally {
       setLoading(false);
     }
@@ -38,7 +41,7 @@ const SelectEmpresa: React.FC = () => {
 
   return (
     <form
-      className="max-w-md w-full mx-auto rounded-lg bg-[var(--primary)]"
+      className="max-w-lg w-full mx-auto rounded-lg bg-[var(--primary)]"
       onSubmit={handleSelectEmpresa}
     >
       <div className="bg-[var(--secondary)] p-3 rounded-t-md">
@@ -50,9 +53,10 @@ const SelectEmpresa: React.FC = () => {
         <div className="my-8">
           <Select
             label="Empresa"
-            options={empresas.map((e) => ({ id: e.id, label: e.nome }))}
-            onSelect={(option) => setSelectedEmpresa(Number(option.id))}
             placeholder="Selecione a empresa"
+            options={empresas.map((e) => ({ id: e.id, label: e.nome }))}
+            selectedOption={selectedEmpresa}
+            onSelect={(option) => setSelectedEmpresa(option)}
           />
         </div>
         <Button
