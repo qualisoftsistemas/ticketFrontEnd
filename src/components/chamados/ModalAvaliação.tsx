@@ -53,10 +53,12 @@ export default function ModalAvaliacao({
     }
 
     if (rating === 5) {
-      // só mostra a celebration em 5 estrelas
       setShowCelebration(true);
+      setTimeout(() => {
+        handleClose();
+        router.push("/chamados");
+      }, 3000);
     } else {
-      // fecha normalmente se for < 5
       handleClose();
       router.push("/chamados");
     }
@@ -107,15 +109,9 @@ export default function ModalAvaliacao({
               autoPlay
               muted
               className="w-24 h-24"
-              onEnded={() => {
-                setTimeout(() => {
-                  handleClose();
-                  router.push("/chamados");
-                }, 1000);
-              }}
             />
             <p className="text-center text-[var(--primary-foreground)]">
-              Excelente!
+              Excelente! Agradecemos pela avaliação
             </p>
           </>
         )}

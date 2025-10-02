@@ -142,8 +142,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
           observacao: comentario,
         },
       });
-
-      router.push("/chamados");
     } catch (error) {
       console.error("Erro ao avaliar chamado:", error);
       alert("Erro ao avaliar chamado. Tente novamente.");
