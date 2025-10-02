@@ -10,10 +10,9 @@ export default function StarRating({
   totalStars = 5,
   onChange,
 }: StarRatingProps) {
-  const [hovered, setHovered] = useState<number | null>(null);
   const [rating, setRating] = useState<number>(0);
 
-  // refs para cada vídeo
+  // refs para vídeos
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement | null }>({});
 
   const handleClick = (index: number) => {
@@ -34,20 +33,11 @@ export default function StarRating({
     <div className="flex gap-2 mx-auto">
       {Array.from({ length: totalStars }, (_, i) => {
         const index = i + 1;
-        const isHovered = hovered !== null && index <= hovered;
         const isSelected = index <= rating;
 
         let content;
 
-        if (isHovered) {
-          content = (
-            <img
-              src="/Gifs/starblink.gif"
-              alt="Star hover"
-              className="w-10 h-10 object-contain [animation-play-state:paused]"
-            />
-          );
-        } else if (isSelected) {
+        if (isSelected) {
           if (index === rating) {
             content = (
               <video
@@ -58,21 +48,25 @@ export default function StarRating({
                 autoPlay
                 muted
                 playsInline
-                className="w-10 h-10 object-contain"
+                className="w-12 h-12 object-contain"
                 onEnded={() => handleVideoEnd(index)}
               />
             );
           } else {
             content = (
-              <img
-                src="/Gifs/starblink.gif"
-                alt="Star static"
-                className="w-10 h-10 object-contain [animation-play-state:paused]"
+              <video
+                ref={(el) => {
+                  videoRefs.current[index] = el;
+                }}
+                src="/Videos/StarBlink.webm"
+                muted
+                playsInline
+                className="w-12 h-12 object-contain"
+                onEnded={() => handleVideoEnd(index)}
               />
             );
           }
         } else {
-          // Padrão → graystar.webm, rodando uma vez e parando
           content = (
             <video
               ref={(el) => {
@@ -82,7 +76,7 @@ export default function StarRating({
               autoPlay
               muted
               playsInline
-              className="w-10 h-10 object-contain"
+              className="w-12 h-12 object-contain"
               onEnded={() => handleVideoEnd(index)}
             />
           );
@@ -92,8 +86,6 @@ export default function StarRating({
           <div
             key={index}
             className="cursor-pointer"
-            onMouseEnter={() => setHovered(index)}
-            onMouseLeave={() => setHovered(null)}
             onClick={() => handleClick(index)}
           >
             {content}
