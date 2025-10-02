@@ -52,7 +52,16 @@ export default function ModalAvaliacao({
       console.error("Erro ao confirmar avaliação:", error);
     }
 
-    setShowCelebration(true);
+    if (rating === 5) {
+      setShowCelebration(true);
+      setTimeout(() => {
+        handleClose();
+        router.push("/chamados");
+      }, 3000);
+    } else {
+      handleClose();
+      router.push("/chamados");
+    }
   };
 
   return (
@@ -81,39 +90,30 @@ export default function ModalAvaliacao({
             />
 
             <div className="flex justify-center gap-4 pt-2">
-              <Button variant="default" onClick={handleClose}>
-                Cancelar
-              </Button>
               <Button
-                variant="default"
+                variant="confirm"
                 onClick={handleSubmit}
                 disabled={rating === 0}
-                className={
-                  rating > 0
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-500 cursor-not-allowed"
-                }
               >
-                Confirmar Avaliação
+                Avaliar
+              </Button>
+              <Button variant="destructive" onClick={handleClose}>
+                Cancelar
               </Button>
             </div>
           </>
         ) : (
-          <video
-            src="/Videos/FiveStars.webm"
-            autoPlay
-            muted
-            className="w-64 h-64"
-            onEnded={() => {
-              setTimeout(() => {
-                setShowCelebration(false);
-                setRating(0);
-                setComentario("");
-                onClose();
-                router.push("/chamados");
-              }, 4000);
-            }}
-          />
+          <>
+            <video
+              src="/Videos/FiveStars.webm"
+              autoPlay
+              muted
+              className="w-24 h-24"
+            />
+            <p className="text-center text-[var(--primary-foreground)]">
+              Excelente! Agradecemos pela avaliação
+            </p>
+          </>
         )}
       </div>
     </Modal>
