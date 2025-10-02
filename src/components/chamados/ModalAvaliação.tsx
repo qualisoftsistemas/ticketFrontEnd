@@ -77,20 +77,15 @@ export default function ModalAvaliacao({
         />
 
         <div className="flex justify-center gap-4 pt-2">
-          <Button variant="default" onClick={handleClose}>
-            Cancelar
-          </Button>
           <Button
-            variant="default"
+            variant="confirm"
             onClick={handleSubmit}
             disabled={rating === 0}
-            className={
-              rating > 0
-                ? "bg-blue-500 hover:bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-500 cursor-not-allowed"
-            }
           >
-            Confirmar Avaliação
+            Avaliar
+          </Button>
+          <Button variant="destructive" onClick={handleClose}>
+            Cancelar
           </Button>
         </div>
       </div>
