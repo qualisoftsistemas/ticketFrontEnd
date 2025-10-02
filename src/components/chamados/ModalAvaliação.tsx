@@ -10,7 +10,7 @@ interface Props {
   onClose: () => void;
   onConfirm: (nota: number, comentario: string) => void;
   itemName?: string;
-  totalStars?: number;  
+  totalStars?: number;
 }
 
 export default function ModalAvaliacao({
@@ -22,6 +22,14 @@ export default function ModalAvaliacao({
   const [rating, setRating] = useState(0);
   const [comentario, setComentario] = useState("");
   const [hover, setHover] = useState(0);
+
+  const legends: Record<number, string> = {
+    1: "Péssimo",
+    2: "Ruim",
+    3: "Regular",
+    4: "Bom",
+    5: "Excelente",
+  };
 
   const handleClose = () => {
     setRating(0);
@@ -49,22 +57,23 @@ export default function ModalAvaliacao({
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose}>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <h2 className="text-lg font-semibold text-center">Avalie o Chamado</h2>
 
-        {/* Estrelas */}
         <StarRating totalStars={totalStars} onChange={setRating} />
 
-        <p className="text-center text-sm text-gray-500">
-          Sua avaliação: <strong>{rating}</strong> de {totalStars} estrelas
-        </p>
+        {rating > 0 && (
+          <p className="text-center text-[var(--primary-foreground)]">
+            {legends[rating]} ({rating} {rating === 1 ? "estrela" : "estrelas"})
+          </p>
+        )}
 
         {/* Textarea para comentário */}
         <textarea
           value={comentario}
           onChange={(e) => setComentario(e.target.value)}
           placeholder="Deixe seu comentário (opcional)"
-          className="w-full h-24 p-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+          className="w-full p-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
         />
 
         <div className="flex justify-center gap-4 pt-2">
