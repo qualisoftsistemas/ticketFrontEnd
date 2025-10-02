@@ -4,7 +4,8 @@ export interface Operador {
   id: number;
 
   nome: string;
-
+  whatsapp?: string;
+  email?: string;
   senha: string;
 }
 

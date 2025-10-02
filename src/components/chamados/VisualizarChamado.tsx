@@ -6,12 +6,15 @@ import React from "react";
 import Badge from "../ui/badge";
 import Mensagem from "./Mensagem";
 import InfoChamado from "./InfoChamado";
-import { useUserRole } from "@/hooks/useUserRole";
+import { Role, useUserRole } from "@/hooks/useUserRole";
 import RespostaChamado from "./RespostaChamado";
 import apiFetchClient from "@/service/api";
 import type { RespostaFormData } from "./RespostaChamado";
 import { UploadedFile } from "../ui/inputFile";
 import { MensagemType } from "./Mensagem";
+import { useRouter } from "next/navigation";
+import ModalFinalizarChamado from "./ModalFinalizarChamado";
+import ModalAvaliacao from "./ModalAvaliação";
 
 export interface VisualizarChamadoProps {
   chamado: ChamadoApiResponse | null;
@@ -20,13 +23,19 @@ export interface VisualizarChamadoProps {
 const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   if (!chamado) return null;
   const chamadoSelecionado = chamado.chamado;
+  const router = useRouter();
 
   const role = useUserRole();
   const [showRespostaForm, setShowRespostaForm] = useState(false);
   const [showRespostaInput, setShowRespostaInput] = useState(false);
+  const [showModalFinalizar, setShowModalFinalizar] = useState(false);
+  const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [mensagens, setMensagens] = useState<MensagemType[]>(
     chamadoSelecionado?.mensagens || []
   );
+  useEffect(() => {
+    setMensagens([]);
+  }, []);
 
   useEffect(() => {
     if (!role || !chamadoSelecionado) return;
@@ -43,6 +52,11 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       (role === "Admin" || role === "Funcionario")
     ) {
       setShowRespostaForm(true);
+    } else if (
+      (status === "aguardando_avaliacao" && role === "Funcionario") ||
+      role === "Admin"
+    ) {
+      setShowModalAvaliar(true);
     } else {
       setShowRespostaForm(false);
     }
@@ -97,6 +111,50 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       alert("Erro ao enviar resposta. Tente novamente.");
     }
   };
+
+  const handleFinalizar = async () => {
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/encerrar_chamado`,
+        data: {
+          chamado_id: chamadoSelecionado.id,
+        },
+      });
+
+      router.push("/chamados");
+    } catch (error) {
+      console.error("Erro ao finalizar chamado:", error);
+      alert("Erro ao finalizar chamado. Tente novamente.");
+    }
+  };
+
+  const handleAvaliacao = async (nota: number) => {
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/avaliar_chamado`,
+        data: {
+          chamado_id: chamadoSelecionado.id,
+          nota,
+        },
+      });
+
+      router.push("/chamados");
+    } catch (error) {
+      console.error("Erro ao avaliar chamado:", error);
+      alert("Erro ao avaliar chamado. Tente novamente.");
+    }
+  };
+  const handleCloseModalAvaliar = () => {
+    setShowModalAvaliar(false);
+
+    router.push("/chamados");
+  };
+
+  useEffect(() => {
+    setMensagens(chamadoSelecionado?.mensagens || []);
+  }, [chamadoSelecionado]);
 
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
@@ -162,11 +220,25 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
                 showRespostaForm={showRespostaForm}
                 handleResponder={() => setShowRespostaInput(true)}
                 showRespostaInput={showRespostaInput}
+                role={role as Role}
+                handleFinalizar={() => setShowModalFinalizar(true)}
               />
             </div>
           </div>
         </div>
       </div>
+
+      <ModalFinalizarChamado
+        isOpen={showModalFinalizar}
+        onClose={() => setShowModalFinalizar(false)}
+        onConfirm={handleFinalizar}
+      />
+
+      <ModalAvaliacao
+        isOpen={showModalAvaliar}
+        onConfirm={handleAvaliacao}
+        onClose={handleCloseModalAvaliar}
+      />
     </div>
   );
 };

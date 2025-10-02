@@ -9,6 +9,8 @@ interface Props {
   showRespostaForm?: boolean;
   showRespostaInput?: boolean;
   handleResponder: () => void;
+  role: string;
+  handleFinalizar: () => void;
 }
 
 export const statusColors: Record<string, string> = {
@@ -29,6 +31,8 @@ const InfoChamado: React.FC<Props> = ({
   showRespostaForm,
   handleResponder,
   showRespostaInput,
+  role,
+  handleFinalizar,
 }) => {
   if (!chamado) return null;
 
@@ -52,13 +56,31 @@ const InfoChamado: React.FC<Props> = ({
             <p className="p-1">{chamado.operador?.email}</p>
           </div>
         </div>
-        {showRespostaForm && !showRespostaInput && (
-          <div className="flex justify-center mt-4">
-            <Button type="button" onClick={handleResponder} variant={"default"}>
-              Responder
-            </Button>
-          </div>
-        )}
+        <div className="flex gap-2">
+          {showRespostaForm && !showRespostaInput && (
+            <div className="flex justify-center mt-4">
+              <Button
+                type="button"
+                onClick={handleResponder}
+                variant={"default"}
+              >
+                Responder
+              </Button>
+            </div>
+          )}
+
+          {showRespostaForm && !showRespostaInput && role === "Operador" && (
+            <div className="flex justify-center mt-4">
+              <Button
+                type="button"
+                onClick={handleFinalizar}
+                variant={"default"}
+              >
+                Finalizar
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
