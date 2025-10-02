@@ -7,6 +7,8 @@ import { Operador } from "@/types/Operador";
 import ModalCadastroOperador from "./CadastroOperador";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import TableSelectSetores from "../ui/tableSelect";
+import apiFetchClient from "@/service/api";
 
 export default function OperadorPageClient() {
   const {
@@ -84,8 +86,29 @@ export default function OperadorPageClient() {
     setShowModal(true);
   };
 
-  const handleSelectSetores = (id: number) => {
+  const handleSelectSetores = (operador: Operador) => {
+    setEditOperador(operador);
     setShowTableSetores(true);
+  };
+
+  const handleSetSetores = async (setores: number[]) => {
+    if (!editOperador) return;
+
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/atribuir_setores`,
+        data: {
+          operador_id: editOperador.id,
+          setores: setores,
+        },
+      });
+
+      await fetchTableData(pagination?.current_page || 1, searchTerm);
+      setShowTableSetores(false);
+    } catch (error) {
+      console.error("Erro ao atribuir setores:", error);
+    }
   };
 
   const columns: Column<Operador>[] = [
@@ -112,7 +135,7 @@ export default function OperadorPageClient() {
             src="/Icons/SectorTree.svg"
             alt="Setores"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleSelectSetores(operador.id)}
+            onClick={() => handleSelectSetores(operador)}
           />
         </div>
       ),
@@ -154,6 +177,15 @@ export default function OperadorPageClient() {
           onClose={() => setShowDeleteModal(false)}
           onConfirm={handleConfirmDelete}
           itemName={operadores.find((o) => o.id === deleteOperadorId)?.nome}
+        />
+      )}
+
+      {showTableSetores && (
+        <TableSelectSetores
+          prestadorId={editOperador?.id || 0}
+          isOpen={showTableSetores}
+          onClose={() => setShowTableSetores(false)}
+          onConfirm={(setores) => handleSetSetores(setores)}
         />
       )}
     </>

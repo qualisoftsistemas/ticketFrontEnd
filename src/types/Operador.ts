@@ -1,4 +1,5 @@
 import { Pagination } from "./Pagination";
+import { Setor } from "./Setor";
 
 export interface Operador {
   id: number;
@@ -7,6 +8,7 @@ export interface Operador {
   whatsapp?: string;
   email?: string;
   senha: string;
+  setores: Setor[];
 }
 
 export interface OperadorApiResponse {

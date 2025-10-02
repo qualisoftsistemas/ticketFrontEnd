@@ -15,7 +15,7 @@ interface SetorState {
     page?: number;
     withPagination?: boolean;
   }) => Promise<void>;
-  fetchSetorById: (id: number) => Promise<void>;
+   fetchSetorById: (id: number) => Promise<void>;
   createSetor: (data: Partial<Setor>) => Promise<void>;
   updateSetor: (data: Partial<Setor>) => Promise<void>;
   deleteSetor: (id: number) => Promise<void>;
@@ -62,6 +62,7 @@ export const useSetorStore = create<SetorState>((set, get) => ({
     }
   },
 
+ 
   fetchSetorById: async (id: number) => {
     set({ loading: true, error: null });
     try {

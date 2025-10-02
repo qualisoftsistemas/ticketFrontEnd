@@ -17,6 +17,7 @@ interface OperadorState {
   fetchOperadorById: (id: number) => Promise<void>;
   createOperador: (data: Partial<Operador>) => Promise<void>;
   updateOperador: (data: Partial<Operador>) => Promise<void>;
+
   deleteOperador: (id: number) => Promise<void>;
   clearError: () => void;
 }
@@ -63,11 +64,11 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
   fetchOperadorById: async (id: number) => {
     set({ loading: true, error: null });
     try {
-      const response = await apiFetchClient<Operador>({
+      const response = await apiFetchClient<{ operador: Operador }>({
         method: "GET",
         endpoint: `/operador/${id}`,
       });
-      set({ operadorSelecionado: response, loading: false });
+      set({ operadorSelecionado: response.operador, loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
