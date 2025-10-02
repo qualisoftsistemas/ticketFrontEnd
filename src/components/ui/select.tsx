@@ -13,12 +13,14 @@ export interface SelectProps {
   options: SelectOption[];
   onSelect: (option: SelectOption) => void;
   placeholder?: string;
+  disabled?: boolean;
   selectedOption?: SelectOption | null;
 }
 
 const Select: React.FC<SelectProps> = ({
   label,
   options,
+  disabled = false,
   onSelect,
   placeholder = "Selecione",
   selectedOption: propSelectedOption,
@@ -39,11 +41,17 @@ const Select: React.FC<SelectProps> = ({
     }
   }, [isOpen]);
 
-  const handleToggle = () => setIsOpen(!isOpen);
+  const handleToggle = () => {
+    if (!disabled) {
+      setIsOpen(!isOpen);
+    }
+  };
 
   const handleSelectOption = (option: SelectOption) => {
-    onSelect(option);
-    setIsOpen(false);
+    if (!disabled) {
+      onSelect(option);
+      setIsOpen(false);
+    }
   };
 
   const displayValue = propSelectedOption
@@ -51,19 +59,29 @@ const Select: React.FC<SelectProps> = ({
     : placeholder;
 
   return (
-    <div className="relative  text-white" ref={dropdownRef}>
-      <label className="block text-sm font-medium mb-1">{label}</label>
+    <div className="relative text-white" ref={dropdownRef}>
+      <label
+        className={`block text-sm font-medium mb-1 ${
+          disabled ? "text-gray-400" : ""
+        }`}
+      >
+        {label}
+      </label>
 
       {/* Botão do Select */}
       <div
-        className="relative flex items-center justify-between p-3 cursor-pointer rounded-lg transition-colors duration-200 bg-[var(--extra)]  text-[var(--primary)]     "
+        className={`relative flex items-center justify-between p-3 rounded-lg transition-colors duration-200 ${
+          disabled
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+            : "bg-[var(--extra)] text-[var(--primary)] cursor-pointer hover:bg-opacity-80"
+        }`}
         onClick={handleToggle}
       >
         <span className="truncate">{displayValue}</span>
         <svg
           className={`w-4 h-4 transition-transform duration-300 ${
             isOpen ? "transform rotate-180" : ""
-          }`}
+          } ${disabled ? "text-gray-400" : ""}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -75,7 +93,7 @@ const Select: React.FC<SelectProps> = ({
         </svg>
       </div>
 
-      {isOpen && (
+      {!disabled && isOpen && (
         <Portal>
           <div
             className="absolute z-50 rounded-lg overflow-hidden bg-[var(--secondary)] text-[var(--extra)]"

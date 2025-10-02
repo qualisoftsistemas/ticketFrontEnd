@@ -29,6 +29,8 @@ export default function OperadorPageClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [showTableSetores, setShowTableSetores] = useState(false);
+
   const fetchTableData = useCallback(
     (page: number, search = "") => fetchOperadores({ page, search }),
     [fetchOperadores]
@@ -82,6 +84,10 @@ export default function OperadorPageClient() {
     setShowModal(true);
   };
 
+  const handleSelectSetores = (id: number) => {
+    setShowTableSetores(true);
+  };
+
   const columns: Column<Operador>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -101,6 +107,12 @@ export default function OperadorPageClient() {
             alt="Excluir"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
             onClick={() => handleDeleteClick(operador.id)}
+          />
+          <img
+            src="/Icons/SectorTree.svg"
+            alt="Setores"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleSelectSetores(operador.id)}
           />
         </div>
       ),

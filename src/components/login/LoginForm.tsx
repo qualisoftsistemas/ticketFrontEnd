@@ -52,7 +52,7 @@ const LoginForm: React.FC = () => {
       if (user.tipo === "ADMIN" || user.tipo === "FUNCIONÁRIO") {
         router.push("/selecionar-empresa");
       } else {
-        router.push("/setor");
+        router.push("/chamados");
       }
     } catch (err: any) {
       console.error("Login error:", err);

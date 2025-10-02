@@ -57,13 +57,11 @@ const CadastroChamado = () => {
       try {
         const data = await apiFetchClient<SelectsData>({
           method: "GET",
-          endpoint: "/abrir_chamado_selects",
+          endpoint: "/abrir_chamado/selects_iniciais",
         });
 
         setEmpresas(data.empresas || []);
         setSetores(data.setores || []);
-        setCategorias(data.categorias || []);
-        setOperadores(data.operadores || []);
       } catch (err) {
         console.error("Erro ao buscar selects:", err);
       }
@@ -141,28 +139,46 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        <div className="flex-1 min-w-[200px]">
-          <Controller
-            name="setor_id"
-            control={control}
-            render={({ field }) => (
-              <Select
-                label="Setor"
-                options={setorOptions}
-                placeholder="Selecione o setor"
-                selectedOption={
-                  setorOptions.find((opt) => opt.id === field.value) || null
+        <Controller
+          name="setor_id"
+          control={control}
+          render={({ field }) => (
+            <Select
+              label="Setor"
+              options={setorOptions}
+              placeholder="Selecione o setor"
+              selectedOption={
+                setorOptions.find((opt) => opt.id === field.value) || null
+              }
+              onSelect={async (option) => {
+                const setorId = Number(option.id);
+                field.onChange(setorId);
+
+                try {
+                  const data = await apiFetchClient<{
+                    categorias: { id: number; nome: string }[];
+                    operadores: {
+                      id: number;
+                      nome: string;
+                      foto?: string | null;
+                    }[];
+                  }>({
+                    method: "GET",
+                    endpoint: `/abrir_chamado/detalhes_setor/${setorId}`,
+                  });
+
+                  setCategorias(data.categorias || []);
+                  setOperadores(data.operadores || []);
+
+                  setValue("categoria_id", 0);
+                  setValue("operador_id", 0);
+                } catch (err) {
+                  console.error("Erro ao buscar detalhes do setor:", err);
                 }
-                onSelect={(option) => field.onChange(Number(option.id))}
-              />
-            )}
-          />
-          {errors.setor_id && (
-            <p className="text-[var(--destructive)] text-sm">
-              {errors.setor_id.message}
-            </p>
+              }}
+            />
           )}
-        </div>
+        />
 
         <div className="flex-1 min-w-[200px]">
           <Controller
@@ -173,6 +189,7 @@ const CadastroChamado = () => {
                 label="Categoria"
                 options={categoriaOptions}
                 placeholder="Selecione a categoria"
+                disabled={categorias.length === 0}
                 selectedOption={
                   categoriaOptions.find((opt) => opt.id === field.value) || null
                 }
@@ -196,6 +213,7 @@ const CadastroChamado = () => {
                 label="Operador"
                 options={operadorOptions}
                 placeholder="Selecione o operador"
+                disabled={operadores.length === 0}
                 selectedOption={
                   operadorOptions.find((opt) => opt.id === field.value) || null
                 }

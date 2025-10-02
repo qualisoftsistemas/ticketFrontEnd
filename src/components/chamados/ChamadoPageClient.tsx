@@ -90,6 +90,7 @@ export default function ChamadoPageClient() {
       <Table
         columns={columns}
         data={chamados}  
+        nomeCadastro="Chamado"
         showCadastro={showCadastro}
         loading={loading}
         pagination={pagination}
