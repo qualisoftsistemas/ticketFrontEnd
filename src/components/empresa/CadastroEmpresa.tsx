@@ -9,6 +9,7 @@ import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import Select, { SelectOption } from "@/components/ui/select";
+import InputCNPJ from "../ui/inputCnpj";
 // Se quiser usar componente custom de CPF/CNPJ:
 // import CpfCnpjInput from "../ui/cpfCnpjInput";
 
@@ -130,9 +131,8 @@ export default function CadastroEmpresa({
           </p>
         )}
 
-        <InputText
+        <InputCNPJ
           label="CNPJ"
-          labelColor="text-[var(--extra)]"
           value={cnpjValue}
           onChange={(val) => setValue("cnpj", val, { shouldValidate: true })}
           placeholder="Digite o CNPJ"

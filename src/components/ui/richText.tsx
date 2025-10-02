@@ -288,7 +288,7 @@ const Tiptap: React.FC<TiptapProps> = ({ value, onChange }) => {
         placeholder: "Comece a escrever aqui...",
       }),
     ],
-    content: "<p>Escreva aqui...</p>",
+    content: "",
     immediatelyRender: false,
   });
 
