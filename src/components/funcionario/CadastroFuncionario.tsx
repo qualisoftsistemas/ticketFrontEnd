@@ -7,11 +7,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Funcionario } from "@/types/Funcionario";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
+import InputCPF from "../ui/inputCpf";
 
 const schema = z.object({
   id: z.number().optional(),
   nome: z.string().min(1, "Nome é obrigatório"),
   senha: z.string().min(1, "Senha é obrigatória"),
+  cpf: z.string().min(11, "CPF deve ter 11 caracteres").optional(),
+  email: z.string().email("Email inválido").optional(),
+  whatsapp: z.string().optional(),
+  facebook: z.string().optional(),
+  instagram: z.string().optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -41,6 +47,11 @@ export default function CadastroFuncionario({
     defaultValues: {
       nome: initialData?.nome || "",
       senha: initialData?.senha || "",
+      cpf: initialData?.cpf || "",
+      email: initialData?.email || "",
+      whatsapp: initialData?.whatsapp || "",
+      facebook: initialData?.facebook || "",
+      instagram: initialData?.instagram || "",
     },
   });
 
@@ -49,11 +60,21 @@ export default function CadastroFuncionario({
       id: initialData?.id,
       nome: initialData?.nome || "",
       senha: initialData?.senha || "",
+      cpf: initialData?.cpf || "",
+      email: initialData?.email || "",
+      whatsapp: initialData?.whatsapp || "",
+      facebook: initialData?.facebook || "",
+      instagram: initialData?.instagram || "",
     });
   }, [initialData, reset]);
 
   const nomeValue = watch("nome");
   const senhaValue = watch("senha");
+  const cpfValue = watch("cpf");
+  const emailValue = watch("email");
+  const whatsappValue = watch("whatsapp");
+  const facebookValue = watch("facebook");
+  const instagramValue = watch("instagram");
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -90,6 +111,80 @@ export default function CadastroFuncionario({
         {errors.senha && (
           <p className="text-[var(--destructive)] text-sm">
             {errors.senha.message}
+          </p>
+        )}
+
+        <InputCPF
+          label="CPF"
+          value={cpfValue}
+          onChange={(val) => setValue("cpf", val, { shouldValidate: true })}
+          placeholder="Digite o CPF"
+        />
+        {errors.cpf && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.cpf.message}
+          </p>
+        )}
+
+        {/* Email */}
+        <InputText
+          label="Email"
+          labelColor="text-[var(--extra)]"
+          value={emailValue}
+          onChange={(val) => setValue("email", val, { shouldValidate: true })}
+          placeholder="Digite o email"
+        />
+        {errors.email && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.email.message}
+          </p>
+        )}
+
+        {/* WhatsApp */}
+        <InputText
+          label="WhatsApp"
+          labelColor="text-[var(--extra)]"
+          value={whatsappValue}
+          onChange={(val) =>
+            setValue("whatsapp", val, { shouldValidate: true })
+          }
+          placeholder="Digite o WhatsApp"
+        />
+        {errors.whatsapp && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.whatsapp.message}
+          </p>
+        )}
+
+        {/* Facebook */}  
+        <InputText
+          label="Facebook"
+          labelColor="text-[var(--extra)]"
+          value={facebookValue}
+          onChange={(val) =>
+            setValue("facebook", val, { shouldValidate: true })
+          }
+          placeholder="Digite o perfil do Facebook"
+        />
+        {errors.facebook && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.facebook.message}
+          </p>
+        )}
+
+        {/* Instagram */}
+        <InputText
+          label="Instagram"
+          labelColor="text-[var(--extra)]"
+          value={instagramValue}
+          onChange={(val) =>
+            setValue("instagram", val, { shouldValidate: true })
+          }
+          placeholder="Digite o perfil do Instagram"
+        />
+        {errors.instagram && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.instagram.message}
           </p>
         )}
 
