@@ -48,13 +48,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar conglomerados",
-        loading: false,
-      });
-    }
+    }catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   fetchConglomeradoById: async (id: number) => {
@@ -65,13 +68,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         endpoint: `/conglomerado/${id}`,
       });
       set({ conglomeradoSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar conglomerado",
-        loading: false,
-      });
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   createConglomerado: async (data: Partial<Conglomerado>) => {
@@ -86,13 +92,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         conglomerados: [...get().conglomerados, response],
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao criar conglomerado",
-        loading: false,
-      });
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   updateConglomerado: async (data: Partial<Conglomerado>) => {
@@ -110,13 +119,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar conglomerado",
-        loading: false,
-      });
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   deleteConglomerado: async (id: number) => {
@@ -130,13 +142,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         conglomerados: get().conglomerados.filter((c) => c.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao deletar conglomerado",
-        loading: false,
-      });
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   clearError: () => set({ error: null }),

@@ -3,41 +3,47 @@
 import React, { useState } from "react";
 import Modal from "../ui/modal";
 import { Button } from "../ui/button";
-// Usando o ícone de estrela da lucide-react (pode ser substituído por qualquer ícone SVG)
-import { Star } from "lucide-react";
+import StarRating from "../ui/stars";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  // A prop onConfirm espera a nota selecionada.
-  onConfirm: (nota: number) => void;
+  onConfirm: (nota: number, comentario: string) => void;
   itemName?: string;
-  totalStars?: number; // Permite customizar o máximo de estrelas (padrão: 5)
+  totalStars?: number;  
 }
 
 export default function ModalAvaliacao({
   isOpen,
   onClose,
   onConfirm,
-
   totalStars = 5,
 }: Props) {
   const [rating, setRating] = useState(0);
+  const [comentario, setComentario] = useState("");
   const [hover, setHover] = useState(0);
-
-  const handleConfirm = () => {
-    if (rating === 0) {
-      alert("Por favor, selecione uma nota antes de confirmar.");
-      return;
-    }
-    onConfirm(rating);
-    setRating(0);
-    onClose();
-  };
 
   const handleClose = () => {
     setRating(0);
     setHover(0);
+    setComentario("");
+    onClose();
+  };
+
+  const handleSubmit = () => {
+    if (rating === 0) {
+      alert("Por favor, selecione uma nota antes de confirmar.");
+      return;
+    }
+
+    try {
+      onConfirm(rating, comentario);
+    } catch (error) {
+      console.error("Erro ao confirmar avaliação:", error);
+    }
+
+    setRating(0);
+    setComentario("");
     onClose();
   };
 
@@ -46,30 +52,20 @@ export default function ModalAvaliacao({
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-center">Avalie o Chamado</h2>
 
-        {/* Componente de Star Rating */}
-        <div className="flex justify-center gap-1 my-2">
-          {[...Array(totalStars)].map((_, index) => {
-            const currentRating = index + 1;
-            return (
-              <Star
-                key={index}
-                className={`w-8 h-8 cursor-pointer transition-colors ${
-                  // A estrela é preenchida se o índice for menor ou igual à nota do hover OU à nota do clique
-                  currentRating <= (hover || rating)
-                    ? "text-yellow-400 fill-yellow-400" // Cor para estrela selecionada/hovered
-                    : "text-gray-300" // Cor para estrela não selecionada
-                }`}
-                onClick={() => setRating(currentRating)}
-                onMouseEnter={() => setHover(currentRating)}
-                onMouseLeave={() => setHover(0)}
-              />
-            );
-          })}
-        </div>
+        {/* Estrelas */}
+        <StarRating totalStars={totalStars} onChange={setRating} />
 
         <p className="text-center text-sm text-gray-500">
-          Sua avaliação: **{rating}** de {totalStars} estrelas
+          Sua avaliação: <strong>{rating}</strong> de {totalStars} estrelas
         </p>
+
+        {/* Textarea para comentário */}
+        <textarea
+          value={comentario}
+          onChange={(e) => setComentario(e.target.value)}
+          placeholder="Deixe seu comentário (opcional)"
+          className="w-full h-24 p-2 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+        />
 
         <div className="flex justify-center gap-4 pt-2">
           <Button variant="default" onClick={handleClose}>
@@ -77,7 +73,7 @@ export default function ModalAvaliacao({
           </Button>
           <Button
             variant="default"
-            onClick={handleConfirm}
+            onClick={handleSubmit}
             disabled={rating === 0}
             className={
               rating > 0

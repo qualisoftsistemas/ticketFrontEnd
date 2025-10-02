@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 import FileBadge from "../ui/fileBadge";
 import apiFetchClient from "@/service/api";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   empresa_id: z.number().min(1, "Selecione uma empresa"),
@@ -43,6 +44,8 @@ const CadastroChamado = () => {
     },
   });
 
+  const router = useRouter();
+
   const [empresas, setEmpresas] = useState<any[]>([]);
   const [setores, setSetores] = useState<any[]>([]);
   const [categorias, setCategorias] = useState<any[]>([]);
@@ -55,7 +58,7 @@ const CadastroChamado = () => {
         const data = await apiFetchClient<SelectsData>({
           method: "GET",
           endpoint: "/abrir_chamado_selects",
-        } );
+        });
 
         setEmpresas(data.empresas || []);
         setSetores(data.setores || []);
@@ -98,6 +101,7 @@ const CadastroChamado = () => {
       });
       reset();
       setUploadedFiles([]);
+      router.push("/chamados");
     } catch (err) {
       console.error("Erro ao abrir chamado:", err);
     }

@@ -46,9 +46,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao buscar admins", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -60,9 +65,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         endpoint: `/admin/${id}`,
       });
       set({ adminSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao buscar admin", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -75,9 +85,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         data,
       });
       set({ admins: [...get().admins, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao criar admin", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -94,9 +109,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         admins: get().admins.map((a) => (a.id === response.id ? response : a)),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao atualizar admin", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -108,9 +128,14 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         endpoint: `/admin/${id}`,
       });
       set({ admins: get().admins.filter((a) => a.id !== id), loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao deletar admin", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

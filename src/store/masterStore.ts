@@ -46,12 +46,14 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar masters",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -63,12 +65,14 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         endpoint: `/master/${id}`,
       });
       set({ masterSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar master",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -81,12 +85,14 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         data,
       });
       set({ masters: [...get().masters, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao criar master",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -105,12 +111,14 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar master",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -125,12 +133,14 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         masters: get().masters.filter((m) => m.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao deletar master",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

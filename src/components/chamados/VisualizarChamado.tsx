@@ -35,10 +35,18 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   );
   useEffect(() => {
     setMensagens([]);
+    setShowModalAvaliar(false);
+    setShowModalFinalizar(false);
+    setShowRespostaForm(false);
+    setShowRespostaInput(false);
   }, []);
 
   useEffect(() => {
     if (!role || !chamadoSelecionado) return;
+
+    setShowRespostaForm(false);
+    setShowModalAvaliar(false);
+    setShowModalFinalizar(false);
 
     const status = chamadoSelecionado.status;
 
@@ -52,15 +60,9 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       (role === "Admin" || role === "Funcionario")
     ) {
       setShowRespostaForm(true);
-    } else if (
-      (status === "aguardando_avaliacao" && role === "Funcionario") ||
-      role === "Admin"
-    ) {
+    } else if (status === "aguardando_avaliacao" && role === "Admin") {
       setShowModalAvaliar(true);
-    } else {
-      setShowRespostaForm(false);
     }
-    console.log("role:", role, "status:", status);
   }, [role, chamadoSelecionado]);
 
   const handleResponder = async (
@@ -129,14 +131,15 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     }
   };
 
-  const handleAvaliacao = async (nota: number) => {
+  const handleAvaliacao = async (nota: number, comentario: string) => {
     try {
       await apiFetchClient({
         method: "PATCH",
         endpoint: `/avaliar_chamado`,
         data: {
           chamado_id: chamadoSelecionado.id,
-          nota,
+          avaliacao: nota,
+          observacao: comentario,
         },
       });
 
@@ -228,17 +231,21 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
         </div>
       </div>
 
-      <ModalFinalizarChamado
-        isOpen={showModalFinalizar}
-        onClose={() => setShowModalFinalizar(false)}
-        onConfirm={handleFinalizar}
-      />
+      {showModalFinalizar && (
+        <ModalFinalizarChamado
+          isOpen={showModalFinalizar}
+          onClose={() => setShowModalFinalizar(false)}
+          onConfirm={handleFinalizar}
+        />
+      )}
 
-      <ModalAvaliacao
-        isOpen={showModalAvaliar}
-        onConfirm={handleAvaliacao}
-        onClose={handleCloseModalAvaliar}
-      />
+      {showModalAvaliar && (
+        <ModalAvaliacao
+          isOpen={showModalAvaliar}
+          onClose={handleCloseModalAvaliar}
+          onConfirm={(nota, comentario) => handleAvaliacao(nota, comentario)}
+        />
+      )}
     </div>
   );
 };

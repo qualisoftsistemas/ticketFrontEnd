@@ -4,6 +4,11 @@ export interface Funcionario {
   id: number;
   nome: string;
   senha: string;
+  email?: string;
+  whatsapp?: string;
+  facebook?: string;
+  instagram?: string;
+  cpf?: string;
 }
 
 export interface FuncionarioApiResponse {

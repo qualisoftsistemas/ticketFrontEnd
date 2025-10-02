@@ -49,12 +49,14 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar prestadores",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -66,12 +68,14 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         endpoint: `/prestador/${id}`,
       });
       set({ prestadorSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar prestador",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -84,12 +88,14 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         data,
       });
       set({ prestadores: [...get().prestadores, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao criar prestador",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -108,12 +114,14 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar prestador",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -128,12 +136,14 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         prestadores: get().prestadores.filter((p) => p.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao deletar prestador",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

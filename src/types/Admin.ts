@@ -10,6 +10,11 @@ export interface Admin {
   conglomerado_id?: number;
   nome: string;
   senha: string;
+  email?: string;
+  whatsapp?: string;
+  facebook?: string;
+  instagram?: string;
+  cpf?: string;
 }
 
 export interface AdminApiResponse {

@@ -61,13 +61,16 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar chamados",
-        loading: false,
-      });
-    }
+    }catch (err: unknown) {
+  if (err instanceof Error) {
+    console.error(err);
+    set({ error: err.message || "Erro ao buscar admins", loading: false });
+  } else {
+    console.error(err);
+    set({ error: "Erro desconhecido", loading: false });
+  }
+}
+
   },
 
   fetchChamadoById: async (id: number) => {
@@ -78,12 +81,14 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         endpoint: `/chamado/${id}`,
       });
       set({ chamadoSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar chamado",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -99,12 +104,14 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         chamados: [...get().chamados, response],
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao criar chamado",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -123,12 +130,14 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar chamado",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -143,12 +152,14 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         chamados: get().chamados.filter((c) => c.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao deletar chamado",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

@@ -49,12 +49,14 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar operadores",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -66,9 +68,14 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         endpoint: `/operador/${id}`,
       });
       set({ operadorSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao buscar operador", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -81,9 +88,14 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         data,
       });
       set({ operadores: [...get().operadores, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao criar operador", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -102,12 +114,14 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar operador",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -122,9 +136,14 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         operadores: get().operadores.filter((o) => o.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao deletar operador", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

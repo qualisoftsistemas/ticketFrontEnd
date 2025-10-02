@@ -108,14 +108,14 @@ const Mensagem: React.FC<MensagemProps> = ({
       </div>
 
       <div
-        className="prose max-w-full p-2 rounded  text-[var(--primary)]"
+        className="p-2 rounded text-[var(--primary)] [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1"
         dangerouslySetInnerHTML={{ __html: mensagem.mensagem }}
       ></div>
 
       {mensagem.anexos.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {mensagem.anexos.map((anexo) => (
-            <div className="flex flex-wrap gap-2">
+            <div key={anexo.id} className="flex flex-wrap gap-2">
               <FileBadge
                 key={anexo.id}
                 file={anexo.arquivo}

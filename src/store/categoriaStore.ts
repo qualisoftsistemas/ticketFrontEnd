@@ -48,12 +48,14 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar categorias",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -65,9 +67,14 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         endpoint: `/categoria/${id}`,
       });
       set({ categoriaSelecionada: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao buscar categoria", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -80,9 +87,14 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         data,
       });
       set({ categorias: [...get().categorias, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao criar categoria", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -101,12 +113,14 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao atualizar categoria",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -121,12 +135,14 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         categorias: get().categorias.filter((c) => c.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao deletar categoria",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

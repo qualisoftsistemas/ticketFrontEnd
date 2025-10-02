@@ -51,12 +51,14 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err.message || "Erro ao buscar setores",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -68,9 +70,14 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         endpoint: `/setor/${id}`,
       });
       set({ setorSelecionado: response, loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao buscar setor", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -83,9 +90,14 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         data,
       });
       set({ setores: [...get().setores, response], loading: false });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao criar setor", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -104,9 +116,14 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         ),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao atualizar setor", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 
@@ -121,9 +138,14 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         setores: get().setores.filter((s) => s.id !== id),
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({ error: err.message || "Erro ao deletar setor", loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

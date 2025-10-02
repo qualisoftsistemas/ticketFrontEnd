@@ -58,12 +58,17 @@ export const useEmpresaStore = create<EmpresaState>()(
             pagination: response.pagination || null,
             loading: false,
           });
-        } catch (err: any) {
-          console.error(err);
-          set({
-            error: err.message || "Erro ao buscar empresas",
-            loading: false,
-          });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
         }
       },
 
@@ -75,12 +80,17 @@ export const useEmpresaStore = create<EmpresaState>()(
             endpoint: `/empresa/${id}`,
           });
           set({ empresaSelecionada: response, loading: false });
-        } catch (err: any) {
-          console.error(err);
-          set({
-            error: err.message || "Erro ao buscar empresa",
-            loading: false,
-          });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
         }
       },
 
@@ -93,12 +103,17 @@ export const useEmpresaStore = create<EmpresaState>()(
             data,
           });
           set({ empresas: [...get().empresas, response], loading: false });
-        } catch (err: any) {
-          console.error(err);
-          set({
-            error: err.message || "Erro ao criar empresa",
-            loading: false,
-          });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
         }
       },
 
@@ -117,12 +132,17 @@ export const useEmpresaStore = create<EmpresaState>()(
             ),
             loading: false,
           });
-        } catch (err: any) {
-          console.error(err);
-          set({
-            error: err.message || "Erro ao atualizar empresa",
-            loading: false,
-          });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
         }
       },
 
@@ -137,12 +157,17 @@ export const useEmpresaStore = create<EmpresaState>()(
             empresas: get().empresas.filter((e) => e.id !== id),
             loading: false,
           });
-        } catch (err: any) {
-          console.error(err);
-          set({
-            error: err.message || "Erro ao deletar empresa",
-            loading: false,
-          });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
         }
       },
 
