@@ -22,7 +22,6 @@ const InputCNPJ: React.FC<Props> = ({
   placeholder = "00.000.000/0000-00",
   name,
   id,
-  labelColor = "text-[var(--extra)]",
   disabled,
 }) => {
   const handleChange = (val: string) => {

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import ActionBox from "./ActionBox";
 import Image from "next/image";
 import Pagination from "@/components/ui/pagination";
+import type { Pagination as PaginationType } from "@/types/Pagination";
 
 interface TableProps<T> {
   nomeCadastro?: string;
@@ -13,13 +14,14 @@ interface TableProps<T> {
   data: T[];
   showCadastro?: () => void;
   loading?: boolean;
-  pagination: any;
+  pagination: PaginationType | null;
   onPageChange: (page: number) => void;
   searchTerm: string;
   onRowClick?: (id: number) => void;
   onSearchChange: (term: string) => void;
 }
 
+// eslint-disable-next-line
 function Table<T extends Record<string, any>>({
   nomeCadastro = "Cadastro",
   columns,
@@ -84,7 +86,7 @@ function Table<T extends Record<string, any>>({
         loading={loading}
         columns={columns}
         data={data}
-      />  
+      />
       {pagination && (
         <Pagination
           currentPage={pagination.current_page}

@@ -60,11 +60,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   fetchAdminById: async (id: number) => {
     set({ loading: true, error: null });
     try {
-      const response = await apiFetchClient<Admin>({
+      const response = await apiFetchClient<{ admin: Admin }>({
         method: "GET",
         endpoint: `/admin/${id}`,
       });
-      set({ adminSelecionado: response, loading: false });
+      set({ adminSelecionado: response.admin, loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);

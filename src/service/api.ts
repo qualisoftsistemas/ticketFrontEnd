@@ -6,6 +6,7 @@ export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 interface ApiFetchOptions {
   method: HttpMethod;
   endpoint: string;
+  // eslint-disable-next-line
   data?: any;
 }
 
@@ -75,6 +76,7 @@ const apiFetchClient = async <T>({
     }
 
     return res.json();
+    // eslint-disable-next-line
   } catch (error: any) {
     console.error("API fetch client error:", error);
     throw error;

@@ -31,8 +31,7 @@ export default function CadastroOperador({
 }: Props) {
   const {
     handleSubmit,
-    control,
-    setValue,
+     setValue,
     watch,
     reset,
     formState: { errors },

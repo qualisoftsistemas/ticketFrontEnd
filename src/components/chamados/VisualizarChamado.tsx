@@ -21,18 +21,17 @@ export interface VisualizarChamadoProps {
 }
 
 const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
-  if (!chamado) return null;
-  const chamadoSelecionado = chamado.chamado;
   const router = useRouter();
-
   const role = useUserRole();
   const [showRespostaForm, setShowRespostaForm] = useState(false);
   const [showRespostaInput, setShowRespostaInput] = useState(false);
   const [showModalFinalizar, setShowModalFinalizar] = useState(false);
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
-  const [mensagens, setMensagens] = useState<MensagemType[]>(
-    chamadoSelecionado?.mensagens || []
-  );
+  const [mensagens, setMensagens] = useState<MensagemType[]>([]);
+
+  if (!chamado) return null;
+
+  const chamadoSelecionado = chamado.chamado;
   useEffect(() => {
     setMensagens([]);
     setShowModalAvaliar(false);
@@ -40,9 +39,16 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowRespostaForm(false);
     setShowRespostaInput(false);
   }, []);
+  useEffect(() => {
+    setMensagens(chamadoSelecionado?.mensagens || []);
+    setShowModalAvaliar(false);
+    setShowModalFinalizar(false);
+    setShowRespostaForm(false);
+    setShowRespostaInput(false);
+  }, [chamadoSelecionado]);
 
   useEffect(() => {
-    if (!role || !chamadoSelecionado) return;
+    if (!role) return;
 
     setShowRespostaForm(false);
     setShowModalAvaliar(false);

@@ -45,12 +45,10 @@ const TableSelectSetores = ({
     setSelectedSetores(operadorSelecionado.setores.map((s) => s.id));
   }, [operadorSelecionado]);
 
-  // Busca todos os setores
   useEffect(() => {
     fetchSetores();
   }, [fetchSetores]);
 
-  // Pega os setores da página atual
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const currentSetores = setores.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   const totalPages = Math.ceil(setores.length / ITEMS_PER_PAGE);

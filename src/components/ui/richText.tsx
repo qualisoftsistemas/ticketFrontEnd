@@ -42,7 +42,7 @@ import {
   FaAlignRight,
   FaAlignJustify,
 } from "react-icons/fa";
-
+// eslint-disable-next-line
 const MenuBar = ({ editor }: { editor: any }) => {
   const [_, setUpdate] = useState(0);
 
@@ -247,7 +247,7 @@ const MenuBar = ({ editor }: { editor: any }) => {
   );
 };
 
-const Tiptap: React.FC<TiptapProps> = ({ value, onChange }) => {
+const Tiptap: React.FC<TiptapProps> = ({ onChange }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({

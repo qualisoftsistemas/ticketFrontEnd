@@ -54,11 +54,12 @@ const LoginForm: React.FC = () => {
       } else {
         router.push("/chamados");
       }
-    } catch (err: any) {
-      console.error("Login error:", err);
-      setError(err.message || "Erro desconhecido");
-    } finally {
-      setLoading(false);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Erro desconhecido");
+      }
     }
   };
 

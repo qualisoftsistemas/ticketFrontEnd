@@ -8,6 +8,7 @@ import { Admin } from "@/types/Admin";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import { useConglomeradoStore } from "@/store/conglomeradoStore";
+import { useAdminStore } from "@/store/adminStore";
 import Select, { SelectOption } from "../ui/select";
 import InputCPF from "../ui/inputCpf";
 
@@ -55,25 +56,32 @@ export default function CadastroAdmin({
       whatsapp: initialData?.whatsapp || "",
       facebook: initialData?.facebook || "",
       instagram: initialData?.instagram || "",
-
       conglomerado_id: initialData?.conglomerado?.id || undefined,
     },
   });
   const { conglomerados, fetchConglomerados } = useConglomeradoStore();
 
+  const { fetchAdminById, adminSelecionado } = useAdminStore();
+
   useEffect(() => {
+    fetchAdminById(initialData?.id || 0);
+  }, [fetchAdminById, initialData]);
+
+  useEffect(() => {
+    if (!adminSelecionado) return;
+
     reset({
-      id: initialData?.id,
-      nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
-      cpf: initialData?.cpf || "",
-      email: initialData?.email || "",
-      whatsapp: initialData?.whatsapp || "",
-      facebook: initialData?.facebook || "",
-      instagram: initialData?.instagram || "",
-      conglomerado_id: initialData?.conglomerado?.id || undefined,
+      id: adminSelecionado.id,
+      nome: adminSelecionado.nome || "",
+      senha: adminSelecionado.senha || "",
+      cpf: adminSelecionado.cpf || "",
+      email: adminSelecionado.email || "",
+      whatsapp: adminSelecionado.whatsapp || "",
+      facebook: adminSelecionado.facebook || "",
+      instagram: adminSelecionado.instagram || "",
+      conglomerado_id: adminSelecionado.conglomerado?.id || undefined,
     });
-  }, [initialData, reset]);
+  }, [adminSelecionado, reset]);
 
   useEffect(() => {
     fetchConglomerados();

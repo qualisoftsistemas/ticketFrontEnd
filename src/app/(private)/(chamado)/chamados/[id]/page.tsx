@@ -4,9 +4,8 @@ import React, { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useChamadoStore } from "@/store/chamadoStore";
 
-type Props = {};
-
-const page = (props: Props) => {
+ 
+const ChamadoIdPage = () => {
   const { chamadoSelecionado, fetchChamadoById } = useChamadoStore();
   const pathname = usePathname();
   const id = pathname.split("/").pop();
@@ -24,4 +23,4 @@ const page = (props: Props) => {
   );
 };
 
-export default page;
+export default ChamadoIdPage;

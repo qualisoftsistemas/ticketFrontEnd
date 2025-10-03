@@ -75,8 +75,7 @@ export default function CadastroMaster({
       label: p.nome,
     }));
 
-  const prestadorIdValue = watch("prestador_id");
-  const nomeValue = watch("nome");
+   const nomeValue = watch("nome");
   const senhaValue = watch("senha");
 
   return (

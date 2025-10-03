@@ -23,9 +23,9 @@ export default function Modal({
   textColor = "text-[var(--extra)]",
   closeButtonColor,
 }: ModalProps) {
-  if (!isOpen) return null;
-
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -37,7 +37,9 @@ export default function Modal({
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [onClose]);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <ModalPortal>
