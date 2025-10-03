@@ -28,7 +28,12 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
         href={item.href ?? "#"}
         className="px-1 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
       >
-        {item.icon && <Icon icon={item.icon} className="w-6 h-6 bg-[var(--primary-foreground)]"/>}
+        {item.icon && (
+          <Icon
+            icon={item.icon}
+            className="w-6 h-6 bg-[var(--primary-foreground)]"
+          />
+        )}
         <p>{item.label}</p>
       </Link>
     );
@@ -38,10 +43,15 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
     <div className="w-full">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full px-1 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
+        className="w-full px-1 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition cursor-pointer"
       >
         <div className="flex items-center gap-3">
-          {item.icon && <Icon icon={item.icon} className="w-6 h-6 bg-[var(--primary-foreground)]"/>}
+          {item.icon && (
+            <Icon
+              icon={item.icon}
+              className="w-6 h-6 bg-[var(--primary-foreground)]"
+            />
+          )}
           <p>{item.label}</p>
         </div>
         <img
@@ -50,8 +60,12 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
           className="w-4 h-4"
         />
       </button>
-      {open && (
-        <div className="pl-6 flex flex-col gap-1">
+      {item.subItems && (
+        <div
+          className={`pl-6 flex flex-col gap-1 overflow-hidden transition-all duration-500 ease-in-out
+      ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+    `}
+        >
           {item.subItems.map((subItem, idx) => (
             <Link
               key={idx}
