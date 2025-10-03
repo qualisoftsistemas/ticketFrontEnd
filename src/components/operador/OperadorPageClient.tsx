@@ -9,6 +9,7 @@ import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
 import TableSelectSetores from "../ui/tableSelect";
 import apiFetchClient from "@/service/api";
+import Icon from "../ui/icon";
 
 export default function OperadorPageClient() {
   const {
@@ -131,10 +132,9 @@ export default function OperadorPageClient() {
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
             onClick={() => handleDeleteClick(operador.id)}
           />
-          <img
-            src="/Icons/SectorTree.svg"
-            alt="Setores"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/SectorTree.svg"
+            className="w-5 h-5 bg-[var(--primary-foreground)] hover:brightness-200 hover:scale-105"
             onClick={() => handleSelectSetores(operador)}
           />
         </div>
