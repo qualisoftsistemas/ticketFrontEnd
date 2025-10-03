@@ -14,7 +14,7 @@ import { UploadedFile } from "../ui/inputFile";
 import { MensagemType } from "./Mensagem";
 import { useRouter } from "next/navigation";
 import ModalFinalizarChamado from "./ModalFinalizarChamado";
-import ModalAvaliacao from "./ModalAvaliação";
+import ModalAvaliacao from "./ModalAvaliacao";
 
 export interface VisualizarChamadoProps {
   chamado: ChamadoApiResponse | null;
@@ -29,9 +29,8 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [mensagens, setMensagens] = useState<MensagemType[]>([]);
 
-  if (!chamado) return null;
-
-  const chamadoSelecionado = chamado.chamado;
+  // 1. Efeito de inicialização/limpeza (executa no mount/unmount)
+  // Este hook não depende de 'chamado', mas deve vir antes do retorno condicional.
   useEffect(() => {
     setMensagens([]);
     setShowModalAvaliar(false);
@@ -39,22 +38,30 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowRespostaForm(false);
     setShowRespostaInput(false);
   }, []);
+
+  // 2. Efeito para carregar as mensagens e redefinir estados modais/formulário
+  // Este hook é chamado sempre que a prop 'chamado' muda.
   useEffect(() => {
-    setMensagens(chamadoSelecionado?.mensagens || []);
+    // Usamos optional chaining (?) para acessar 'mensagens' com segurança
+    setMensagens(chamado?.chamado?.mensagens || []);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
     setShowRespostaForm(false);
     setShowRespostaInput(false);
-  }, [chamadoSelecionado]);
+  }, [chamado]);
 
+  // 3. Efeito para determinar a visibilidade de formulários/modais com base no status e role
+  // Depende de 'role' e 'chamado'.
   useEffect(() => {
-    if (!role) return;
+    // Cláusula de guarda dentro do hook é permitida
+    if (!role || !chamado) return;
+
+    const chamadoSelecionado = chamado.chamado;
+    const status = chamadoSelecionado.status;
 
     setShowRespostaForm(false);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
-
-    const status = chamadoSelecionado.status;
 
     if (
       (status === "pendente_pelo_operador" && role === "Operador") ||
@@ -69,7 +76,12 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     } else if (status === "aguardando_avaliacao" && role === "Admin") {
       setShowModalAvaliar(true);
     }
-  }, [role, chamadoSelecionado]);
+  }, [role, chamado]);
+
+  // A verificação condicional é colocada DEPOIS de todos os hooks
+  if (!chamado) return null;
+
+  const chamadoSelecionado = chamado.chamado;
 
   const handleResponder = async (
     data: RespostaFormData,
@@ -148,20 +160,19 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
           observacao: comentario,
         },
       });
+      // Após a avaliação bem-sucedida, você pode querer fechar o modal e redirecionar
+      handleCloseModalAvaliar();
     } catch (error) {
       console.error("Erro ao avaliar chamado:", error);
       alert("Erro ao avaliar chamado. Tente novamente.");
     }
   };
+
   const handleCloseModalAvaliar = () => {
     setShowModalAvaliar(false);
 
     router.push("/chamados");
   };
-
-  useEffect(() => {
-    setMensagens(chamadoSelecionado?.mensagens || []);
-  }, [chamadoSelecionado]);
 
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
@@ -247,7 +258,9 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
         <ModalAvaliacao
           isOpen={showModalAvaliar}
           onClose={handleCloseModalAvaliar}
-          onConfirm={(nota, comentario) => handleAvaliacao(nota, comentario)}
+          onConfirm={(nota: number, comentario: string) =>
+            handleAvaliacao(nota, comentario)
+          }
         />
       )}
     </div>

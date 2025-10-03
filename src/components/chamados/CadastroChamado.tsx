@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import InputText from "../ui/inputText";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import Tiptap from "../ui/richText";
@@ -20,7 +22,7 @@ const baseSchema = z.object({
   assunto: z.string().min(3, "Assunto obrigatório"),
   mensagem: z.string().min(5, "Mensagem obrigatória"),
   arquivos_ids: z.array(z.number()).optional(),
-  operador_id: z.number().optional(), // sempre opcional
+  operador_id: z.number().optional(),
 });
 
 interface SelectsData {
@@ -29,6 +31,7 @@ interface SelectsData {
   empresas: { id: number; nome: string }[];
   operadores: { id: number; nome: string; foto?: string | null }[];
 }
+
 type FormData = z.infer<typeof baseSchema>;
 
 const CadastroChamado = () => {
@@ -48,10 +51,10 @@ const CadastroChamado = () => {
   const role = useUserRole();
   const router = useRouter();
 
-  const [empresas, setEmpresas] = useState<any[]>([]);
-  const [setores, setSetores] = useState<any[]>([]);
-  const [categorias, setCategorias] = useState<any[]>([]);
-  const [operadores, setOperadores] = useState<any[]>([]);
+  const [empresas, setEmpresas] = useState<SelectsData["empresas"]>([]);
+  const [setores, setSetores] = useState<SelectsData["setores"]>([]);
+  const [categorias, setCategorias] = useState<SelectsData["categorias"]>([]);
+  const [operadores, setOperadores] = useState<SelectsData["operadores"]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   useEffect(() => {
@@ -94,15 +97,19 @@ const CadastroChamado = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
+      // Remove operador_id se não aplicável
+      let payload: FormData = data;
       if (role === "Master" || role === "Operador") {
-        delete (data as any).operador_id;
+        const { operador_id, ...rest } = data;
+        payload = rest as FormData;
       }
 
       await apiFetchClient({
         method: "POST",
         endpoint: "/chamado",
-        data,
+        data: payload,
       });
+
       reset();
       setUploadedFiles([]);
       router.push("/chamados");
@@ -177,8 +184,9 @@ const CadastroChamado = () => {
                   setOperadores(data.operadores || []);
 
                   setValue("categoria_id", 0);
-                  (role === "Funcionario" || role === "Admin") &&
+                  if (role === "Funcionario" || role === "Admin") {
                     setValue("operador_id", 0);
+                  }
                 } catch (err) {
                   console.error("Erro ao buscar detalhes do setor:", err);
                 }
@@ -211,7 +219,6 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        {/* Só renderiza campo Operador se role for FUNCIONARIO ou ADMIN */}
         {(role === "Funcionario" || role === "Admin") && (
           <div className="flex-1 min-w-[200px]">
             <Controller
@@ -248,7 +255,6 @@ const CadastroChamado = () => {
           <InputText
             label="Assunto"
             labelColor="text-[var(--extra)]"
-            name="assunto"
             value={field.value}
             onChange={(val) => field.onChange(val)}
             placeholder="Digite o assunto do chamado"
@@ -303,16 +309,13 @@ const CadastroChamado = () => {
             file={file}
             fileIcon={
               file?.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
-                <img
-                  src="/icons/Eye.svg"
-                  alt="Eye"
-                  className="w-6 h-6 object-contain"
-                />
+                <Image src="/icons/Eye.svg" alt="Eye" width={24} height={24} />
               ) : (
-                <img
+                <Image
                   src="/icons/Download.svg"
                   alt="Download"
-                  className="w-6 h-6 object-contain"
+                  width={24}
+                  height={24}
                 />
               )
             }
