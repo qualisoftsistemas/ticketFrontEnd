@@ -35,7 +35,7 @@ export default function ChamadoPageClient() {
 
   useEffect(() => {
     fetchTableData(1);
-  }, [fetchTableData]);
+  }, []);
 
   const handlePageChange = (page: number) => {
     fetchTableData(page, searchTerm);

@@ -49,18 +49,25 @@ const statusConfig: {
 const FilterBox = ({ onFilterChange }: Props) => {
   const [selected, setSelected] = useState<string[]>(defaultStatuses);
 
+  // Atualiza callback sempre que selected muda
   useEffect(() => {
     onFilterChange(selected);
-  }, []);
+  }, [selected, onFilterChange]);
 
   const handleClick = (status: string) => {
-    const updated = [status];
+    let updated: string[];
+    if (selected.includes(status)) {
+      // desmarca se já estava selecionado
+      updated = selected.filter((s) => s !== status);
+    } else {
+      // adiciona ao selecionado
+      updated = [...selected, status];
+    }
     setSelected(updated);
-    onFilterChange(updated);
   };
 
   return (
-    <div className="flex gap-4 p-4 rounded-lg mb-4 w-full">
+    <div className="flex gap-4 p-4 rounded-lg mb-4 w-full flex-wrap">
       {statuses.map((status) => {
         const isSelected = selected.includes(status);
         const config = statusConfig[status];
@@ -73,8 +80,7 @@ const FilterBox = ({ onFilterChange }: Props) => {
               p-3 rounded-lg border border-gray-300 font-medium text-center
               hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-              ${isSelected ? config.text + " font-semibold" : "text-gray-700"}
-              bg-white
+              ${isSelected ? config.text + " font-semibold bg-gray-100" : "text-gray-700 bg-white"}
             `}
             onClick={() => handleClick(status)}
           >
