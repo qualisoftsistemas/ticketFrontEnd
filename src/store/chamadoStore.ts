@@ -61,10 +61,13 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    } catch (err: unknown) {
+    } catch (err: any) {
       if (err instanceof Error) {
         console.error(err);
-        set({ error: err.message || "Erro ao buscar admins", loading: false });
+        set({
+          error: err.message || "Erro ao buscar  chamados",
+          loading: false,
+        });
       } else {
         console.error(err);
         set({ error: "Erro desconhecido", loading: false });
