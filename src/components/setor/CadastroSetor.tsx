@@ -41,6 +41,7 @@ export default function CadastroSetor({
 
   useEffect(() => {
     reset({
+      id: initialData?.id,
       nome: initialData?.nome || "",
     });
   }, [initialData, reset]);
@@ -60,7 +61,9 @@ export default function CadastroSetor({
           placeholder="Digite o nome do setor"
         />
         {errors.nome && (
-          <p className="text-[var(--destructive)] text-sm">{errors.nome.message}</p>
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.nome.message}
+          </p>
         )}
 
         <Button variant={"confirm"} type="submit">

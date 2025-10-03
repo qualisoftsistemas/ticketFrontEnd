@@ -9,6 +9,7 @@ import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
 import { FaEdit, FaTrash, FaTag, FaLightbulb } from "react-icons/fa";
 import Table from "../table/Table";
+import { FieldErrors } from "react-hook-form";
 
 export default function SetorPageClient() {
   const {

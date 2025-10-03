@@ -50,6 +50,7 @@ export default function CadastroCategoria({
 
   useEffect(() => {
     reset({
+      id: initialData?.id,
       nome: initialData?.nome || "",
       setor_id: initialData?.setor?.id || undefined,
     });

@@ -11,15 +11,16 @@ import { Button } from "../ui/button";
 import FileBadge from "../ui/fileBadge";
 import apiFetchClient from "@/service/api";
 import { useRouter } from "next/navigation";
+import { useUserRole } from "@/hooks/useUserRole";
 
-const schema = z.object({
+const baseSchema = z.object({
   empresa_id: z.number().min(1, "Selecione uma empresa"),
   setor_id: z.number().min(1, "Selecione um setor"),
   categoria_id: z.number().min(1, "Selecione uma categoria"),
-  operador_id: z.number().min(1, "Selecione um operador"),
   assunto: z.string().min(3, "Assunto obrigatório"),
   mensagem: z.string().min(5, "Mensagem obrigatória"),
   arquivos_ids: z.array(z.number()).optional(),
+  operador_id: z.number().optional(), // sempre opcional
 });
 
 interface SelectsData {
@@ -28,7 +29,7 @@ interface SelectsData {
   empresas: { id: number; nome: string }[];
   operadores: { id: number; nome: string; foto?: string | null }[];
 }
-type FormData = z.infer<typeof schema>;
+type FormData = z.infer<typeof baseSchema>;
 
 const CadastroChamado = () => {
   const {
@@ -38,12 +39,13 @@ const CadastroChamado = () => {
     reset,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(baseSchema),
     defaultValues: {
       arquivos_ids: [],
     },
   });
 
+  const role = useUserRole();
   const router = useRouter();
 
   const [empresas, setEmpresas] = useState<any[]>([]);
@@ -92,6 +94,10 @@ const CadastroChamado = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
+      if (role === "Master" || role === "Operador") {
+        delete (data as any).operador_id;
+      }
+
       await apiFetchClient({
         method: "POST",
         endpoint: "/chamado",
@@ -171,7 +177,8 @@ const CadastroChamado = () => {
                   setOperadores(data.operadores || []);
 
                   setValue("categoria_id", 0);
-                  setValue("operador_id", 0);
+                  (role === "Funcionario" || role === "Admin") &&
+                    setValue("operador_id", 0);
                 } catch (err) {
                   console.error("Erro ao buscar detalhes do setor:", err);
                 }
@@ -204,29 +211,33 @@ const CadastroChamado = () => {
           )}
         </div>
 
-        <div className="flex-1 min-w-[200px]">
-          <Controller
-            name="operador_id"
-            control={control}
-            render={({ field }) => (
-              <Select
-                label="Operador"
-                options={operadorOptions}
-                placeholder="Selecione o operador"
-                disabled={operadores.length === 0}
-                selectedOption={
-                  operadorOptions.find((opt) => opt.id === field.value) || null
-                }
-                onSelect={(option) => field.onChange(Number(option.id))}
-              />
+        {/* Só renderiza campo Operador se role for FUNCIONARIO ou ADMIN */}
+        {(role === "Funcionario" || role === "Admin") && (
+          <div className="flex-1 min-w-[200px]">
+            <Controller
+              name="operador_id"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Operador"
+                  options={operadorOptions}
+                  placeholder="Selecione o operador"
+                  disabled={operadores.length === 0}
+                  selectedOption={
+                    operadorOptions.find((opt) => opt.id === field.value) ||
+                    null
+                  }
+                  onSelect={(option) => field.onChange(Number(option.id))}
+                />
+              )}
+            />
+            {errors.operador_id && (
+              <p className="text-[var(--destructive)] text-sm">
+                {errors.operador_id.message}
+              </p>
             )}
-          />
-          {errors.operador_id && (
-            <p className="text-[var(--destructive)] text-sm">
-              {errors.operador_id.message}
-            </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
 
       {/* Assunto */}
