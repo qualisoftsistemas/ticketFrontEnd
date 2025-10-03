@@ -28,7 +28,7 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
         href={item.href ?? "#"}
         className="px-1 py-2 hover:-translate-y-0.5 hover:brightness-200 transition flex items-center gap-3"
       >
-        {item.icon && <Icon icon={item.icon} />}
+        {item.icon && <Icon icon={item.icon} className="w-6 h-6 bg-[var(--primary-foreground)]"/>}
         <p>{item.label}</p>
       </Link>
     );
@@ -41,7 +41,7 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
         className="w-full px-1 py-2 flex items-center justify-between hover:-translate-y-0.5 hover:brightness-200 transition"
       >
         <div className="flex items-center gap-3">
-          {item.icon && <Icon icon={item.icon} />}
+          {item.icon && <Icon icon={item.icon} className="w-6 h-6 bg-[var(--primary-foreground)]"/>}
           <p>{item.label}</p>
         </div>
         <img

@@ -69,9 +69,9 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
                   </p>
                 </div>
                 {open ? (
-                  <Icon icon="/Icons/ArrowUp.svg" className="w-4 h-4 ml-2" />
+                  <Icon icon="/Icons/ArrowUp.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
                 ) : (
-                  <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2" />
+                  <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
                 )}
               </div>
             </DropdownMenuTrigger>
@@ -109,7 +109,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
         <div className="flex items-center gap-2">
           <img src="/Icons/UserCircle.svg" alt="user" className="w-10 h-10" />
           <h1 className="font-bold">Eu sou o Usuário</h1>
-          <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2" />
+          <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
         </div>
       </div>
     </header>
