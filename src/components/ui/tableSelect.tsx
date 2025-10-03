@@ -11,7 +11,7 @@ interface TableSelectSetoresProps {
   onConfirm: (selectedSetores: number[]) => void;
 }
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 20;
 
 const TableSelectSetores = ({
   isOpen,
@@ -86,14 +86,14 @@ const TableSelectSetores = ({
               {currentSetores.map((setor) => (
                 <tr
                   key={setor.id}
-                  className={`cursor-pointer text-sm ${
+                  className={`cursor-pointer text-xs ${
                     selectedSetores.includes(setor.id)
-                      ? "bg-[var(--secondary)] text-[var(--secondary-foreground)]"
+                      ? "bg-[var(--secondary)]/60 text-[var(--secondary-foreground)]"
                       : ""
                   }`}
                   onClick={() => toggleSelect(setor.id)}
                 >
-                  <td className="border-b p-2">{setor.nome}</td>
+                  <td className="border-b p-1">{setor.nome}</td>
                 </tr>
               ))}
             </tbody>
@@ -132,15 +132,15 @@ const TableSelectSetores = ({
               return (
                 <div
                   key={setor.id}
-                  className="flex items-center gap-1 bg-blue-200 text-blue-800 px-2 py-1 rounded-full"
+                  className="flex items-center gap-3 text-sm bg-[var(--secondary)] text-[var-(--secondary-foreground)] px-2 py-1 rounded-md"
                 >
                   <span>{setor.nome}</span>
                   <button
                     type="button"
-                    className="font-bold text-red-500"
+                    className="font-bold text-[var(--destructive)] text-xs cursor-pointer"
                     onClick={() => removeSelected(setor.id)}
                   >
-                    ×
+                    X
                   </button>
                 </div>
               );
