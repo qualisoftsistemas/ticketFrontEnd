@@ -60,6 +60,8 @@ const LoginForm: React.FC = () => {
       } else {
         setError("Erro desconhecido");
       }
+    } finally {
+      setLoading(false);
     }
   };
 

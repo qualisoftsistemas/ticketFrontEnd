@@ -57,7 +57,7 @@ const InfoChamado: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex gap-2">
-          {showRespostaForm && !showRespostaInput && (
+   
             <div className="flex justify-center mt-4">
               <Button
                 type="button"
@@ -67,7 +67,7 @@ const InfoChamado: React.FC<Props> = ({
                 Responder
               </Button>
             </div>
-          )}
+           
 
           {showRespostaForm && !showRespostaInput && role === "Operador" && (
             <div className="flex justify-center mt-4">

@@ -29,8 +29,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
   const [mensagens, setMensagens] = useState<MensagemType[]>([]);
 
-  // 1. Efeito de inicialização/limpeza (executa no mount/unmount)
-  // Este hook não depende de 'chamado', mas deve vir antes do retorno condicional.
   useEffect(() => {
     setMensagens([]);
     setShowModalAvaliar(false);
@@ -39,10 +37,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowRespostaInput(false);
   }, []);
 
-  // 2. Efeito para carregar as mensagens e redefinir estados modais/formulário
-  // Este hook é chamado sempre que a prop 'chamado' muda.
   useEffect(() => {
-    // Usamos optional chaining (?) para acessar 'mensagens' com segurança
     setMensagens(chamado?.chamado?.mensagens || []);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
@@ -50,10 +45,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowRespostaInput(false);
   }, [chamado]);
 
-  // 3. Efeito para determinar a visibilidade de formulários/modais com base no status e role
-  // Depende de 'role' e 'chamado'.
   useEffect(() => {
-    // Cláusula de guarda dentro do hook é permitida
     if (!role || !chamado) return;
 
     const chamadoSelecionado = chamado.chamado;
@@ -62,23 +54,14 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowRespostaForm(false);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
-
     if (
-      (status === "pendente_pelo_operador" && role === "Operador") ||
-      role === "Master"
+      (status === "aguardando_avaliacao" && role === "Admin") ||
+      role === "Funcionario"
     ) {
-      setShowRespostaForm(true);
-    } else if (
-      status === "pendente_pelo_usuario" &&
-      (role === "Admin" || role === "Funcionario")
-    ) {
-      setShowRespostaForm(true);
-    } else if (status === "aguardando_avaliacao" && role === "Admin") {
       setShowModalAvaliar(true);
     }
   }, [role, chamado]);
 
-  // A verificação condicional é colocada DEPOIS de todos os hooks
   if (!chamado) return null;
 
   const chamadoSelecionado = chamado.chamado;
@@ -87,12 +70,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     data: RespostaFormData,
     arquivos?: UploadedFile[]
   ) => {
-    if (data && "preventDefault" in data) {
-      setShowRespostaInput(true);
-      return;
-    }
-
-    if (!showRespostaForm || !data) {
+    if (!data) {
       setShowRespostaInput(true);
       return;
     }

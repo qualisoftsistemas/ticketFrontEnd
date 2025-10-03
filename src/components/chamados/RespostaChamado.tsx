@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
 
 const schema = z.object({
-  mensagem: z.string().min(5, "Mensagem obrigatória"),
+  mensagem: z.string().min(1, "Mensagem obrigatória"),
   arquivos_ids: z.array(z.number()).optional(),
 });
 export type RespostaFormData = z.infer<typeof schema>;
@@ -29,19 +29,18 @@ const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
   } = useForm<RespostaFormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      mensagem: "",
       arquivos_ids: [],
     },
   });
 
   const onSubmit = (data: RespostaFormData) => {
-    handleResponder(data, uploadedFiles); 
+    console.log(data.mensagem);
+    handleResponder(data, uploadedFiles);
     reset();
     setUploadedFiles([]);
   };
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
   return (
     <form
       className="flex flex-col gap-4 mt-4"
