@@ -134,7 +134,7 @@ export default function OperadorPageClient() {
           />
           <Icon
             icon="/Icons/SectorTree.svg"
-            className="w-5 h-5 bg-[var(--primary-foreground)]"
+            className="w-5 h-5 bg-[var(--primary-foreground)] hover:brightness-200 hover:scale-105"
             onClick={() => handleSelectSetores(operador)}
           />
         </div>
