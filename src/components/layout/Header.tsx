@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
 
   const handleLogout = () => {
     try {
-      const res = apiFetchClient({
+      apiFetchClient({
         method: "POST",
         endpoint: "/logout",
       });

@@ -7,7 +7,7 @@ import { useChamadoStore } from "@/store/chamadoStore";
 import Table from "../table/Table";
 import { Chamado } from "@/types/Chamado";
 import { Column } from "../table/TableGeneric";
-import { formatDate } from "@/app/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 import Badge from "../ui/badge";
 import FilterBox from "./FilterBox";
 

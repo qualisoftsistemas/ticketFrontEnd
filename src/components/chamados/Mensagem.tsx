@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDate } from "@/app/utils/formatDate";
+import { formatDate } from "@/utils/formatDate";
 import React from "react";
 import FileBadge from "../ui/fileBadge";
 import { UploadedFile } from "../ui/inputFile";

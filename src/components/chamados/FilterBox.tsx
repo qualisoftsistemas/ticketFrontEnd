@@ -54,7 +54,14 @@ const FilterBox = ({ onFilterChange }: Props) => {
   }, []);
 
   const handleClick = (status: string) => {
-    const updated = [status];
+    let updated: string[];
+
+    if (selected.includes(status)) {
+      updated = selected.filter((s) => s !== status);
+    } else {
+      updated = [...selected, status];
+    }
+
     setSelected(updated);
     onFilterChange(updated);
   };
@@ -69,13 +76,16 @@ const FilterBox = ({ onFilterChange }: Props) => {
           <button
             key={status}
             className={`
-              flex-1 cursor-pointer transition-all duration-200 ease-in-out
-              p-3 rounded-lg border border-gray-300 font-medium text-center
-              hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
-              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-              ${isSelected ? config.text + " font-semibold" : "text-gray-700"}
-              bg-white
-            `}
+    flex-1 cursor-pointer transition-all duration-200 ease-in-out
+    p-3 rounded-lg border font-medium text-center
+    hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
+    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+    ${
+      isSelected
+        ? `${config.text} font-semibold bg-gray-100 dark:bg-gray-800 border-blue-500`
+        : "text-gray-700 bg-white border-gray-300"
+    }
+  `}
             onClick={() => handleClick(status)}
           >
             <div className="flex items-center justify-center gap-2">
