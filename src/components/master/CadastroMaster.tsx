@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect } from "react";
 import Modal from "../ui/modal";
 import { Controller, useForm } from "react-hook-form";
@@ -10,12 +11,23 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import Select, { SelectOption } from "@/components/ui/select";
 
-const schema = z.object({
-  id: z.number().optional(),
-  prestador_id: z.number().min(1, "Prestador é obrigatório"),
-  nome: z.string().min(1, "Nome é obrigatório"),
-  senha: z.string().min(1, "Senha é obrigatória"),
-});
+// 🔹 Schema: senha obrigatória só na criação
+const schema = z
+  .object({
+    id: z.number().optional(),
+    prestador_id: z.number().min(1, "Prestador é obrigatório"),
+    nome: z.string().min(1, "Nome é obrigatório"),
+    senha: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.id && !data.senha) {
+      ctx.addIssue({
+        path: ["senha"],
+        message: "Senha é obrigatória ao criar um master",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -32,6 +44,8 @@ export default function CadastroMaster({
   onSubmit,
   initialData,
 }: Props) {
+  const { prestadores, fetchPrestadores } = usePrestadorStore();
+
   const {
     handleSubmit,
     control,
@@ -42,20 +56,19 @@ export default function CadastroMaster({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData?.id,
       prestador_id: initialData?.prestador?.id || undefined,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
     },
   });
-
-  const { prestadores, fetchPrestadores } = usePrestadorStore();
 
   useEffect(() => {
     reset({
       id: initialData?.id,
       prestador_id: initialData?.prestador?.id || undefined,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
     });
   }, [initialData, reset]);
 
@@ -70,20 +83,30 @@ export default function CadastroMaster({
 
   const prestadorOptions: SelectOption[] = prestadores
     .filter((p) => p.id !== undefined)
-    .map((p) => ({
-      id: p.id as number,
-      label: p.nome,
-    }));
+    .map((p) => ({ id: p.id as number, label: p.nome }));
 
-   const nomeValue = watch("nome");
+  const nomeValue = watch("nome");
   const senhaValue = watch("senha");
+
+  const handleFormSubmit = (data: FormData) => {
+    const payload = { ...data };
+    // Remove senha se estiver editando e campo estiver vazio
+    if (initialData?.id && !data.senha) {
+      delete payload.senha;
+    }
+    onSubmit(payload);
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
-        Cadastro de Master
+        {initialData ? "Editar Master" : "Cadastrar Master"}
       </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className="flex flex-col gap-6"
+      >
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
@@ -95,16 +118,13 @@ export default function CadastroMaster({
           render={({ field }) => {
             const selectedOption =
               prestadorOptions.find((opt) => opt.id === field.value) || null;
-
             return (
               <Select
                 label="Prestador"
                 options={prestadorOptions}
                 placeholder="Selecione o prestador"
                 selectedOption={selectedOption}
-                onSelect={(option) => {
-                  field.onChange(Number(option.id));
-                }}
+                onSelect={(option) => field.onChange(Number(option.id))}
               />
             );
           }}
@@ -135,7 +155,11 @@ export default function CadastroMaster({
           labelColor="text-[var(--extra)]"
           value={senhaValue}
           onChange={(val) => setValue("senha", val, { shouldValidate: true })}
-          placeholder="Digite a senha"
+          placeholder={
+            initialData?.id
+              ? "Deixe em branco para manter a senha atual"
+              : "Digite a senha do master"
+          }
         />
         {errors.senha && (
           <p className="text-[var(--destructive)] text-sm">

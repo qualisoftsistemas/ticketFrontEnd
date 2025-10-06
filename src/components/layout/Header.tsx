@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import apiFetchClient from "@/service/api";
 
 type HeaderProps = {
   toggleSidebar: () => void;
@@ -26,9 +27,27 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
     setEmpresaSelecionadaAndReload,
   } = useEmpresaStore();
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
   useEffect(() => {
     fetchEmpresas();
   }, [fetchEmpresas]);
+
+  const handleLogout = () => {
+    try {
+      const res = apiFetchClient({
+        method: "POST",
+        endpoint: "/logout",
+      });
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("empresa-store");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
+  };
 
   return (
     <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
@@ -69,9 +88,15 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
                   </p>
                 </div>
                 {open ? (
-                  <Icon icon="/Icons/ArrowUp.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
+                  <Icon
+                    icon="/Icons/ArrowUp.svg"
+                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                  />
                 ) : (
-                  <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
+                  <Icon
+                    icon="/Icons/ArrowDown.svg"
+                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                  />
                 )}
               </div>
             </DropdownMenuTrigger>
@@ -107,9 +132,29 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <img src="/Icons/UserCircle.svg" alt="user" className="w-10 h-10" />
-          <h1 className="font-bold">Eu sou o Usuário</h1>
-          <Icon icon="/Icons/ArrowDown.svg" className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <div className="flex items-center gap-2 cursor-pointer">
+                <img
+                  src="/Icons/UserCircle.svg"
+                  alt="user"
+                  className="w-10 h-10"
+                />
+                <h1 className="font-bold">{user.nome}</h1>
+                <Icon
+                  icon="/Icons/ArrowDown.svg"
+                  className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                />
+              </div>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="end"
+              className="bg-[var(--secondary)] text-[var(--extra)] mt-1"
+            >
+              <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

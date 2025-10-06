@@ -30,7 +30,6 @@ export default function CadastroPrestador({
 }: Props) {
   const {
     handleSubmit,
-    control,
     setValue,
     watch,
     reset,
@@ -54,8 +53,9 @@ export default function CadastroPrestador({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
-        Cadastro de Prestador
+        {initialData ? "Editar Prestador" : "Cadastrar Prestador"}
       </h2>
+
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />

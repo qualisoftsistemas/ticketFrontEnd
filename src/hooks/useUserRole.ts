@@ -22,7 +22,7 @@ export const useUserRole = (): Role | null => {
             case "OPERADOR":
               setRole("Operador");
               break;
-            case "FUNCIONARIO":
+            case "FUNCIONÁRIO":
               setRole("Funcionario");
               break;
             case "SISTEMA":

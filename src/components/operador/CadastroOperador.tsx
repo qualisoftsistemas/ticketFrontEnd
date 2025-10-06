@@ -8,11 +8,22 @@ import { Operador } from "@/types/Operador";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 
-const schema = z.object({
-  id: z.number().optional(),
-  nome: z.string().min(1, "Nome é obrigatório"),
-  senha: z.string().min(1, "Senha é obrigatória"),
-});
+// 🔹 Validação condicional da senha
+const schema = z
+  .object({
+    id: z.number().optional(),
+    nome: z.string().min(1, "Nome é obrigatório"),
+    senha: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.id && !data.senha) {
+      ctx.addIssue({
+        path: ["senha"],
+        message: "Senha é obrigatória ao criar um operador",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -31,15 +42,16 @@ export default function CadastroOperador({
 }: Props) {
   const {
     handleSubmit,
-     setValue,
+    setValue,
     watch,
     reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData?.id,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
     },
   });
 
@@ -47,19 +59,32 @@ export default function CadastroOperador({
     reset({
       id: initialData?.id,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
     });
   }, [initialData, reset]);
 
   const nomeValue = watch("nome");
   const senhaValue = watch("senha");
 
+  const handleFormSubmit = (data: FormData) => {
+    const payload = { ...data };
+    // Remove senha se for edição e campo estiver vazio
+    if (initialData?.id && !data.senha) {
+      delete payload.senha;
+    }
+    onSubmit(payload);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
-        Cadastro de Operador
+        {initialData ? "Editar Operador" : "Cadastrar Operador"}
       </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className="flex flex-col gap-6"
+      >
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
@@ -84,7 +109,11 @@ export default function CadastroOperador({
           labelColor="text-[var(--extra)]"
           value={senhaValue}
           onChange={(val) => setValue("senha", val, { shouldValidate: true })}
-          placeholder="Digite a senha do funcionário"
+          placeholder={
+            initialData?.id
+              ? "Deixe em branco para manter a senha atual"
+              : "Digite a senha do operador"
+          }
         />
         {errors.senha && (
           <p className="text-[var(--destructive)] text-sm">

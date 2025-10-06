@@ -8,7 +8,9 @@ interface Props {
   chamado: Chamado | null;
   showRespostaForm?: boolean;
   showRespostaInput?: boolean;
+  showReabertura?: boolean;
   handleResponder: () => void;
+  handleReabrir: () => void;
   role: string;
   handleFinalizar: () => void;
 }
@@ -28,8 +30,9 @@ export const prioridadeColors: Record<string, string> = {
 
 const InfoChamado: React.FC<Props> = ({
   chamado,
-  showRespostaForm,
   handleResponder,
+  handleReabrir,
+  showReabertura,
   showRespostaInput,
   role,
   handleFinalizar,
@@ -57,19 +60,13 @@ const InfoChamado: React.FC<Props> = ({
           </div>
         </div>
         <div className="flex gap-2">
-   
-            <div className="flex justify-center mt-4">
-              <Button
-                type="button"
-                onClick={handleResponder}
-                variant={"default"}
-              >
-                Responder
-              </Button>
-            </div>
-           
+          <div className="flex justify-center mt-4">
+            <Button type="button" onClick={handleResponder} variant={"default"}>
+              Responder
+            </Button>
+          </div>
 
-          {showRespostaForm && !showRespostaInput && role === "Operador" && (
+          {!showRespostaInput && (role === "Operador" || role === "Master") && (
             <div className="flex justify-center mt-4">
               <Button
                 type="button"
@@ -77,6 +74,13 @@ const InfoChamado: React.FC<Props> = ({
                 variant={"default"}
               >
                 Finalizar
+              </Button>
+            </div>
+          )}
+          {showReabertura && (role === "Funcionario" || role === "Admin") && (
+            <div className="flex justify-center mt-4">
+              <Button type="button" onClick={handleReabrir} variant={"default"}>
+                Solicitar Reabertura
               </Button>
             </div>
           )}

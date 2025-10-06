@@ -9,16 +9,27 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import InputCPF from "../ui/inputCpf";
 
-const schema = z.object({
-  id: z.number().optional(),
-  nome: z.string().min(1, "Nome é obrigatório"),
-  senha: z.string().min(1, "Senha é obrigatória"),
-  cpf: z.string().min(11, "CPF deve ter 11 caracteres").optional(),
-  email: z.string().email("Email inválido").optional(),
-  whatsapp: z.string().optional(),
-  facebook: z.string().optional(),
-  instagram: z.string().optional(),
-});
+// 🔹 Schema condicional
+const schema = z
+  .object({
+    id: z.number().optional(),
+    nome: z.string().min(1, "Nome é obrigatório"),
+    senha: z.string().optional(),
+    cpf: z.string().min(11, "CPF deve ter 11 caracteres").optional(),
+    email: z.string().email("Email inválido").optional(),
+    whatsapp: z.string().optional(),
+    facebook: z.string().optional(),
+    instagram: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (!data.id && !data.senha) {
+      ctx.addIssue({
+        path: ["senha"],
+        message: "Senha é obrigatória ao criar um funcionário",
+        code: z.ZodIssueCode.custom,
+      });
+    }
+  });
 
 type FormData = z.infer<typeof schema>;
 
@@ -45,8 +56,9 @@ export default function CadastroFuncionario({
   } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
+      id: initialData?.id,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
       cpf: initialData?.cpf || "",
       email: initialData?.email || "",
       whatsapp: initialData?.whatsapp || "",
@@ -59,7 +71,7 @@ export default function CadastroFuncionario({
     reset({
       id: initialData?.id,
       nome: initialData?.nome || "",
-      senha: initialData?.senha || "",
+      senha: "",
       cpf: initialData?.cpf || "",
       email: initialData?.email || "",
       whatsapp: initialData?.whatsapp || "",
@@ -76,12 +88,25 @@ export default function CadastroFuncionario({
   const facebookValue = watch("facebook");
   const instagramValue = watch("instagram");
 
+  // 🔹 Tratamento do payload antes de enviar
+  const handleFormSubmit = (data: FormData) => {
+    const payload = { ...data };
+    if (initialData?.id && !data.senha) {
+      delete payload.senha; // remove senha no editar
+    }
+    onSubmit(payload);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
         Cadastro de Funcionário
       </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+
+      <form
+        onSubmit={handleSubmit(handleFormSubmit)}
+        className="flex flex-col gap-6"
+      >
         {initialData?.id && (
           <input type="hidden" name="id" value={initialData.id} />
         )}
@@ -100,20 +125,27 @@ export default function CadastroFuncionario({
           </p>
         )}
 
-        {/* Senha */}
-        <InputText
-          label="Senha"
-          labelColor="text-[var(--extra)]"
-          value={senhaValue}
-          onChange={(val) => setValue("senha", val, { shouldValidate: true })}
-          placeholder="Digite a senha do funcionário"
-        />
-        {errors.senha && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.senha.message}
-          </p>
+        {/* Senha (só no modo criar) */}
+        {!initialData?.id && (
+          <>
+            <InputText
+              label="Senha"
+              labelColor="text-[var(--extra)]"
+              value={senhaValue}
+              onChange={(val) =>
+                setValue("senha", val, { shouldValidate: true })
+              }
+              placeholder="Digite a senha do funcionário"
+            />
+            {errors.senha && (
+              <p className="text-[var(--destructive)] text-sm">
+                {errors.senha.message}
+              </p>
+            )}
+          </>
         )}
 
+        {/* CPF */}
         <InputCPF
           label="CPF"
           value={cpfValue}
@@ -150,13 +182,8 @@ export default function CadastroFuncionario({
           }
           placeholder="Digite o WhatsApp"
         />
-        {errors.whatsapp && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.whatsapp.message}
-          </p>
-        )}
 
-        {/* Facebook */}  
+        {/* Facebook */}
         <InputText
           label="Facebook"
           labelColor="text-[var(--extra)]"
@@ -166,11 +193,6 @@ export default function CadastroFuncionario({
           }
           placeholder="Digite o perfil do Facebook"
         />
-        {errors.facebook && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.facebook.message}
-          </p>
-        )}
 
         {/* Instagram */}
         <InputText
@@ -182,11 +204,6 @@ export default function CadastroFuncionario({
           }
           placeholder="Digite o perfil do Instagram"
         />
-        {errors.instagram && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.instagram.message}
-          </p>
-        )}
 
         <div className="flex justify-end gap-3 w-full">
           <Button variant="confirm" type="submit">

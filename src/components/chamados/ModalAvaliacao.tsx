@@ -1,29 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "../ui/modal";
 import { Button } from "../ui/button";
 import StarRating from "../ui/stars";
 import { useRouter } from "next/navigation";
+import { Chamado } from "@/types/Chamado";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: (nota: number, comentario: string) => void;
+  chamado: Chamado;
   totalStars?: number;
 }
 
 export default function ModalAvaliacao({
   isOpen,
   onClose,
+  chamado,
   onConfirm,
   totalStars = 5,
 }: Props) {
   const [rating, setRating] = useState(0);
   const [comentario, setComentario] = useState("");
   const [showCelebration, setShowCelebration] = useState(false);
-
-  const router = useRouter();
 
   const legends: Record<number, string> = {
     1: "Péssimo",
@@ -56,11 +57,9 @@ export default function ModalAvaliacao({
       setShowCelebration(true);
       setTimeout(() => {
         handleClose();
-        router.push("/chamados");
       }, 3000);
     } else {
       handleClose();
-      router.push("/chamados");
     }
   };
 

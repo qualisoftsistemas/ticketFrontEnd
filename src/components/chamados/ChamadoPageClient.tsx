@@ -70,12 +70,18 @@ export default function ChamadoPageClient() {
     {
       header: "Aberto",
       key: "created_at",
-      render: (chamado) => formatDate(chamado.created_at),
+      render: (chamado) =>
+        chamado.created_at
+          ? new Date(chamado.created_at).toLocaleDateString("pt-BR")
+          : "—",
     },
     {
       header: "Atualizado",
       key: "updated_at",
-      render: (chamado) => formatDate(chamado.updated_at),
+      render: (chamado) =>
+        chamado.updated_at
+          ? new Date(chamado.updated_at).toLocaleDateString("pt-BR")
+          : "—",
     },
     {
       header: "Status",

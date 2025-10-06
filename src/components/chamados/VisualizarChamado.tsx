@@ -1,4 +1,4 @@
-'use client";';
+"use client";
 import { useEffect, useState } from "react";
 import { ChamadoApiResponse } from "@/types/Chamado";
 import DescriptionBox from "../ui/descriptionBox";
@@ -23,42 +23,41 @@ export interface VisualizarChamadoProps {
 const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const router = useRouter();
   const role = useUserRole();
-  const [showRespostaForm, setShowRespostaForm] = useState(false);
   const [showRespostaInput, setShowRespostaInput] = useState(false);
   const [showModalFinalizar, setShowModalFinalizar] = useState(false);
   const [showModalAvaliar, setShowModalAvaliar] = useState(false);
+  const [showReabertura, setShowReabertura] = useState(false);
+  const [isReabrindo, setIsReabrindo] = useState(false);
   const [mensagens, setMensagens] = useState<MensagemType[]>([]);
-
-  useEffect(() => {
-    setMensagens([]);
-    setShowModalAvaliar(false);
-    setShowModalFinalizar(false);
-    setShowRespostaForm(false);
-    setShowRespostaInput(false);
-  }, []);
 
   useEffect(() => {
     setMensagens(chamado?.chamado?.mensagens || []);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
-    setShowRespostaForm(false);
     setShowRespostaInput(false);
+    setIsReabrindo(false);
   }, [chamado]);
 
   useEffect(() => {
     if (!role || !chamado) return;
+    const status = chamado.chamado.status;
 
-    const chamadoSelecionado = chamado.chamado;
-    const status = chamadoSelecionado.status;
-
-    setShowRespostaForm(false);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
+
+    // mostra modal de avaliação
     if (
-      (status === "aguardando_avaliacao" && role === "Admin") ||
-      role === "Funcionario"
+      status === "aguardando_avaliacao" &&
+      (role === "Admin" || role === "Funcionario")
     ) {
       setShowModalAvaliar(true);
+    }
+
+    // mostra botão de reabertura
+    if (status === "concluido") {
+      setShowReabertura(true);
+    } else {
+      setShowReabertura(false);
     }
   }, [role, chamado]);
 
@@ -91,7 +90,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       };
 
       setMensagens((prev) => [...prev, mensagemTemporaria as MensagemType]);
-
       setShowRespostaInput(false);
 
       const payload = {
@@ -110,16 +108,43 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     }
   };
 
+  const handleReabrir = async (
+    data: RespostaFormData,
+    arquivos?: UploadedFile[]
+  ) => {
+    if (!data) {
+      setShowRespostaInput(true);
+      setIsReabrindo(true);
+      return;
+    }
+
+    try {
+      const payload = {
+        chamado_id: chamadoSelecionado.id,
+        mensagem: data.mensagem,
+        anexos: arquivos?.map((file) => ({ id: file.id, arquivo: file })) || [],
+      };
+
+      await apiFetchClient({
+        method: "POST",
+        endpoint: `/reabrir_chamado`,
+        data: payload,
+      });
+
+      router.push("/chamados");
+    } catch (error) {
+      console.error("Erro ao reabrir chamado:", error);
+      alert("Erro ao reabrir chamado. Tente novamente.");
+    }
+  };
+
   const handleFinalizar = async () => {
     try {
       await apiFetchClient({
         method: "PATCH",
         endpoint: `/encerrar_chamado`,
-        data: {
-          chamado_id: chamadoSelecionado.id,
-        },
+        data: { chamado_id: chamadoSelecionado.id },
       });
-
       router.push("/chamados");
     } catch (error) {
       console.error("Erro ao finalizar chamado:", error);
@@ -138,7 +163,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
           observacao: comentario,
         },
       });
-      // Após a avaliação bem-sucedida, você pode querer fechar o modal e redirecionar
       handleCloseModalAvaliar();
     } catch (error) {
       console.error("Erro ao avaliar chamado:", error);
@@ -148,8 +172,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
 
   const handleCloseModalAvaliar = () => {
     setShowModalAvaliar(false);
-
-    router.push("/chamados");
   };
 
   return (
@@ -205,17 +227,27 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
               {showRespostaInput && (
                 <div className="mt-2">
                   <RespostaChamado
-                    handleResponder={(data) => handleResponder(data)}
+                    handleResponder={(data) =>
+                      isReabrindo ? handleReabrir(data) : handleResponder(data)
+                    }
                   />
                 </div>
               )}
             </div>
+
             <div className="sticky top-0">
               <InfoChamado
                 chamado={chamadoSelecionado}
-                showRespostaForm={showRespostaForm}
-                handleResponder={() => setShowRespostaInput(true)}
+                handleResponder={() => {
+                  setIsReabrindo(false);
+                  setShowRespostaInput(true);
+                }}
+                handleReabrir={() => {
+                  setIsReabrindo(true);
+                  setShowRespostaInput(true);
+                }}
                 showRespostaInput={showRespostaInput}
+                showReabertura={showReabertura}
                 role={role as Role}
                 handleFinalizar={() => setShowModalFinalizar(true)}
               />
@@ -234,6 +266,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
 
       {showModalAvaliar && (
         <ModalAvaliacao
+          chamado={chamadoSelecionado}
           isOpen={showModalAvaliar}
           onClose={handleCloseModalAvaliar}
           onConfirm={(nota: number, comentario: string) =>
