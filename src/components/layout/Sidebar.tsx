@@ -3,9 +3,12 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Role } from "@/hooks/useUserRole";
 import Icon from "../ui/icon";
+import { useEmpresaStore } from "@/store/empresaStore";
 
 interface SidebarProps {
   role: Role;
+  isOpen: boolean;
+  toggleSidebar: () => void;
 }
 
 interface NavItem {
@@ -62,9 +65,9 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
       </button>
       {item.subItems && (
         <div
-          className={`pl-6 flex flex-col gap-1 overflow-hidden transition-all duration-500 ease-in-out
-      ${open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
-    `}
+          className={`pl-6 flex flex-col gap-1 overflow-hidden transition-all duration-500 ease-in-out ${
+            open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
         >
           {item.subItems.map((subItem, idx) => (
             <Link
@@ -81,7 +84,17 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ role }) => {
+const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
+  const { empresaSelecionada } = useEmpresaStore();
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("empresa-store");
+    window.location.href = "/";
+  };
+
   const links: NavItem[] = [
     { label: "Chamados", href: "/chamados", icon: "/Icons/Message.svg" },
     { label: "Arquivos", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
@@ -141,22 +154,37 @@ const Sidebar: React.FC<SidebarProps> = ({ role }) => {
   })();
 
   return (
-    <aside className="h-screen w-44 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col">
-      <nav className="flex flex-col gap-1 w-full mt-18 p-1">
+    <aside
+      className={`fixed top-0 left-0 h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col z-50 transform transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}  `}
+    >
+      <nav className="flex flex-col gap-1 w-full mt-20 p-1 overflow-y-auto">
         {navItems.map((item, idx) => (
           <DropdownNavItem key={idx} item={item} />
         ))}
       </nav>
 
-      <div className="mt-auto w-full py-2 text-center border-t border-[var(--primary-foreground)]/50 text-sm">
-        &copy; {new Date().getFullYear()} - By{" "}
-        <a
-          href="https://www.qualisoftsistemas.com.br/"
-          target="_blank"
-          rel="noopener noreferrer"
+      <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2 border-t border-[var(--primary-foreground)]/50 text-sm">
+        <div className="flex items-center gap-2">
+          <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
+          <p className="font-bold">{user.nome}</p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="w-full py-2 bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded hover:brightness-110 transition"
         >
-          Qualisoft
-        </a>
+          Logout
+        </button>
+        <div className="text-center text-xs mt-2">
+          &copy; {new Date().getFullYear()} - By{" "}
+          <a
+            href="https://www.qualisoftsistemas.com.br/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Qualisoft
+          </a>
+        </div>
       </div>
     </aside>
   );

@@ -92,10 +92,10 @@ export default function ChamadoPageClient() {
 
   return (
     <>
-      <FilterBox onFilterChange={handleFilterChange} />
+      <FilterBox loading={loading} onFilterChange={handleFilterChange} />
       <Table
         columns={columns}
-        data={chamados}  
+        data={chamados}
         nomeCadastro="Chamado"
         showCadastro={showCadastro}
         loading={loading}

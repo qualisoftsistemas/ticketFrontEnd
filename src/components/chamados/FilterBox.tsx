@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface Props {
+  loading?: boolean;
   onFilterChange: (status: string[]) => void;
 }
 
@@ -46,28 +47,31 @@ const statusConfig: {
   },
 };
 
-const FilterBox = ({ onFilterChange }: Props) => {
+const FilterBox = ({ onFilterChange, loading }: Props) => {
   const [selected, setSelected] = useState<string[]>(defaultStatuses);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     onFilterChange(selected);
   }, []);
 
   const handleClick = (status: string) => {
-    let updated: string[];
+    if (loading) return;
 
-    if (selected.includes(status)) {
-      updated = selected.filter((s) => s !== status);
-    } else {
-      updated = [...selected, status];
-    }
+    const updated = selected.includes(status)
+      ? selected.filter((s) => s !== status)
+      : [...selected, status];
 
     setSelected(updated);
-    onFilterChange(updated);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      onFilterChange(updated);
+    }, 200);
   };
 
   return (
-    <div className="flex gap-4 p-4 rounded-lg mb-4 w-full">
+    <div className="flex flex-wrap gap-4 p-4 rounded-lg mb-4 w-full">
       {statuses.map((status) => {
         const isSelected = selected.includes(status);
         const config = statusConfig[status];
@@ -76,16 +80,17 @@ const FilterBox = ({ onFilterChange }: Props) => {
           <button
             key={status}
             className={`
-    flex-1 cursor-pointer transition-all duration-200 ease-in-out
-    p-3 rounded-lg border font-medium text-center
-    hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
-    focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
-    ${
-      isSelected
-        ? `${config.text} font-semibold bg-gray-100 dark:bg-gray-800 border-blue-500`
-        : "text-gray-700 bg-white border-gray-300"
-    }
-  `}
+          flex-1 sm:flex-auto cursor-pointer transition-all duration-200 ease-in-out
+          p-2 md:p-3 rounded-lg border font-medium text-center
+          hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
+          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+          ${
+            isSelected
+              ? `${config.text} font-semibold bg-gray-100 dark:bg-gray-800 border-blue-500`
+              : "text-gray-700 bg-white border-gray-300"
+          }
+          min-w-[140px]
+        `}
             onClick={() => handleClick(status)}
           >
             <div className="flex items-center justify-center gap-2">

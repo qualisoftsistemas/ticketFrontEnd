@@ -39,12 +39,14 @@ function Table<T extends Record<string, any>>({
   const toggleFilters = () => setShowFilters((prev) => !prev);
 
   return (
-    <div className="flex flex-col gap-0.5">
-      <div className="flex justify-between items-center w-full">
-        <div className="flex self-end">
-          <ActionBox onToggleFilter={toggleFilters} /> {" "}
+    <div className="flex flex-col gap-2 w-full">
+      {/* Cabeçalho com Ações */}
+      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full">
+        <div className="flex gap-2 flex-wrap">
+          <ActionBox onToggleFilter={toggleFilters} />
         </div>
-        <div className="flex gap-2 pb-2">
+
+        <div className="flex gap-2  w-full sm:w-auto">
           <Input
             icon={
               <Image
@@ -61,13 +63,20 @@ function Table<T extends Record<string, any>>({
             bgIcon="bg-[var(--secondary)]"
             textColor="text-[var(--extra)]"
             onChange={(e) => onSearchChange(e.target.value)}
+            className="flex-1 min-w-[150px]"
           />
-          <Button onClick={showCadastro}>Novo {nomeCadastro}</Button> {" "}
-        </div>{" "}
-      </div>{" "}
+          {showCadastro && (
+            <Button onClick={showCadastro} className="whitespace-nowrap">
+              Novo {nomeCadastro}
+            </Button>
+          )}
+        </div>
+      </div> */}
+
+      {/* Filtros */}
       {showFilters && (
         <div className="w-full p-4 bg-[var(--primary)] rounded border border-[var(--extra)]">
-          <div className="flex justify-start gap-3 w-full">
+          <div className="flex flex-wrap gap-3">
             <Button variant="confirm" type="submit" className="px-2 text-xs">
               Aplicar Filtros
             </Button>
@@ -81,12 +90,16 @@ function Table<T extends Record<string, any>>({
           </div>
         </div>
       )}
+
+      {/* Tabela Responsiva */}
       <TableGeneric
         onRowClick={onRowClick ? (row) => onRowClick(row.id) : undefined}
         loading={loading}
         columns={columns}
         data={data}
       />
+
+      {/* Paginação */}
       {pagination && (
         <Pagination
           currentPage={pagination.current_page}

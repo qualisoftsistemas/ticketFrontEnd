@@ -122,7 +122,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
           </DropdownMenu>
         )}
 
-        <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-6">
           <Link href="/sobre">
             <img src="/Icons/Settings.svg" alt="config" className="w-6 h-6" />
           </Link>
@@ -131,7 +131,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden md:flex  items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
