@@ -219,7 +219,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
           />
 
           <div className="flex gap-4">
-            <div className="w-full space-y-2 bg-[var(--extra)] p-1 rounded">
+            <div className="w-full space-y-2 bg-[var(--primary)] p-1 rounded">
               {mensagens.map((msg, index) => (
                 <Mensagem key={msg.id} mensagem={msg} numero={index + 1} />
               ))}
