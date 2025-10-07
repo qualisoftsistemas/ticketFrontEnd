@@ -7,6 +7,7 @@ import ActionBox from "./ActionBox";
 import Image from "next/image";
 import Pagination from "@/components/ui/pagination";
 import type { Pagination as PaginationType } from "@/types/Pagination";
+import Icon from "../ui/icon";
 
 interface TableProps<T> {
   nomeCadastro?: string;
@@ -19,6 +20,7 @@ interface TableProps<T> {
   searchTerm: string;
   onRowClick?: (id: number) => void;
   onSearchChange: (term: string) => void;
+  legendasAcoes?: { icon: string; label: string }[];
 }
 
 // eslint-disable-next-line
@@ -33,6 +35,7 @@ function Table<T extends Record<string, any>>({
   searchTerm,
   onRowClick,
   onSearchChange,
+  legendasAcoes
 }: TableProps<T>) {
   const [showFilters, setShowFilters] = useState(false);
 
@@ -98,10 +101,16 @@ function Table<T extends Record<string, any>>({
         data={data}
       />
 
-        <div className="bg-gray-100">
-        
+      {legendasAcoes && legendasAcoes.length > 0 && (
+        <div className="flex flex-wrap gap-4 mt-4 items-center text-sm bg-[var(--secondary)] text-[var(--secondary-foreground)]">
+          {legendasAcoes.map((item, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Image src={item.icon} alt={item.label} width={18} height={18} />
+              <span>{item.label}</span>
+            </div>
+          ))}
         </div>
-
+      )}
       {/* Paginação */}
       {pagination && (
         <Pagination

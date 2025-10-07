@@ -120,46 +120,19 @@ export default function OperadorPageClient() {
       key: "actions" as keyof Operador,
       render: (operador: Operador) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(operador)}
           />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Excluir"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Trash.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(operador.id)}
           />
           <Icon
             icon="/Icons/SectorTree.svg"
-            className="w-5 h-5 bg-[var(--primary-foreground)] hover:brightness-200 hover:scale-105"
-            onClick={() => handleSelectSetores(operador)}
-          />
-        </div>
-      ),
-    },
-    {
-      header: "Ações",
-      key: "actions" as keyof Operador,
-      render: (operador: Operador) => (
-        <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleEdit(operador)}
-          />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Excluir"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-            onClick={() => handleDeleteClick(operador.id)}
-          />
-          <Icon
-            icon="/Icons/SectorTree.svg"
-            className="w-5 h-5 bg-[var(--primary-foreground)] hover:brightness-200 hover:scale-105"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleSelectSetores(operador)}
           />
         </div>

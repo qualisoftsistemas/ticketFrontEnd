@@ -8,6 +8,7 @@ import ModalCadastroEmpresa from "./CadastroEmpresa";
 import ModalDeletar from "@/components/ui/modalDelete";
 import { Button } from "@/components/ui/button";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function EmpresaPageClient() {
   const {
@@ -91,16 +92,14 @@ export default function EmpresaPageClient() {
       key: "actions" as keyof Empresa,
       render: (empresa: Empresa) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(empresa)}
           />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Trash.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(empresa.id)}
           />
         </div>

@@ -7,6 +7,7 @@ import { Prestador } from "@/types/Prestador";
 import ModalCadastroPrestador from "./CadastroPrestador";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function PrestadorPageClient() {
   const {
@@ -87,10 +88,9 @@ export default function PrestadorPageClient() {
       key: "actions" as keyof Prestador,
       render: (prestador: Prestador) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(prestador)}
           />
         </div>

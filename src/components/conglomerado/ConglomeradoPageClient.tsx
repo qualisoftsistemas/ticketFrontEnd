@@ -7,6 +7,7 @@ import { Conglomerado } from "@/types/Conglomerado";
 import ModalCadastroConglomerado from "./CadastroConglomerado";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function ConglomeradoPageClient() {
   const {
@@ -95,16 +96,14 @@ export default function ConglomeradoPageClient() {
       key: "actions" as keyof Conglomerado,
       render: (conglomerado: Conglomerado) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(conglomerado)}
           />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Deletar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Trash.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(conglomerado.id)}
           />
         </div>
