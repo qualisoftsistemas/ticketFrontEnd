@@ -140,6 +140,31 @@ export default function OperadorPageClient() {
         </div>
       ),
     },
+    {
+      header: "Ações",
+      key: "actions" as keyof Operador,
+      render: (operador: Operador) => (
+        <div className="flex justify-start gap-4 py-1">
+          <img
+            src="/Icons/Edit.svg"
+            alt="Editar"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleEdit(operador)}
+          />
+          <img
+            src="/Icons/Trash.svg"
+            alt="Excluir"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+            onClick={() => handleDeleteClick(operador.id)}
+          />
+          <Icon
+            icon="/Icons/SectorTree.svg"
+            className="w-5 h-5 bg-[var(--primary-foreground)] hover:brightness-200 hover:scale-105"
+            onClick={() => handleSelectSetores(operador)}
+          />
+        </div>
+      ),
+    },
   ];
 
   if (loading && operadores.length === 0)

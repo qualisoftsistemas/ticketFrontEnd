@@ -17,8 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   if (!role) return null;
 
   return (
-    <div className="flex h-screen w-full">
-      {/* Sidebar */}
+    <div className="bg-[var(--foreground)] h-screen w-full">
       <Sidebar role={role} isOpen={isOpen} toggleSidebar={toggleSidebar} />
 
       <div className="flex-1 flex flex-col transition-all duration-300">
@@ -34,4 +33,3 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
 };
 
 export default Navbar;
-  

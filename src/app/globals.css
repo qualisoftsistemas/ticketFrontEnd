@@ -16,12 +16,15 @@
   font-family: "Sansation", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #cacdcd !important;
   color: var(--primary);
   font-family: "Sansation", sans-serif;
 }
-
 
 .ProseMirror {
   outline: none;
@@ -120,4 +123,77 @@ body {
 /* Estilos de Blockquote */
 .remove-tailwind blockquote {
   margin: 1em 40px;
+}
+
+/* ====================================================
+   1. Estilo para o Container do Toast (Toastify__toast)
+   ====================================================
+*/
+
+/* O .Toastify__toast é o wrapper de cada notificação. */
+.custom-toast-background {
+    /* Cor de fundo do corpo do toast conforme a imagem (bege claro) */
+    background-color: #fcf6f0 !important;
+    /* Remover sombra padrão ou ajustá-la */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /* Ajustar borda (pode ser necessário arredondar menos) */
+    border-radius: 4px !important; 
+    /* Remover padding padrão para que nossa borda lateral fique ajustada */
+    padding: 0 !important;
+    /* Definir altura mínima para um bom visual */
+    min-height: 80px; 
+}
+
+/* Opcional: ajustar o texto padrão para escuro se necessário */
+.Toastify__toast-body {
+    color: #333; 
+    padding: 0; /* Remove o padding padrão do body */
+    margin: 0; /* Remove a margin padrão do body */
+    width: 100%; /* Garante que o body ocupe todo o espaço */
+}
+
+/* ====================================================
+   2. Estilos para o Componente Personalizado
+   ====================================================
+*/
+
+.custom-toast-content {
+    display: flex;
+    height: 100%;
+    align-items: stretch; /* Garante que a borda lateral ocupe toda a altura */
+}
+
+/* Borda lateral colorida */
+.custom-toast-border {
+    width: 6px; /* Largura da barra lateral */
+    min-height: 100%; /* Ocupa toda a altura */
+    border-top-left-radius: 4px; /* Arredonda junto com o container */
+    border-bottom-left-radius: 4px;
+}
+
+.custom-toast-text-area {
+    padding: 12px 15px;
+    flex-grow: 1;
+}
+
+.custom-toast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.custom-toast-title {
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+.custom-toast-icon {
+    font-size: 1.3em;
+}
+
+.custom-toast-message {
+    font-size: 0.9em;
+    color: #333; /* Cor do texto da mensagem */
+    margin: 0;
 }

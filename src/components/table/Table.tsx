@@ -39,9 +39,8 @@ function Table<T extends Record<string, any>>({
   const toggleFilters = () => setShowFilters((prev) => !prev);
 
   return (
-    <div className="flex flex-col gap-2 w-full">
-      {/* Cabeçalho com Ações */}
-      {/* <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full">
+    <div className="flex flex-col gap-2 w-full overflow-hidden">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full">
         <div className="flex gap-2 flex-wrap">
           <ActionBox onToggleFilter={toggleFilters} />
         </div>
@@ -71,7 +70,7 @@ function Table<T extends Record<string, any>>({
             </Button>
           )}
         </div>
-      </div> */}
+      </div>
 
       {/* Filtros */}
       {showFilters && (
@@ -98,6 +97,10 @@ function Table<T extends Record<string, any>>({
         columns={columns}
         data={data}
       />
+
+        <div className="bg-gray-100">
+        
+        </div>
 
       {/* Paginação */}
       {pagination && (

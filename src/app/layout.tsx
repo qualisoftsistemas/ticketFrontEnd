@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
 
 import "@fontsource/sansation";
@@ -16,6 +17,21 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true} // Ocultar a barra de progresso para um visual mais limpo como na imagem
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          // Use a prop 'toastClassName' para aplicar o background-color uniforme
+          toastClassName="custom-toast-background"
+          // Desabilitar o ícone padrão para usarmos nosso próprio
+          icon={false}
+        />{" "}
         {children}
         <div id="modal-root" />
       </body>

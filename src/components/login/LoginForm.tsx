@@ -5,6 +5,7 @@ import InputText from "@/components/ui/inputText";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "@/service/api";
+import { toastSuccess } from "@/utils/toastService";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -37,6 +38,7 @@ const LoginForm: React.FC = () => {
         const errData = await res.json();
         throw new Error(errData.message || "Erro ao fazer login");
       }
+      toastSuccess("Os dados foram salvos com sucesso!");
 
       const data = await res.json();
 

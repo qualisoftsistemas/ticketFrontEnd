@@ -25,8 +25,8 @@ export default function TableGeneric<T>({
   skeletonRows = 5,
 }: TableGenericProps<T>) {
   return (
-    <div className="overflox-x-auto w-full  ">
-      <table className="table-auto  w-full border border-[var(--secondary-foreground)] ">
+    <div className="overflow-x-auto ">
+      <table className="w-full min-w-full border border-[var(--secondary-foreground)] ">
         <thead className="bg-[var(--secondary)]">
           <tr>
             {columns.map((col) => (
@@ -39,7 +39,6 @@ export default function TableGeneric<T>({
             ))}
           </tr>
         </thead>
-
         <tbody className="bg-[var(--primary)] text-[var(--primary-foreground)]">
           {loading
             ? Array.from({ length: skeletonRows }).map((_, i) => (
