@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { Chamado, ChamadoApiResponse } from "@/types/Chamado";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface ChamadoState {
   chamados: Chamado[];
@@ -102,11 +103,13 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         endpoint: "/chamado",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         chamados: [...get().chamados, response],
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -126,6 +129,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         endpoint: `/chamado/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         chamados: get().chamados.map((c) =>
           c.id === response.id ? response : c
@@ -133,6 +137,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -150,11 +155,13 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         method: "DELETE",
         endpoint: `/chamado/${id}`,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         chamados: get().chamados.filter((c) => c.id !== id),
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

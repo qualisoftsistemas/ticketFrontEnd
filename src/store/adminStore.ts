@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Admin } from "@/types/Admin";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface AdminState {
   admins: Admin[];
@@ -47,6 +48,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -84,9 +86,11 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         endpoint: "/admin",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ admins: [...get().admins, response], loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
+        showRequestToast("error", err.message || "Erro ao buscar admins");
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
       } else {
@@ -105,11 +109,13 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         endpoint: `/admin/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         admins: get().admins.map((a) => (a.id === response.id ? response : a)),
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -127,8 +133,10 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         method: "DELETE",
         endpoint: `/admin/${id}`,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ admins: get().admins.filter((a) => a.id !== id), loading: false });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

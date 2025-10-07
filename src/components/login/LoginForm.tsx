@@ -6,6 +6,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "@/service/api";
 import { toastSuccess } from "@/utils/toastService";
+import { showRequestToast } from "../ui/toast";
 
 const LoginForm: React.FC = () => {
   const router = useRouter();
@@ -38,7 +39,7 @@ const LoginForm: React.FC = () => {
         const errData = await res.json();
         throw new Error(errData.message || "Erro ao fazer login");
       }
-      toastSuccess("Os dados foram salvos com sucesso!");
+      showRequestToast("success", "Dados salvos com sucesso!");
 
       const data = await res.json();
 
@@ -57,6 +58,8 @@ const LoginForm: React.FC = () => {
         router.push("/chamados");
       }
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao fazer login!");
+
       if (err instanceof Error) {
         setError(err.message);
       } else {

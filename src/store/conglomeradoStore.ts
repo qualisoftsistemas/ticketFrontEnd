@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Conglomerado } from "@/types/Conglomerado";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface ConglomeradoState {
   conglomerados: Conglomerado[];
@@ -48,16 +49,15 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         pagination: response.pagination || null,
         loading: false,
       });
-    }catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error(err);
-    set({ error: err.message || "Erro ao buscar admins", loading: false });
-  } else {
-    console.error(err);
-    set({ error: "Erro desconhecido", loading: false });
-  }
-}
-
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
   },
 
   fetchConglomeradoById: async (id: number) => {
@@ -69,15 +69,14 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
       });
       set({ conglomeradoSelecionado: response, loading: false });
     } catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error(err);
-    set({ error: err.message || "Erro ao buscar admins", loading: false });
-  } else {
-    console.error(err);
-    set({ error: "Erro desconhecido", loading: false });
-  }
-}
-
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
   },
 
   createConglomerado: async (data: Partial<Conglomerado>) => {
@@ -88,20 +87,21 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         endpoint: "/conglomerado",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         conglomerados: [...get().conglomerados, response],
         loading: false,
       });
     } catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error(err);
-    set({ error: err.message || "Erro ao buscar admins", loading: false });
-  } else {
-    console.error(err);
-    set({ error: "Erro desconhecido", loading: false });
-  }
-}
-
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
   },
 
   updateConglomerado: async (data: Partial<Conglomerado>) => {
@@ -113,6 +113,7 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         endpoint: `/conglomerado/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         conglomerados: get().conglomerados.map((c) =>
           c.id === response.id ? response : c
@@ -120,15 +121,15 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error(err);
-    set({ error: err.message || "Erro ao buscar admins", loading: false });
-  } else {
-    console.error(err);
-    set({ error: "Erro desconhecido", loading: false });
-  }
-}
-
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
   },
 
   deleteConglomerado: async (id: number) => {
@@ -138,20 +139,21 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         method: "DELETE",
         endpoint: `/conglomerado/${id}`,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         conglomerados: get().conglomerados.filter((c) => c.id !== id),
         loading: false,
       });
     } catch (err: unknown) {
-  if (err instanceof Error) {
-    console.error(err);
-    set({ error: err.message || "Erro ao buscar admins", loading: false });
-  } else {
-    console.error(err);
-    set({ error: "Erro desconhecido", loading: false });
-  }
-}
-
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
   },
 
   clearError: () => set({ error: null }),

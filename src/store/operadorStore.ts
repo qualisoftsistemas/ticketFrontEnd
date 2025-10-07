@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Operador } from "@/types/Operador";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface OperadorState {
   operadores: Operador[];
@@ -88,8 +89,10 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         endpoint: "/operador",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ operadores: [...get().operadores, response], loading: false });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -109,6 +112,7 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         endpoint: `/operador/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         operadores: get().operadores.map((o) =>
           o.id === response.id ? response : o
@@ -116,6 +120,7 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

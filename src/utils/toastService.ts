@@ -1,33 +1,11 @@
 // src/utils/toastService.ts
-import { toast } from "react-toastify";
-import CustomToastContent from "@/components/ui/customToast";
+import { toast } from "sonner";
 
-type ToastType = "primary" | "warning" | "success" | "error" | "info";
+export const toastSuccess = (message: string, title?: string) =>
+  toast.success(message, { description: title });
 
-/**
- * Exibe um toast customizado com estilo global.
- */
-export const showToast = (
-  type: ToastType,
-  title: string,
-  message: string,
-  options?: Record<string, any>
-) => {
-  toast(<CustomToastContent>   {
-    type: "default", 
-    ...options,
-  });
-};
+export const toastError = (message: string, title?: string) =>
+  toast.error(message, { description: title });
 
-// Atalhos práticos:
-export const toastSuccess = (message: string, title = "Sucesso!") =>
-  showToast("success", title, message);
-
-export const toastError = (message: string, title = "Erro!") =>
-  showToast("error", title, message);
-
-export const toastWarning = (message: string, title = "Atenção!") =>
-  showToast("warning", title, message);
-
-export const toastInfo = (message: string, title = "Informação") =>
-  showToast("primary", title, message);
+export const toastInfo = (message: string, title?: string) =>
+  toast(message, { description: title });

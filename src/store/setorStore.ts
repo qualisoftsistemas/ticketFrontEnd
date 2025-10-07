@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { Setor } from "@/types/Setor";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface SetorState {
   setores: Setor[];
@@ -15,7 +16,7 @@ interface SetorState {
     page?: number;
     withPagination?: boolean;
   }) => Promise<void>;
-   fetchSetorById: (id: number) => Promise<void>;
+  fetchSetorById: (id: number) => Promise<void>;
   createSetor: (data: Partial<Setor>) => Promise<void>;
   updateSetor: (data: Partial<Setor>) => Promise<void>;
   deleteSetor: (id: number) => Promise<void>;
@@ -62,7 +63,6 @@ export const useSetorStore = create<SetorState>((set, get) => ({
     }
   },
 
- 
   fetchSetorById: async (id: number) => {
     set({ loading: true, error: null });
     try {
@@ -90,8 +90,10 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         endpoint: "/setor",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ setores: [...get().setores, response], loading: false });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -111,6 +113,7 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         endpoint: "/setor/" + data.id,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         setores: get().setores.map((s) =>
           s.id === response.id ? response : s
@@ -118,6 +121,7 @@ export const useSetorStore = create<SetorState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

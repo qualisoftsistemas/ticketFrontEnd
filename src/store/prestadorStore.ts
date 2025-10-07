@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Prestador } from "@/types/Prestador";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface PrestadorState {
   prestadores: Prestador[];
@@ -87,8 +88,10 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         endpoint: "/prestador",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ prestadores: [...get().prestadores, response], loading: false });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -108,6 +111,7 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         endpoint: `/prestador/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         prestadores: get().prestadores.map((p) =>
           p.id === response.id ? response : p
@@ -115,6 +119,7 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

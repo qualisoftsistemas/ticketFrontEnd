@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 import { Empresa } from "@/types/Empresa";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface EmpresaState {
   empresas: Empresa[];
@@ -102,8 +103,10 @@ export const useEmpresaStore = create<EmpresaState>()(
             endpoint: "/empresa",
             data,
           });
+          showRequestToast("success", "Dados salvos com sucesso!");
           set({ empresas: [...get().empresas, response], loading: false });
         } catch (err: unknown) {
+          showRequestToast("error", "Erro ao buscar admins");
           if (err instanceof Error) {
             console.error(err);
             set({
@@ -126,6 +129,7 @@ export const useEmpresaStore = create<EmpresaState>()(
             endpoint: `/empresa/${data.id}`,
             data,
           });
+          showRequestToast("success", "Dados salvos com sucesso!");
           set({
             empresas: get().empresas.map((e) =>
               e.id === response.id ? response : e
@@ -133,6 +137,7 @@ export const useEmpresaStore = create<EmpresaState>()(
             loading: false,
           });
         } catch (err: unknown) {
+          showRequestToast("error", "Erro ao buscar admins");
           if (err instanceof Error) {
             console.error(err);
             set({

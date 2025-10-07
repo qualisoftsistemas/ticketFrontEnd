@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { Funcionario } from "@/types/Funcionario";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface FuncionarioState {
   funcionarios: Funcionario[];
@@ -87,8 +88,10 @@ export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
         endpoint: "/funcionario",
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({ funcionarios: [...get().funcionarios, response], loading: false });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
@@ -108,6 +111,7 @@ export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
         endpoint: `/funcionario/${data.id}`,
         data,
       });
+      showRequestToast("success", "Dados salvos com sucesso!");
       set({
         funcionarios: get().funcionarios.map((f) =>
           f.id === response.id ? response : f
@@ -115,6 +119,7 @@ export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

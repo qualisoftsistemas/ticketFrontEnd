@@ -21,7 +21,7 @@ export default function ChamadoPageClient() {
     "pendente_pelo_usuario",
     "aguardando_avaliacao",
   ]);
-
+  
   const handleFilterChange = (status: string[]) => {
     setSelectedStatus(status);
     fetchTableData(1, searchTerm, status);
@@ -33,9 +33,9 @@ export default function ChamadoPageClient() {
     [fetchChamados, selectedStatus]
   );
 
-  useEffect(() => {
-    fetchTableData(1);
-  }, []);
+  // useEffect(() => {
+  //   fetchTableData(1);
+  // }, []);
 
   const handlePageChange = (page: number) => {
     fetchTableData(page, searchTerm);
@@ -86,7 +86,33 @@ export default function ChamadoPageClient() {
     {
       header: "Status",
       key: "status",
-      render: (chamado) => <Badge label={chamado.status} />,
+      render: (chamado) => {
+        const statusMap: Record<string, { label: string; color: string }> = {
+          pendente_pelo_operador: {
+            label: "Pendente Operador",
+            color: "bg-yellow-200 text-yellow-800",
+          },
+          pendente_pelo_usuario: {
+            label: "Pendente Usuário",
+            color: "bg-blue-200 text-blue-800",
+          },
+          aguardando_avaliacao: {
+            label: "Aguardando Avaliação",
+            color: "bg-orange-200 text-orange-800",
+          },
+          concluido: {
+            label: "Concluído",
+            color: "bg-green-200 text-green-800",
+          },
+        };
+
+        const statusInfo = statusMap[chamado.status] || {
+          label: chamado.status,
+          color: "blue",
+        };
+
+        return <Badge label={statusInfo.label} bgColor={statusInfo.color} />;
+      },
     },
   ];
 
