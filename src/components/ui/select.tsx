@@ -96,11 +96,12 @@ const Select: React.FC<SelectProps> = ({
       {!disabled && isOpen && (
         <Portal>
           <div
-            className="absolute z-50 rounded-lg overflow-hidden bg-[var(--secondary)] text-[var(--extra)]"
+            className="absolute z-50 rounded-lg overflow-auto bg-[var(--secondary)] text-[var(--extra)] shadow-lg"
             style={{
               top: position.top,
               left: position.left,
               width: position.width,
+              maxHeight: "300px", 
             }}
           >
             {options.map((option) => (

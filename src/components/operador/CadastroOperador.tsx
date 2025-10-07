@@ -108,6 +108,7 @@ export default function CadastroOperador({
           label="Senha"
           labelColor="text-[var(--extra)]"
           value={senhaValue}
+          type="password"
           onChange={(val) => setValue("senha", val, { shouldValidate: true })}
           placeholder={
             initialData?.id

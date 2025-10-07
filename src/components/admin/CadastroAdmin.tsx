@@ -2,12 +2,14 @@
 
 import { useEffect } from "react";
 import Modal from "../ui/modal";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Admin } from "@/types/Admin";
 import { Button } from "../ui/button";
+import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import InputText from "../ui/inputText";
+import Select, { SelectOption } from "../ui/select";
 
 // 🔹 Schema: senha obrigatória só ao criar
 const schema = z
@@ -15,6 +17,7 @@ const schema = z
     id: z.number().optional(),
     nome: z.string().min(1, "Nome é obrigatório"),
     email: z.string().email("Email inválido").min(1, "Email é obrigatório"),
+    conglomerado_id: z.number().min(1, "Conglomerado é obrigatório"),
     senha: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -46,6 +49,7 @@ export default function ModalCadastroAdmin({
     handleSubmit,
     setValue,
     watch,
+    control,
     reset,
     formState: { errors },
   } = useForm<FormData>({
@@ -54,18 +58,35 @@ export default function ModalCadastroAdmin({
       id: initialData?.id,
       nome: initialData?.nome || "",
       email: initialData?.email || "",
+      conglomerado_id: initialData?.conglomerado?.id || undefined,
       senha: "",
     },
   });
+  const { conglomerados, fetchConglomerados } = useConglomeradoStore();
 
   useEffect(() => {
     reset({
       id: initialData?.id,
       nome: initialData?.nome || "",
       email: initialData?.email || "",
+      conglomerado_id: initialData?.conglomerado?.id || undefined,
       senha: "",
     });
   }, [initialData, reset]);
+
+  useEffect(() => {
+    fetchConglomerados();
+    if (initialData?.conglomerado?.id) {
+      setValue("conglomerado_id", initialData.conglomerado?.id, {
+        shouldValidate: true,
+      });
+    }
+  }, [fetchConglomerados, initialData, setValue]);
+
+  const conglomeradoOptions: SelectOption[] = conglomerados.map((c) => ({
+    id: c.id,
+    label: c.nome,
+  }));
 
   const nomeValue = watch("nome");
   const emailValue = watch("email");
@@ -111,6 +132,23 @@ export default function ModalCadastroAdmin({
           </p>
         )}
 
+        <InputText
+          label="Senha"
+          labelColor="text-[var(--extra)]"
+          type="password"
+          value={senhaValue}
+          onChange={(val) => setValue("senha", val, { shouldValidate: true })}
+          placeholder={
+            initialData?.id
+              ? "Deixe em branco para manter a senha atual"
+              : "Digite a senha do admin"
+          }
+        />
+        {errors.senha && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.senha.message}
+          </p>
+        )}
         {/* Email */}
         <InputText
           label="Email"
@@ -125,21 +163,29 @@ export default function ModalCadastroAdmin({
           </p>
         )}
 
-        {/* Senha (sempre visível) */}
-        <InputText
-          label="Senha"
-          labelColor="text-[var(--extra)]"
-          value={senhaValue}
-          onChange={(val) => setValue("senha", val, { shouldValidate: true })}
-          placeholder={
-            initialData?.id
-              ? "Deixe em branco para manter a senha atual"
-              : "Digite a senha do admin"
-          }
+        <Controller
+          name="conglomerado_id"
+          control={control}
+          render={({ field }) => {
+            const selectedOption =
+              conglomeradoOptions.find((opt) => opt.id === field.value) || null;
+
+            return (
+              <Select
+                label="Conglomerado"
+                options={conglomeradoOptions}
+                placeholder="Selecione o conglomerado"
+                selectedOption={selectedOption}
+                onSelect={(option) => {
+                  field.onChange(Number(option.id));
+                }}
+              />
+            );
+          }}
         />
-        {errors.senha && (
+        {errors.conglomerado_id && (
           <p className="text-[var(--destructive)] text-sm">
-            {errors.senha.message}
+            {errors.conglomerado_id.message}
           </p>
         )}
 

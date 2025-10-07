@@ -153,6 +153,7 @@ export default function CadastroMaster({
         <InputText
           label="Senha"
           labelColor="text-[var(--extra)]"
+          type="password"
           value={senhaValue}
           onChange={(val) => setValue("senha", val, { shouldValidate: true })}
           placeholder={

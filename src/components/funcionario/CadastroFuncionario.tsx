@@ -125,26 +125,23 @@ export default function CadastroFuncionario({
           </p>
         )}
 
-        {/* Senha (só no modo criar) */}
-        {!initialData?.id && (
-          <>
-            <InputText
-              label="Senha"
-              labelColor="text-[var(--extra)]"
-              value={senhaValue}
-              onChange={(val) =>
-                setValue("senha", val, { shouldValidate: true })
-              }
-              placeholder="Digite a senha do funcionário"
-            />
-            {errors.senha && (
-              <p className="text-[var(--destructive)] text-sm">
-                {errors.senha.message}
-              </p>
-            )}
-          </>
+        <InputText
+          label="Senha"
+          labelColor="text-[var(--extra)]"
+          value={senhaValue}
+          type="password"
+          onChange={(val) => setValue("senha", val, { shouldValidate: true })}
+          placeholder={
+            initialData?.id
+              ? "Deixe em branco para manter a senha atual"
+              : "Digite a senha do funcionário"
+          }
+        />
+        {errors.senha && (
+          <p className="text-[var(--destructive)] text-sm">
+            {errors.senha.message}
+          </p>
         )}
-
         {/* CPF */}
         <InputCPF
           label="CPF"

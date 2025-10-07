@@ -31,7 +31,7 @@ const Pagination: React.FC<PaginationProps> = ({
       {pages.map((page) => (
         <Button
           key={page}
-          variant={page === currentPage ? "default" : "confirm"}
+          variant={page === currentPage ? "confirm" : "default"}
           onClick={() => onPageChange(page)}
         >
           {page}

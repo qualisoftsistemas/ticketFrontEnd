@@ -90,7 +90,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       set({ admins: [...get().admins, response], loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
-        showRequestToast("error", err.message || "Erro ao buscar admins");
+        showRequestToast("error", err.message || "Erro ao criar admins");
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
       } else {
@@ -115,7 +115,7 @@ export const useAdminStore = create<AdminState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
-      showRequestToast("error", "Erro ao buscar admins");
+      showRequestToast("error", "Erro ao atualizar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
