@@ -118,6 +118,13 @@ export default function SetorPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Desativar" },
+    { icon: "/Icons/Trash.svg", label: "Excluir" },
+    { icon: "/Icons/CategoryTag.svg", label: "Tags" },
+  ];
+
   if (loading && setores.length === 0)
     return <p className="text-[var(--primary)]">Carregando setores...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -136,6 +143,7 @@ export default function SetorPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (
