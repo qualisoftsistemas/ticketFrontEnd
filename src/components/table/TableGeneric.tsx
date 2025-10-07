@@ -9,7 +9,8 @@ import {
   EmptyDescription,
   EmptyContent,
   EmptyMedia,
-} from "@/components/ui/empty";  
+} from "@/components/ui/empty";
+import Icon from "../ui/icon";
 export interface Column<T> {
   header: string;
   key: keyof T;
@@ -71,20 +72,10 @@ export default function TableGeneric<T>({
         <Empty className="my-4">
           <EmptyHeader>
             <EmptyMedia variant="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 3v18h18V3H3z"
-                />
-              </svg>
+              <Icon
+                icon="/Icons/Warning.svg"
+                className="w-24 h-24 bg-[var(--primary-foreground)]"
+              />
             </EmptyMedia>
             <EmptyTitle>Nenhum registro encontrado</EmptyTitle>
           </EmptyHeader>
