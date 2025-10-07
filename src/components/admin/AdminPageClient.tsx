@@ -7,6 +7,7 @@ import { Admin } from "@/types/Admin";
 import ModalCadastroAdmin from "./CadastroAdmin";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function AdminPageClient() {
   const {
@@ -90,16 +91,14 @@ export default function AdminPageClient() {
       key: "actions" as keyof Admin,
       render: (admin: Admin) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(admin)}
           />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Excluir"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Trash.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(admin.id)}
           />
         </div>

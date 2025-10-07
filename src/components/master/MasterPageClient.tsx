@@ -7,6 +7,7 @@ import { Master } from "@/types/Master";
 import ModalCadastroMaster from "./CadastroMaster";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function MasterPageClient() {
   const {
@@ -77,29 +78,28 @@ export default function MasterPageClient() {
     setShowModal(true);
   };
 
-const columns: Column<Master>[] = [
+  const columns: Column<Master>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
     {
-        header: "Prestador",
-        key: "prestador_id",
-        render: (master) => master?.prestador?.nome,
+      header: "Prestador",
+      key: "prestador_id",
+      render: (master) => master?.prestador?.nome,
     },
     {
-        header: "Ações",
-        key: "actions" as keyof Master,
-        render: (master: Master) => (
-            <div className="flex justify-start gap-4 py-1">
-                <img
-                    src="/Icons/Edit.svg"
-                    alt="Editar"
-                    className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
-                    onClick={() => handleEdit(master)}
-                />
-            </div>
-        ),
+      header: "Ações",
+      key: "actions" as keyof Master,
+      render: (master: Master) => (
+        <div className="flex justify-start gap-4 py-1">
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleEdit(master)}
+          />
+        </div>
+      ),
     },
-];
+  ];
 
   if (loading && masters.length === 0)
     return <p className="text-[var(--primary)]">Carregando masters...</p>;

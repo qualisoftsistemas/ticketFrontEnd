@@ -7,6 +7,7 @@ import { Funcionario } from "@/types/Funcionario";
 import ModalCadastroFuncionario from "./CadastroFuncionario";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
+import Icon from "../ui/icon";
 
 export default function FuncionarioPageClient() {
   const {
@@ -94,16 +95,14 @@ export default function FuncionarioPageClient() {
       key: "actions" as keyof Funcionario,
       render: (funcionario: Funcionario) => (
         <div className="flex justify-start gap-4 py-1">
-          <img
-            src="/Icons/Edit.svg"
-            alt="Editar"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Edit.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(funcionario)}
           />
-          <img
-            src="/Icons/Trash.svg"
-            alt="Excluir"
-            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105"
+          <Icon
+            icon="/Icons/Trash.svg"
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(funcionario.id)}
           />
         </div>
