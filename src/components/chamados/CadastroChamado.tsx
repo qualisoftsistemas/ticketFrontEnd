@@ -25,7 +25,7 @@ const baseSchema = z.object({
   operador_id: z.number().optional(),
 });
 
-interface SelectsData {
+export interface SelectsData {
   setores: { id: number; nome: string }[];
   categorias: { id: number; nome: string }[];
   empresas: { id: number; nome: string }[];

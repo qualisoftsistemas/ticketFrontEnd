@@ -12,16 +12,22 @@ interface ChamadoState {
   chamadoSelecionado: ChamadoApiResponse | null;
   pagination: Pagination | null;
 
-  fetchChamados: (options?: {
-    page?: number;
-    search?: string;
-    status?: string[];
-  }) => Promise<void>;
+  fetchChamados: (options?: FetchChamadosOptions) => Promise<void>;
   fetchChamadoById: (id: number) => Promise<void>;
   createChamado: (data: Partial<Chamado>) => Promise<void>;
   updateChamado: (data: Partial<Chamado>) => Promise<void>;
   deleteChamado: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchChamadosOptions {
+  page?: number;
+  search?: string;
+  status?: string[];
+  setor_id?: number | null;
+  operador_id?: number | null;
+  categoria_id?: number | null;
+  empresa_id?: number | null;
 }
 
 export const useChamadoStore = create<ChamadoState>((set, get) => ({
@@ -32,17 +38,20 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
   pagination: null,
 
   fetchChamados: async (
-    options = { page: 1, search: "", status: [] as string[] }
+    options: FetchChamadosOptions = { page: 1, search: "", status: [] }
   ) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/chamado?page=${options.page}`;
 
-      if (options.search) {
+      if (options.search)
         endpoint += `&search=${encodeURIComponent(options.search)}`;
-      }
-
-      // Se houver status, adiciona cada um como status[]
+      if (options.setor_id) endpoint += `&setor_id=${options.setor_id}`;
+      if (options.operador_id)
+        endpoint += `&operador_id=${options.operador_id}`;
+      if (options.categoria_id)
+        endpoint += `&categoria_id=${options.categoria_id}`;
+      if (options.empresa_id) endpoint += `&empresa_id=${options.empresa_id}`;
       if (options.status && options.status.length > 0) {
         options.status.forEach((s) => {
           endpoint += `&status[]=${encodeURIComponent(s)}`;
@@ -63,16 +72,11 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         loading: false,
       });
     } catch (err: any) {
-      if (err instanceof Error) {
-        console.error(err);
-        set({
-          error: err.message || "Erro ao buscar  chamados",
-          loading: false,
-        });
-      } else {
-        console.error(err);
-        set({ error: "Erro desconhecido", loading: false });
-      }
+      console.error(err);
+      set({
+        error: err instanceof Error ? err.message : "Erro desconhecido",
+        loading: false,
+      });
     }
   },
 

@@ -7,22 +7,39 @@ import { useChamadoStore } from "@/store/chamadoStore";
 import Table from "../table/Table";
 import { Chamado } from "@/types/Chamado";
 import { Column } from "../table/TableGeneric";
-import { formatDate } from "@/utils/formatDate";
 import Badge from "../ui/badge";
 import FilterBox from "./FilterBox";
+import { Button } from "../ui/button";
+import Select, { SelectOption } from "../ui/select";
+
+import { SelectsData } from "./CadastroChamado";
+import apiFetchClient from "@/service/api";
 
 export default function ChamadoPageClient() {
   const router = useRouter();
 
   const { chamados, loading, fetchChamados, pagination } = useChamadoStore();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([
     "pendente_pelo_operador",
     "pendente_pelo_usuario",
     "aguardando_avaliacao",
   ]);
-  
-  const handleFilterChange = (status: string[]) => {
+
+  const [selectedSetor, setSelectedSetor] = useState<SelectOption[]>([]);
+  const [selectedEmpresa, setSelectedEmpresa] = useState<SelectOption[]>([]);
+  const [selectedCategoria, setSelectedCategoria] = useState<SelectOption[]>(
+    []
+  );
+  const [selectedOperador, setSelectedOperador] = useState<SelectOption[]>([]);
+
+  const [empresas, setEmpresas] = useState<SelectsData["empresas"]>([]);
+  const [setores, setSetores] = useState<SelectsData["setores"]>([]);
+  const [categorias, setCategorias] = useState<SelectsData["categorias"]>([]);
+  const [operadores, setOperadores] = useState<SelectsData["operadores"]>([]);
+
+  const handleStatusChange = (status: string[]) => {
     setSelectedStatus(status);
     fetchTableData(1, searchTerm, status);
   };
@@ -32,10 +49,6 @@ export default function ChamadoPageClient() {
       fetchChamados({ page, search, status }),
     [fetchChamados, selectedStatus]
   );
-
-  // useEffect(() => {
-  //   fetchTableData(1);
-  // }, []);
 
   const handlePageChange = (page: number) => {
     fetchTableData(page, searchTerm);
@@ -53,6 +66,41 @@ export default function ChamadoPageClient() {
   const showCadastro = () => {
     router.push("/chamados/cadastro");
   };
+
+  useEffect(() => {
+    const fetchSelectsData = async () => {
+      try {
+        const data = await apiFetchClient<SelectsData>({
+          method: "GET",
+          endpoint: "/abrir_chamado/selects_iniciais",
+        });
+
+        setEmpresas(data.empresas || []);
+        setSetores(data.setores || []);
+      } catch (err) {
+        console.error("Erro ao buscar selects:", err);
+      }
+    };
+
+    fetchSelectsData();
+  }, []);
+
+  const empresasOptions: SelectOption[] = empresas.map((s) => ({
+    id: s.id,
+    label: s.nome,
+  }));
+  const setorOptions: SelectOption[] = setores.map((s) => ({
+    id: s.id,
+    label: s.nome,
+  }));
+  const categoriaOptions: SelectOption[] = categorias.map((s) => ({
+    id: s.id,
+    label: s.nome,
+  }));
+  const operadorOptions: SelectOption[] = operadores.map((s) => ({
+    id: s.id,
+    label: s.nome,
+  }));
 
   const columns: Column<Chamado>[] = [
     { header: "Cód", key: "id" },
@@ -118,7 +166,7 @@ export default function ChamadoPageClient() {
 
   return (
     <>
-      <FilterBox loading={loading} onFilterChange={handleFilterChange} />
+      <FilterBox loading={loading} onFilterChange={handleStatusChange} />
       <Table
         columns={columns}
         data={chamados}
@@ -130,6 +178,128 @@ export default function ChamadoPageClient() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         onRowClick={handleVerChamado}
+        onApplyFilters={() => {
+          fetchChamados({
+            page: 1,
+            search: searchTerm,
+            setor_id:
+              selectedSetor[0]?.id !== undefined
+                ? Number(selectedSetor[0].id)
+                : null,
+            operador_id:
+              selectedOperador[0]?.id !== undefined
+                ? Number(selectedOperador[0].id)
+                : null,
+            categoria_id:
+              selectedCategoria[0]?.id !== undefined
+                ? Number(selectedCategoria[0].id)
+                : null,
+            empresa_id:
+              selectedEmpresa[0]?.id !== undefined
+                ? Number(selectedEmpresa[0].id)
+                : null,
+          });
+        }}
+        onClearFilters={() => {
+          setSelectedSetor([]);
+          setSelectedOperador([]);
+          setSelectedCategoria([]);
+          setSelectedEmpresa([]);
+          setSearchTerm("");
+
+          fetchChamados({
+            page: 1,
+            search: "",
+            status: [
+              "pendente_pelo_operador",
+              "pendente_pelo_usuario",
+              "aguardando_avaliacao",
+            ],
+            setor_id: null,
+            operador_id: null,
+            categoria_id: null,
+            empresa_id: null,
+          });
+        }}
+        renderFilters={({ onApply, onClear }) => (
+          <div className="flex flex-col gap-4 w-full">
+            {/* Linha 1: Empresa + Setor */}
+            <div className="flex w-full gap-2">
+              <div className="flex-1">
+                <Select
+                  label="Empresa"
+                  options={empresasOptions}
+                  placeholder="Selecione a empresa"
+                  selectedOption={selectedEmpresa[0] || null}
+                  onSelect={(option) => setSelectedEmpresa([option])}
+                />
+              </div>
+              <div className="flex-1">
+                <Select
+                  label="Setor"
+                  options={setorOptions}
+                  placeholder="Selecione o setor"
+                  selectedOption={selectedSetor[0] || null}
+                  onSelect={async (option) => {
+                    const setorId = Number(option.id);
+                    setSelectedSetor([option]);
+
+                    // limpar categorias e operadores antes do fetch
+                    setCategorias([]);
+                    setOperadores([]);
+                    setSelectedCategoria([]);
+                    setSelectedOperador([]);
+
+                    try {
+                      const data = await apiFetchClient<{
+                        categorias: { id: number; nome: string }[];
+                        operadores: {
+                          id: number;
+                          nome: string;
+                          foto?: string | null;
+                        }[];
+                      }>({
+                        method: "GET",
+                        endpoint: `/abrir_chamado/detalhes_setor/${setorId}`,
+                      });
+
+                      setCategorias(data.categorias || []);
+                      setOperadores(data.operadores || []);
+                    } catch (err) {
+                      console.error("Erro ao buscar detalhes do setor:", err);
+                    }
+                  }}
+                />
+              </div>
+              <div className="flex-1">
+                <Select
+                  label="Operador"
+                  options={operadorOptions}
+                  placeholder="Selecione o operador"
+                  disabled={operadores.length === 0}
+                  selectedOption={selectedOperador[0] || null}
+                  onSelect={(option) => setSelectedOperador([option])}
+                />
+              </div>
+              <div className="flex-1">
+                <Select
+                  label="Categoria"
+                  options={categoriaOptions}
+                  placeholder="Selecione a categoria"
+                  disabled={categorias.length === 0}
+                  selectedOption={selectedCategoria[0] || null}
+                  onSelect={(option) => setSelectedCategoria([option])}
+                />
+              </div>
+            </div>
+
+            {/* Botões */}
+            <div className="flex gap-2">
+              <Button onClick={onApply}>Aplicar Filtros</Button>
+              <Button onClick={onClear}>Limpar Tudo</Button>
+            </div>
+          </div>
+        )}
       />
     </>
   );

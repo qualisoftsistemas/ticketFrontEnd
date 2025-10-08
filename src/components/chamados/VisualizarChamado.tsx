@@ -59,7 +59,18 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       setShowReabertura(false);
     }
   }, [role, chamado]);
+  useEffect(() => {
+    if (showRespostaInput && respostaRef.current) {
+      const timeout = setTimeout(() => {
+        respostaRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 200);
 
+      return () => clearTimeout(timeout);
+    }
+  }, [showRespostaInput]);
   if (!chamado) return null;
 
   const chamadoSelecionado = chamado.chamado;
@@ -182,19 +193,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setIsReabrindo(true);
     setShowRespostaInput(true);
   };
-
-  useEffect(() => {
-    if (showRespostaInput && respostaRef.current) {
-      const timeout = setTimeout(() => {
-        respostaRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 200);
-
-      return () => clearTimeout(timeout);
-    }
-  }, [showRespostaInput]);
 
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">

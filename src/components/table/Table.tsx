@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import TableGeneric, { Column } from "./TableGeneric";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,10 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { extractTextFromRender, formatCellValue } from "@/utils/formatCelulasPraExportar";
+import {
+  extractTextFromRender,
+  formatCellValue,
+} from "@/utils/formatCelulasPraExportar";
 
 interface TableProps<T> {
   nomeCadastro?: string;
@@ -24,10 +28,17 @@ interface TableProps<T> {
   searchTerm: string;
   onRowClick?: (id: number) => void;
   onSearchChange: (term: string) => void;
+  onApplyFilters?: (filters: Record<string, any>) => void;
+  onClearFilters?: () => void;
+  renderFilters?: (props: {
+    filters: Record<string, any>;
+    setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+    onApply: () => void;
+    onClear: () => void;
+  }) => React.ReactNode;
   legendasAcoes?: { icon: string; label: string }[];
 }
 
-// eslint-disable-next-line
 function Table<T extends Record<string, any>>({
   nomeCadastro = "Cadastro",
   columns,
@@ -40,14 +51,23 @@ function Table<T extends Record<string, any>>({
   onRowClick,
   onSearchChange,
   legendasAcoes,
+  renderFilters,
+  onApplyFilters,
+  onClearFilters,
 }: TableProps<T>) {
+  // Estado para mostrar/ocultar filtros
   const [showFilters, setShowFilters] = useState(false);
 
-  const toggleFilters = () => setShowFilters((prev) => !prev);
+  // Estado para os filtros aplicados
+  const [filters, setFilters] = useState<Record<string, any>>({});
+
+  const toggleFilters = () => {
+    setShowFilters((prev) => !prev);
+    console.log(showFilters);
+  };
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
-
     const tableColumn = columns.map((col) => col.header);
     const tableRows = data.map((row) =>
       columns.map((col) =>
@@ -86,17 +106,15 @@ function Table<T extends Record<string, any>>({
       type: "array",
     });
 
-    const blob = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
-
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
     saveAs(blob, `${nomeCadastro}.xlsx`);
   };
 
   return (
-    <div className="flex flex-col gap-2 w-full overflow-hidden">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 w-full">
-        <div className="flex gap-2 flex-wrap">
+    <div className="flex flex-col w-full overflow-hidden">
+      {/* Ações e Busca */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full">
+        <div className="flex gap-2 flex-wrap self-end">
           <ActionBox
             onToggleFilter={toggleFilters}
             onExportPDF={handleExportPDF}
@@ -104,7 +122,7 @@ function Table<T extends Record<string, any>>({
           />
         </div>
 
-        <div className="flex gap-2  w-full sm:w-auto">
+        <div className="flex gap-2 mb-2 w-full sm:w-auto">
           <Input
             icon={
               <Image
@@ -132,20 +150,17 @@ function Table<T extends Record<string, any>>({
       </div>
 
       {/* Filtros */}
-      {showFilters && (
+      {showFilters && renderFilters && (
         <div className="w-full p-4 bg-[var(--primary)] rounded border border-[var(--extra)]">
-          <div className="flex flex-wrap gap-3">
-            <Button variant="confirm" type="submit" className="px-2 text-xs">
-              Aplicar Filtros
-            </Button>
-            <Button
-              variant="destructive"
-              type="button"
-              className="px-2 text-xs"
-            >
-              Limpar Tudo
-            </Button>
-          </div>
+          {renderFilters({
+            filters,
+            setFilters,
+            onApply: () => onApplyFilters?.(filters),
+            onClear: () => {
+              setFilters({});
+              onClearFilters?.();
+            },
+          })}
         </div>
       )}
 
@@ -156,6 +171,7 @@ function Table<T extends Record<string, any>>({
         columns={columns}
         data={data}
       />
+
       {/* Paginação */}
       {pagination && (
         <Pagination
@@ -165,6 +181,7 @@ function Table<T extends Record<string, any>>({
         />
       )}
 
+      {/* Legendas */}
       {legendasAcoes && legendasAcoes.length > 0 && (
         <div className="flex flex-wrap gap-4 items-center text-sm bg-[var(--primary)] text-[var(--primary-foreground)] p-2 rounded">
           {legendasAcoes.map((item, index) => (
