@@ -115,6 +115,7 @@ export default function FuncionarioPageClient() {
     { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
     { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
     { icon: "/Icons/Trash.svg", label: "Excluir" },
+    { icon: "/Icons/Whatsapp.svg", label: "Whatsapp" },
   ];
 
   if (loading && funcionarios.length === 0)

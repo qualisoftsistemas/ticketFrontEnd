@@ -22,28 +22,23 @@ const statusConfig: {
   [key: string]: {
     label: string;
     icon: string;
-    text: string;
   };
 } = {
   pendente_pelo_operador: {
     label: "Pendente Operador",
-    icon: "👤",
-    text: "text-orange-700 dark:text-orange-300",
+    icon: "🕵️‍♀️",
   },
   pendente_pelo_usuario: {
     label: "Pendente Usuário",
-    icon: "👤",
-    text: "text-yellow-700 dark:text-yellow-300",
+    icon: "👨‍💼",
   },
   aguardando_avaliacao: {
     label: "Aguardando Avaliação",
-    icon: "📋",
-    text: "text-blue-700 dark:text-blue-300",
+    icon: "⭐",
   },
   concluido: {
     label: "Concluído",
     icon: "✅",
-    text: "text-green-700 dark:text-green-300",
   },
 };
 
@@ -83,11 +78,11 @@ const FilterBox = ({ onFilterChange, loading }: Props) => {
           flex-1 sm:flex-auto cursor-pointer transition-all duration-200 ease-in-out
           p-2 md:p-3 rounded-lg border font-medium text-center
           hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
-          focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+          focus:outline-none focus:ring-2 focus:ring-offset-2
           ${
             isSelected
-              ? `${config.text} font-semibold bg-gray-100 dark:bg-gray-800 border-blue-500`
-              : "text-gray-700 bg-white border-gray-300"
+              ? `bg-[var(--secondary)] text-[var(--secondary-foreground)]`
+              : "bg-[var(--primary)] text-[var(--primary-foreground)] border-gray-300"
           }
           min-w-[140px]
         `}

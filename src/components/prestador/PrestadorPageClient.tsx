@@ -100,6 +100,8 @@ export default function PrestadorPageClient() {
 
   const legendas = [
     { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
   ];
 
   if (loading && prestadores.length === 0)
