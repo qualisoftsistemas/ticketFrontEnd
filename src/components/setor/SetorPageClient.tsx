@@ -120,9 +120,10 @@ export default function SetorPageClient() {
 
   const legendas = [
     { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Desativar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
     { icon: "/Icons/Trash.svg", label: "Excluir" },
-    { icon: "/Icons/CategoryTag.svg", label: "Tags" },
+    { icon: "/Icons/CategoryTag.svg", label: "Categorias Relacionadas" },
   ];
 
   if (loading && setores.length === 0)

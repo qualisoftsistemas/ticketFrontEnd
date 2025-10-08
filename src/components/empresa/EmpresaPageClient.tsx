@@ -107,6 +107,13 @@ export default function EmpresaPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/Icons/Trash.svg", label: "Excluir" },
+  ];
+
   if (loading && empresas.length === 0)
     return <p className="text-[var(--primary)]">Carregando empresas...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -125,6 +132,7 @@ export default function EmpresaPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (
