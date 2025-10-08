@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChamadoApiResponse } from "@/types/Chamado";
 import DescriptionBox from "../ui/descriptionBox";
 import React from "react";
@@ -29,6 +29,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const [showReabertura, setShowReabertura] = useState(false);
   const [isReabrindo, setIsReabrindo] = useState(false);
   const [mensagens, setMensagens] = useState<MensagemType[]>([]);
+  const respostaRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     setMensagens(chamado?.chamado?.mensagens || []);
@@ -45,7 +46,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
 
-    // mostra modal de avaliação
     if (
       status === "aguardando_avaliacao" &&
       (role === "Admin" || role === "Funcionario")
@@ -53,7 +53,6 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
       setShowModalAvaliar(true);
     }
 
-    // mostra botão de reabertura
     if (status === "concluido") {
       setShowReabertura(true);
     } else {
@@ -174,6 +173,29 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
     setShowModalAvaliar(false);
   };
 
+  const handleAbrirResposta = () => {
+    setIsReabrindo(false);
+    setShowRespostaInput(true);
+  };
+
+  const handleAbrirReabertura = () => {
+    setIsReabrindo(true);
+    setShowRespostaInput(true);
+  };
+
+  useEffect(() => {
+    if (showRespostaInput && respostaRef.current) {
+      const timeout = setTimeout(() => {
+        respostaRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }, 200);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showRespostaInput]);
+
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
       <div className="flex items-center justify-between">
@@ -227,6 +249,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
               {showRespostaInput && (
                 <div className="mt-2">
                   <RespostaChamado
+                    respostaRef={respostaRef}
                     handleResponder={(data) =>
                       isReabrindo ? handleReabrir(data) : handleResponder(data)
                     }
@@ -238,14 +261,8 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
             <div className="sticky top-0">
               <InfoChamado
                 chamado={chamadoSelecionado}
-                handleResponder={() => {
-                  setIsReabrindo(false);
-                  setShowRespostaInput(true);
-                }}
-                handleReabrir={() => {
-                  setIsReabrindo(true);
-                  setShowRespostaInput(true);
-                }}
+                handleResponder={handleAbrirResposta}
+                handleReabrir={handleAbrirReabertura}
                 showRespostaInput={showRespostaInput}
                 showReabertura={showReabertura}
                 role={role as Role}

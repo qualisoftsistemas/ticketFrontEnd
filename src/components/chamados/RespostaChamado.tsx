@@ -16,9 +16,13 @@ export type RespostaFormData = z.infer<typeof schema>;
 
 interface RespostaChamadoProps {
   handleResponder: (data: RespostaFormData, arquivos?: UploadedFile[]) => void;
+  respostaRef: React.RefObject<HTMLFormElement | null>;
 }
 
-const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
+const RespostaChamado = ({
+  handleResponder,
+  respostaRef,
+}: RespostaChamadoProps) => {
   const [uploadedFiles, setUploadedFiles] = React.useState<UploadedFile[]>([]);
 
   const {
@@ -43,6 +47,7 @@ const RespostaChamado = ({ handleResponder }: RespostaChamadoProps) => {
 
   return (
     <form
+      ref={respostaRef}
       className="flex flex-col gap-4 mt-4"
       onSubmit={handleSubmit(onSubmit)}
     >
