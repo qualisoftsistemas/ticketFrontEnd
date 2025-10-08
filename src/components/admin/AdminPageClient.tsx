@@ -111,6 +111,7 @@ export default function AdminPageClient() {
     { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
     { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
     { icon: "/Icons/Trash.svg", label: "Excluir" },
+    { icon: "/Icons/Whatsapp.svg", label: "Whatsapp" },
   ];
 
   if (loading && admins.length === 0)
