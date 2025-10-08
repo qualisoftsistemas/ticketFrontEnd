@@ -35,7 +35,7 @@ export default function ConglomeradoPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchConglomerados({ page, search }),
+    (page: number, nome = "") => fetchConglomerados({ page, nome }),
     [fetchConglomerados]
   );
 
@@ -131,6 +131,7 @@ export default function ConglomeradoPageClient() {
           setEditConglomerado(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

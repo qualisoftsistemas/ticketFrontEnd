@@ -45,8 +45,8 @@ export default function ChamadoPageClient() {
   };
 
   const fetchTableData = useCallback(
-    (page: number, search = "", status: string[] = selectedStatus) =>
-      fetchChamados({ page, search, status }),
+    (page: number, assunto = "", status: string[] = selectedStatus) =>
+      fetchChamados({ page, assunto, status }),
     [fetchChamados, selectedStatus]
   );
 
@@ -167,6 +167,7 @@ export default function ChamadoPageClient() {
   return (
     <>
       <FilterBox loading={loading} onFilterChange={handleStatusChange} />
+
       <Table
         columns={columns}
         data={chamados}
@@ -176,6 +177,7 @@ export default function ChamadoPageClient() {
         pagination={pagination}
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
         onSearchChange={handleSearchChange}
         onRowClick={handleVerChamado}
         onApplyFilters={() => {
@@ -244,7 +246,6 @@ export default function ChamadoPageClient() {
                     const setorId = Number(option.id);
                     setSelectedSetor([option]);
 
-                    // limpar categorias e operadores antes do fetch
                     setCategorias([]);
                     setOperadores([]);
                     setSelectedCategoria([]);

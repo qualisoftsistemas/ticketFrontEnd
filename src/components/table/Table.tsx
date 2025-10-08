@@ -28,6 +28,7 @@ interface TableProps<T> {
   searchTerm: string;
   onRowClick?: (id: number) => void;
   onSearchChange: (term: string) => void;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   onApplyFilters?: (filters: Record<string, any>) => void;
   onClearFilters?: () => void;
   renderFilters?: (props: {
@@ -48,6 +49,7 @@ function Table<T extends Record<string, any>>({
   pagination,
   onPageChange,
   searchTerm,
+  setSearchTerm,
   onRowClick,
   onSearchChange,
   legendasAcoes,
@@ -138,9 +140,15 @@ function Table<T extends Record<string, any>>({
             bgInput="bg-[var(--primary)]"
             bgIcon="bg-[var(--secondary)]"
             textColor="text-[var(--extra)]"
-            onChange={(e) => onSearchChange(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="flex-1 min-w-[150px]"
           />
+          <Button
+            className="whitespace-nowrap"
+            onClick={() => onSearchChange(searchTerm)}
+          >
+            Buscar
+          </Button>
           {showCadastro && (
             <Button onClick={showCadastro} className="whitespace-nowrap">
               Novo {nomeCadastro}

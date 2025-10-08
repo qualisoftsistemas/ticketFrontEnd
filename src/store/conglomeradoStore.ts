@@ -10,15 +10,17 @@ interface ConglomeradoState {
   error: string | null;
   conglomeradoSelecionado: Conglomerado | null;
   pagination: Pagination | null;
-  fetchConglomerados: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchConglomerados: (options?: FetchConglomeradoOptions) => Promise<void>;
   fetchConglomeradoById: (id: number) => Promise<void>;
   createConglomerado: (data: Partial<Conglomerado>) => Promise<void>;
   updateConglomerado: (data: Partial<Conglomerado>) => Promise<void>;
   deleteConglomerado: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchConglomeradoOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
@@ -28,12 +30,16 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
   conglomeradoSelecionado: null,
   pagination: null,
 
-  fetchConglomerados: async (options = { page: 1, search: "" }) => {
+  fetchConglomerados: async (
+    options: FetchConglomeradoOptions = { page: 1 }
+  ) => {
     set({ loading: true, error: null });
+
     try {
-      let endpoint = `/conglomerado?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      let endpoint = `/conglomerado?page=${options.page || 1}`;
+
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{
@@ -52,7 +58,10 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
-        set({ error: err.message || "Erro ao buscar admins", loading: false });
+        set({
+          error: err.message || "Erro ao buscar conglomerados",
+          loading: false,
+        });
       } else {
         console.error(err);
         set({ error: "Erro desconhecido", loading: false });

@@ -34,7 +34,7 @@ export default function CategoriaPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchCategorias({ page, search }),
+    (page: number, nome = "") => fetchCategorias({ page, nome }),
     [fetchCategorias]
   );
 
@@ -130,6 +130,7 @@ export default function CategoriaPageClient() {
           setEditCategoria(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

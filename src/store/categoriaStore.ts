@@ -10,15 +10,18 @@ interface CategoriaState {
   error: string | null;
   categoriaSelecionada: Categoria | null;
   pagination: Pagination | null;
-  fetchCategorias: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchCategorias: (options?: FetchCategoriasOptions) => Promise<void>;
   fetchCategoriaById: (id: number) => Promise<void>;
   createCategoria: (data: Partial<Categoria>) => Promise<void>;
   updateCategoria: (data: Partial<Categoria>) => Promise<void>;
   deleteCategoria: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchCategoriasOptions {
+  page?: number;
+  nome?: string;
+  setor_id?: number;
 }
 
 export const useCategoriaStore = create<CategoriaState>((set, get) => ({
@@ -28,13 +31,23 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
   categoriaSelecionada: null,
   pagination: null,
 
-  fetchCategorias: async (options = { page: 1, search: "" }) => {
+  fetchCategorias: async (options: FetchCategoriasOptions = { page: 1 }) => {
     set({ loading: true, error: null });
+
     try {
-      let endpoint = `/categoria?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      const params = new URLSearchParams();
+
+      params.append("page", options.page?.toString() || "1");
+
+      if (options.nome) {
+        params.append("nome", encodeURIComponent(options.nome));
       }
+
+      if (options.setor_id !== undefined && options.setor_id !== null) {
+        params.append("setor_id", options.setor_id.toString());
+      }
+
+      const endpoint = `/categoria?${params.toString()}`;
 
       const response = await apiFetchClient<{
         categorias: Categoria[];
@@ -52,7 +65,10 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
-        set({ error: err.message || "Erro ao buscar admins", loading: false });
+        set({
+          error: err.message || "Erro ao buscar categorias",
+          loading: false,
+        });
       } else {
         console.error(err);
         set({ error: "Erro desconhecido", loading: false });
