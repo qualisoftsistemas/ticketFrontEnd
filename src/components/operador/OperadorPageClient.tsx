@@ -140,6 +140,14 @@ export default function OperadorPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/Icons/Trash.svg", label: "Excluir" },
+    { icon: "/Icons/SectorTree.svg", label: "Atribuir Setores" },
+  ];
+
   if (loading && operadores.length === 0)
     return <p className="text-[var(--primary)]">Carregando operadores...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -158,6 +166,7 @@ export default function OperadorPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (

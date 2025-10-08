@@ -110,6 +110,13 @@ export default function CategoriaPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/Icons/Trash.svg", label: "Excluir" },
+  ];
+
   if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -128,6 +135,7 @@ export default function CategoriaPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (

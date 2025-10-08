@@ -98,6 +98,10 @@ export default function PrestadorPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+  ];
+
   if (loading && prestadores.length === 0)
     return <p className="text-[var(--primary)]">Carregando prestadores...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -116,6 +120,7 @@ export default function PrestadorPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (

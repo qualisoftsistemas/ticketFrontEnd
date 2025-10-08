@@ -111,6 +111,13 @@ export default function ConglomeradoPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/Icons/Trash.svg", label: "Excluir" },
+  ];
+
   if (loading && conglomerados.length === 0)
     return <p className="text-[var(--primary)]">Carregando conglomerados...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -129,6 +136,7 @@ export default function ConglomeradoPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (

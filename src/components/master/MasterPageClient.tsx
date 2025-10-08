@@ -101,6 +101,10 @@ export default function MasterPageClient() {
     },
   ];
 
+  const legendas = [
+    { icon: "/Icons/Edit.svg", label: "Editar" },
+  ];
+
   if (loading && masters.length === 0)
     return <p className="text-[var(--primary)]">Carregando masters...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -119,6 +123,7 @@ export default function MasterPageClient() {
         onPageChange={handlePageChange}
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
+        legendasAcoes={legendas}
       />
 
       {showModal && (

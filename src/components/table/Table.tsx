@@ -156,17 +156,6 @@ function Table<T extends Record<string, any>>({
         columns={columns}
         data={data}
       />
-
-      {legendasAcoes && legendasAcoes.length > 0 && (
-        <div className="flex flex-wrap gap-4 mt-4 items-center text-sm bg-[var(--secondary)] text-[var(--secondary-foreground)]">
-          {legendasAcoes.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <Image src={item.icon} alt={item.label} width={18} height={18} />
-              <span>{item.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
       {/* Paginação */}
       {pagination && (
         <Pagination
@@ -174,6 +163,17 @@ function Table<T extends Record<string, any>>({
           lastPage={pagination.last_page}
           onPageChange={onPageChange}
         />
+      )}
+
+      {legendasAcoes && legendasAcoes.length > 0 && (
+        <div className="flex flex-wrap gap-4 items-center text-sm bg-[var(--primary)] text-[var(--primary-foreground)] p-2 rounded">
+          {legendasAcoes.map((item, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Image src={item.icon} alt={item.label} width={18} height={18} />
+              <span>{item.label}</span>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
