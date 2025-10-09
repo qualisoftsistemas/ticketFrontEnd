@@ -196,7 +196,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
 
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap   items-center justify-center md:justify-between gap-2">
         <div className="flex items-center gap-4">
           <h2 className="text-2xl font-semibold text-[var(--extra)]">
             Visualizar Chamado
@@ -238,7 +238,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
             label={chamadoSelecionado?.assunto ?? ""}
           />
 
-          <div className="flex gap-4">
+          <div className="flex flex-col lg:flex-row gap-4">
             <div className="w-full space-y-2 bg-[var(--primary)] p-1 rounded">
               {mensagens.map((msg, index) => (
                 <Mensagem key={msg.id} mensagem={msg} numero={index + 1} />
@@ -256,7 +256,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
               )}
             </div>
 
-            <div className="sticky top-0">
+            <div className="md:sticky top-0 lg:order-2 order-0">
               <InfoChamado
                 chamado={chamadoSelecionado}
                 handleResponder={handleAbrirResposta}

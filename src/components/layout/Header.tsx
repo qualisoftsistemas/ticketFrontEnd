@@ -50,7 +50,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
   };
 
   return (
-    <header className="relative flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
+    <header className="fixed flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
       <div className="flex items-center justify-center border-r-2 min-w-44 py-3 border-[var(--secondary-foreground)]">
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (

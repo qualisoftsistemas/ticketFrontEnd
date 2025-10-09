@@ -6,11 +6,23 @@ import Table from "../table/Table";
 import { Column } from "../table/TableGeneric";
 import ModalDetalhes from "./ModalDetalhes";
 import { Rotina, Upload } from "@/types/Arquivo";
+import { useUserRole } from "@/hooks/useUserRole";
+import Select from "../ui/select";
+import { useEmpresaStore } from "@/store/empresaStore";
 
 export default function RotinasPage() {
   const { rotinas, uploads, fetchRotinas, loading } = useRotinaStore();
+  const {
+    empresas,
+    fetchEmpresas,
+    loading: loadingEmpresas,
+    empresaSelecionada,
+    setEmpresaSelecionada,
+  } = useEmpresaStore();
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [modalData, setModalData] = useState<Upload | null>(null);
+
+  const role = useUserRole();
 
   const [mes, setMes] = useState<number>(new Date().getMonth() + 1);
   const [ano, setAno] = useState<number>(new Date().getFullYear());
@@ -19,7 +31,6 @@ export default function RotinasPage() {
     fetchRotinas(mes, ano);
   }, [mes, ano, fetchRotinas]);
 
-  // Map para buscar uploads por rotina/mês/ano
   const uploadsMap = new Map(
     uploads.map((u) => [`${u.rotina.id}-${u.mes}-${u.ano}`, u])
   );
@@ -33,7 +44,7 @@ export default function RotinasPage() {
 
   const columns: Column<Rotina>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome da Rotina", key: "nome" },
+    { header: "Arquivo", key: "nome" },
     {
       header: "Status",
       key: "status" as keyof Rotina,
@@ -78,29 +89,45 @@ export default function RotinasPage() {
       <h1 className="text-lg font-semibold">Rotinas de Envio</h1>
 
       <div className="flex gap-3">
-        <select
-          value={mes}
-          onChange={(e) => setMes(Number(e.target.value))}
-          className="border rounded p-2"
-        >
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((m) => (
-            <option key={m} value={m}>
-              {m.toString().padStart(2, "0")}
-            </option>
-          ))}
-        </select>
+        <Select
+          label="Mês"
+          placeholder="Selecione o mês"
+          options={Array.from({ length: 12 }, (_, i) => {
+            const m = i + 1;
+            return { id: m, label: m.toString().padStart(2, "0") };
+          })}
+          selectedOption={{ id: mes, label: mes.toString().padStart(2, "0") }}
+          onSelect={(option) => setMes(Number(option.id))}
+        />
 
-        <select
-          value={ano}
-          onChange={(e) => setAno(Number(e.target.value))}
-          className="border rounded p-2"
-        >
-          {[2024, 2025, 2026].map((a) => (
-            <option key={a} value={a}>
-              {a}
-            </option>
-          ))}
-        </select>
+        <Select
+          label="Ano"
+          placeholder="Selecione o ano"
+          options={[2024, 2025, 2026].map((a) => ({
+            id: a,
+            label: a.toString(),
+          }))}
+          selectedOption={{ id: ano, label: ano.toString() }}
+          onSelect={(option) => setAno(Number(option.id))}
+        />
+
+        {(role === "Master" || role === "Operador") && (
+          <Select
+            label="Empresa"
+            placeholder="Selecione a empresa"
+            options={empresas.map((e) => ({ id: e.id, label: e.nome }))}
+            selectedOption={
+              empresaSelecionada
+                ? { id: empresaSelecionada.id, label: empresaSelecionada.nome }
+                : null
+            }
+            onSelect={(option) =>
+              setEmpresaSelecionada(
+                empresas.find((e) => e.id === option.id) ?? null
+              )
+            }
+          />
+        )}
       </div>
 
       <Table
@@ -117,7 +144,6 @@ export default function RotinasPage() {
         setSearchTerm={() => {}}
       />
 
-      {/* Modal Detalhes */}
       {showModalEnviar && modalData && (
         <ModalDetalhes
           modalData={modalData}

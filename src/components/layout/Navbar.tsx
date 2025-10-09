@@ -26,7 +26,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
         <main
           className={`
                 flex-1 p-4 bg-gray-50 overflow-y-auto
-                transition-all duration-300 ease-in-out   
+                transition-all duration-300 ease-in-out   mt-16 
                 ${isOpen ? "md:ml-64" : "md:ml-0"}       
             `}
         >
