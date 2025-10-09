@@ -5,6 +5,7 @@ import React from "react";
 import FileBadge from "../ui/fileBadge";
 import { UploadedFile } from "../ui/inputFile";
 import { API_BASE_URL } from "@/service/api";
+import {downloadAnexo} from "@/utils/downloadAnexo";
 
 interface User {
   id: number;
@@ -12,7 +13,7 @@ interface User {
   foto: string | null;
 }
 
-interface Anexo {
+export interface Anexo {
   id: number;
   arquivo: UploadedFile;
 }
@@ -38,49 +39,6 @@ const Mensagem: React.FC<MensagemProps> = ({
   numero,
   showRespostaInput,
 }) => {
-  const downloadAnexo = async (anexo: Anexo) => {
-    if (!anexo.arquivo && !anexo.id) {
-      throw new Error("Anexo inválido");
-    }
-
-    const token = localStorage.getItem("token");
-
-    try {
-      if (anexo.arquivo?.url) {
-        window.open(anexo.arquivo.url, "_blank");
-        return;
-      }
-
-      if (anexo.id) {
-        const res = await fetch(
-          `${API_BASE_URL}/arquivo/download/${anexo.id}`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!res.ok) throw new Error("Falha ao baixar o arquivo");
-
-        const blob = await res.blob();
-        const fileUrl = window.URL.createObjectURL(blob);
-
-        const link = document.createElement("a");
-        link.href = fileUrl;
-        link.download = anexo.arquivo?.nome || "arquivo";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        window.URL.revokeObjectURL(fileUrl);
-      }
-    } catch (error) {
-      console.error("Erro ao baixar anexo:", error);
-    }
-  };
-
   return (
     <div className="bg-[var(--extra)] p-2 rounded space-y-2 text-[var(--primary)]">
       <div className="flex flex-col gap-2">

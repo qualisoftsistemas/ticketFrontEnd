@@ -164,17 +164,27 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
         ))}
       </nav>
 
-      <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2 border-t border-[var(--primary-foreground)]/50 text-sm">
-        <div className="flex items-center gap-2">
-          <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
-          <p className="font-bold">{user.nome}</p>
+      <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2   text-sm">
+        <div className="w-full flex justify-center border-b border-[var(--primary-foreground)]/50   items-center gap-6   px-2 py-2">
+          <Link href="/sobre">
+            <img src="/Icons/Settings.svg" alt="config" className="w-6 h-6" />
+          </Link>
+          <Link href="/notificacoes">
+            <img src="/Icons/Bell.svg" alt="bell" className="w-6 h-6" />
+          </Link>
         </div>
-        <button
-          onClick={handleLogout}
-          className="w-full py-2 bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded hover:brightness-110 transition"
-        >
-          Logout
-        </button>
+        <div>
+          <div className="flex items-center gap-2">
+            <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
+            <p className="font-bold">{user.nome}</p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="w-full py-2 bg-[var(--secondary)] text-[var(--secondary-foreground)] rounded hover:brightness-110 transition"
+          >
+            Logout
+          </button>
+        </div>
         <div className="text-center text-xs mt-2">
           &copy; {new Date().getFullYear()} - By{" "}
           <a

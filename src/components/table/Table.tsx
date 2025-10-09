@@ -26,7 +26,7 @@ interface TableProps<T> {
   pagination: PaginationType | null;
   onPageChange: (page: number) => void;
   searchTerm: string;
-  onRowClick?: (id: number) => void;
+  onRowClick?: (row: T) => void;
   onSearchChange: (term: string) => void;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   onApplyFilters?: (filters: Record<string, any>) => void;
@@ -113,10 +113,10 @@ function Table<T extends Record<string, any>>({
   };
 
   return (
-    <div className="flex flex-col w-full overflow-hidden">
+    <div className="flex flex-col w-full overflow-hidden ">
       {/* Ações e Busca */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center w-full">
-        <div className="flex gap-2 flex-wrap self-end">
+      <div className="flex flex-col md:flex-row justify-between items-start sm:items-center w-full">
+        <div className="flex gap-2 order-2 md:order-0 flex-wrap  md:self-end">
           <ActionBox
             onToggleFilter={toggleFilters}
             onExportPDF={handleExportPDF}
@@ -124,31 +124,33 @@ function Table<T extends Record<string, any>>({
           />
         </div>
 
-        <div className="flex gap-2 mb-2 w-full sm:w-auto">
-          <Input
-            icon={
-              <Image
-                src="/Icons/Search.svg"
-                alt="Search"
-                width={24}
-                height={24}
-              />
-            }
-            iconPosition="left"
-            placeholder="Buscar..."
-            value={searchTerm}
-            bgInput="bg-[var(--primary)]"
-            bgIcon="bg-[var(--secondary)]"
-            textColor="text-[var(--extra)]"
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 min-w-[150px]"
-          />
-          <Button
-            className="whitespace-nowrap"
-            onClick={() => onSearchChange(searchTerm)}
-          >
-            Buscar
-          </Button>
+        <div className="flex gap-2 mb-2 w-full sm:w-auto  flex-col md:flex-row">
+          <div className="flex gap-2 order-2 md:order-0">
+            <Input
+              icon={
+                <Image
+                  src="/Icons/Search.svg"
+                  alt="Search"
+                  width={24}
+                  height={24}
+                />
+              }
+              iconPosition="left"
+              placeholder="Buscar..."
+              value={searchTerm}
+              bgInput="bg-[var(--primary)]"
+              bgIcon="bg-[var(--secondary)]"
+              textColor="text-[var(--extra)]"
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="flex-1 min-w-[150px]"
+            />
+            <Button
+              className="whitespace-nowrap"
+              onClick={() => onSearchChange(searchTerm)}
+            >
+              Buscar
+            </Button>
+          </div>
           {showCadastro && (
             <Button onClick={showCadastro} className="whitespace-nowrap">
               Novo {nomeCadastro}
@@ -174,7 +176,7 @@ function Table<T extends Record<string, any>>({
 
       {/* Tabela Responsiva */}
       <TableGeneric
-        onRowClick={onRowClick ? (row) => onRowClick(row.id) : undefined}
+        onRowClick={onRowClick ? (row) => onRowClick(row) : undefined}
         loading={loading}
         columns={columns}
         data={data}

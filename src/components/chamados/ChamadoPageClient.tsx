@@ -59,10 +59,9 @@ export default function ChamadoPageClient() {
     fetchTableData(1, term);
   };
 
-  const handleVerChamado = (id: number) => {
-    router.push(`/chamados/${id}`);
+  const handleVerChamado = (chamado: Chamado) => {
+    router.push(`/chamados/${chamado.id}`);
   };
-
   const showCadastro = () => {
     router.push("/chamados/cadastro");
   };
@@ -226,7 +225,7 @@ export default function ChamadoPageClient() {
         renderFilters={({ onApply, onClear }) => (
           <div className="flex flex-col gap-4 w-full">
             {/* Linha 1: Empresa + Setor */}
-            <div className="flex w-full gap-2">
+            <div className="flex w-full gap-2 flex-wrap">
               <div className="flex-1">
                 <Select
                   label="Empresa"

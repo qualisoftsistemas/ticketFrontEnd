@@ -17,14 +17,19 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   if (!role) return null;
 
   return (
-    <div className="bg-[var(--foreground)] h-screen w-full">
+    <div className="bg-white h-screen w-full">
       <Sidebar role={role} isOpen={isOpen} toggleSidebar={toggleSidebar} />
 
       <div className="flex-1 flex flex-col transition-all duration-300">
         <Header role={role} toggleSidebar={toggleSidebar} isOpen={isOpen} />
 
-        {/* Main */}
-        <main className="flex-1 p-4 bg-gray-50 overflow-y-auto">
+        <main
+          className={`
+                flex-1 p-4 bg-gray-50 overflow-y-auto
+                transition-all duration-300 ease-in-out   
+                ${isOpen ? "md:ml-64" : "md:ml-0"}       
+            `}
+        >
           {children}
         </main>
       </div>
