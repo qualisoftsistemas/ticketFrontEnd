@@ -31,7 +31,7 @@ export default function MasterPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchMasters({ page, search }),
+    (page: number, nome = "") => fetchMasters({ page, nome }),
     [fetchMasters]
   );
 
@@ -120,6 +120,7 @@ export default function MasterPageClient() {
           setEditMaster(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

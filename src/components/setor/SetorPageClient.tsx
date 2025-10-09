@@ -31,8 +31,8 @@ export default function SetorPageClient() {
 
   // Memoriza fetchTableData para não criar nova função a cada render
   const fetchTableData = useCallback(
-    (page: number, search?: string) => {
-      return fetchSetores({ page, withPagination: true });
+    (page: number, nome?: string) => {
+      return fetchSetores({ page, withPagination: true, nome });
     },
     [fetchSetores]
   );
@@ -139,6 +139,7 @@ export default function SetorPageClient() {
           setShowModal(true);
           setEditSetor(null);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

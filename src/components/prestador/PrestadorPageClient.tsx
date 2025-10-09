@@ -33,7 +33,7 @@ export default function PrestadorPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchPrestadores({ page, search }),
+    (page: number, nome = "") => fetchPrestadores({ page, nome }),
     [fetchPrestadores]
   );
 
@@ -117,6 +117,7 @@ export default function PrestadorPageClient() {
           setEditPrestador(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

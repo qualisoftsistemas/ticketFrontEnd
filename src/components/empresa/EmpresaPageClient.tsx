@@ -32,7 +32,7 @@ export default function EmpresaPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchEmpresas({ page, search }),
+    (page: number, nome = "") => fetchEmpresas({ page, nome }),
     [fetchEmpresas]
   );
 
@@ -127,6 +127,7 @@ export default function EmpresaPageClient() {
           setShowModal(true);
           setEditEmpresa(null);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

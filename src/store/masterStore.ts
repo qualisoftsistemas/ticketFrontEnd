@@ -11,12 +11,17 @@ interface MasterState {
   masterSelecionado: Master | null;
   pagination: Pagination | null;
 
-  fetchMasters: (options?: { page?: number; search?: string }) => Promise<void>;
+  fetchMasters: (options?: fetchMasterOptions) => Promise<void>;
   fetchMasterById: (id: number) => Promise<void>;
   createMaster: (data: Partial<Master>) => Promise<void>;
   updateMaster: (data: Partial<Master>) => Promise<void>;
   deleteMaster: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface fetchMasterOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const useMasterStore = create<MasterState>((set, get) => ({
@@ -26,12 +31,12 @@ export const useMasterStore = create<MasterState>((set, get) => ({
   masterSelecionado: null,
   pagination: null,
 
-  fetchMasters: async (options = { page: 1, search: "" }) => {
+  fetchMasters: async (options: fetchMasterOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/master?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

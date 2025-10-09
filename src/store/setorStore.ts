@@ -12,15 +12,18 @@ interface SetorState {
   setorSelecionado: Setor | null;
   pagination: Pagination | null;
 
-  fetchSetores: (options?: {
-    page?: number;
-    withPagination?: boolean;
-  }) => Promise<void>;
+  fetchSetores: (options?: FetchSetoresOptions) => Promise<void>;
   fetchSetorById: (id: number) => Promise<void>;
   createSetor: (data: Partial<Setor>) => Promise<void>;
   updateSetor: (data: Partial<Setor>) => Promise<void>;
   deleteSetor: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchSetoresOptions {
+  page?: number;
+  withPagination?: boolean;
+  nome?: string;
 }
 
 export const useSetorStore = create<SetorState>((set, get) => ({
@@ -30,13 +33,17 @@ export const useSetorStore = create<SetorState>((set, get) => ({
   setorSelecionado: null,
   pagination: null,
 
-  fetchSetores: async (options = { page: 1, withPagination: true }) => {
+  fetchSetores: async (options: FetchSetoresOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = "/setor";
 
       if (options.withPagination) {
         endpoint += `?page=${options.page}`;
+      }
+
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

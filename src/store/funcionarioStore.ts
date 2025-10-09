@@ -11,15 +11,17 @@ interface FuncionarioState {
   funcionarioSelecionado: Funcionario | null;
   pagination: Pagination | null;
 
-  fetchFuncionarios: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchFuncionarios: (options?: fetchFuncionariosOptions) => Promise<void>;
   fetchFuncionarioById: (id: number) => Promise<void>;
   createFuncionario: (data: Partial<Funcionario>) => Promise<void>;
   updateFuncionario: (data: Partial<Funcionario>) => Promise<void>;
   deleteFuncionario: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface fetchFuncionariosOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
@@ -29,12 +31,12 @@ export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
   funcionarioSelecionado: null,
   pagination: null,
 
-  fetchFuncionarios: async (options = { page: 1, search: "" }) => {
+  fetchFuncionarios: async (options: fetchFuncionariosOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/funcionario?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

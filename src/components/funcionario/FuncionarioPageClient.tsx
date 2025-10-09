@@ -8,7 +8,7 @@ import ModalCadastroFuncionario from "./CadastroFuncionario";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
 import Icon from "../ui/icon";
-
+ 
 export default function FuncionarioPageClient() {
   const {
     funcionarios,
@@ -35,7 +35,7 @@ export default function FuncionarioPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchFuncionarios({ page, search }),
+    (page: number, nome = "") => fetchFuncionarios({ page, nome }),
     [fetchFuncionarios]
   );
 
@@ -131,6 +131,7 @@ export default function FuncionarioPageClient() {
           setEditFuncionario(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

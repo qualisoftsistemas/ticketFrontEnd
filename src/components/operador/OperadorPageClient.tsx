@@ -35,7 +35,7 @@ export default function OperadorPageClient() {
   const [showTableSetores, setShowTableSetores] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchOperadores({ page, search }),
+    (page: number, nome = "") => fetchOperadores({ page, nome }),
     [fetchOperadores]
   );
 
@@ -161,6 +161,7 @@ export default function OperadorPageClient() {
           setShowModal(true);
           setEditOperador(null);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

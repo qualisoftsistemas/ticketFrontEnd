@@ -11,16 +11,18 @@ interface OperadorState {
   operadorSelecionado: Operador | null;
   pagination: Pagination | null;
 
-  fetchOperadores: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchOperadores:  (options?: FetchOperadorOptions) => Promise<void>;
   fetchOperadorById: (id: number) => Promise<void>;
   createOperador: (data: Partial<Operador>) => Promise<void>;
   updateOperador: (data: Partial<Operador>) => Promise<void>;
 
   deleteOperador: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchOperadorOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const useOperadorStore = create<OperadorState>((set, get) => ({
@@ -30,12 +32,12 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
   operadorSelecionado: null,
   pagination: null,
 
-  fetchOperadores: async (options = { page: 1, search: "" }) => {
+  fetchOperadores: async (options: FetchOperadorOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/operador?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

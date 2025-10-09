@@ -11,15 +11,17 @@ interface PrestadorState {
   prestadorSelecionado: Prestador | null;
   pagination: Pagination | null;
 
-  fetchPrestadores: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchPrestadores: (options?: FetchPrestadoresOptions) => Promise<void>;
   fetchPrestadorById: (id: number) => Promise<void>;
   createPrestador: (data: Partial<Prestador>) => Promise<void>;
   updatePrestador: (data: Partial<Prestador>) => Promise<void>;
   deletePrestador: (id: number) => Promise<void>;
   clearError: () => void;
+}
+
+interface FetchPrestadoresOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const usePrestadorStore = create<PrestadorState>((set, get) => ({
@@ -29,12 +31,12 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
   prestadorSelecionado: null,
   pagination: null,
 
-  fetchPrestadores: async (options = { page: 1, search: "" }) => {
+  fetchPrestadores: async (options: FetchPrestadoresOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/prestador?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

@@ -13,10 +13,7 @@ interface EmpresaState {
   empresaSelecionada: Empresa | null;
   pagination: Pagination | null;
 
-  fetchEmpresas: (options?: {
-    page?: number;
-    search?: string;
-  }) => Promise<void>;
+  fetchEmpresas: (options?: FetchEmpresasOptions) => Promise<void>;
   fetchEmpresaById: (id: number) => Promise<void>;
   createEmpresa: (data: Partial<Empresa>) => Promise<void>;
   updateEmpresa: (data: Partial<Empresa>) => Promise<void>;
@@ -26,6 +23,11 @@ interface EmpresaState {
   setEmpresaSelecionada: (empresa: Empresa | null) => void;
   setEmpresaSelecionadaAndReload: (empresa: Empresa | null) => void;
   setConglomeradoId: (id: number | null) => void;
+}
+
+interface FetchEmpresasOptions {
+  page?: number;
+  nome?: string;
 }
 
 export const useEmpresaStore = create<EmpresaState>()(
@@ -38,12 +40,12 @@ export const useEmpresaStore = create<EmpresaState>()(
       pagination: null,
       conglomeradoId: null,
 
-      fetchEmpresas: async (options = { page: 1, search: "" }) => {
+      fetchEmpresas: async (options: FetchEmpresasOptions = { page: 1 }) => {
         set({ loading: true, error: null });
         try {
-          let endpoint = `/empresa?page=${options.page}`;
-          if (options.search) {
-            endpoint += `&search=${encodeURIComponent(options.search)}`;
+          let endpoint = `/empresa?page=${options.page || 1}`;
+          if (options.nome) {
+            endpoint += `&nome=${encodeURIComponent(options.nome)}`;
           }
 
           const response = await apiFetchClient<{
