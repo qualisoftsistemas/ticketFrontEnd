@@ -17,6 +17,7 @@ interface SetorState {
   createSetor: (data: Partial<Setor>) => Promise<void>;
   updateSetor: (data: Partial<Setor>) => Promise<void>;
   deleteSetor: (id: number) => Promise<void>;
+  toggleSetor: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -154,6 +155,25 @@ export const useSetorStore = create<SetorState>((set, get) => ({
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  toggleSetor: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/setor/toggle/${id}`,
+      });
+      set({ loading: false });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar setores", loading: false });
       } else {
         console.error(err);
         set({ error: "Erro desconhecido", loading: false });

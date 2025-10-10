@@ -16,6 +16,7 @@ export default function MasterPageClient() {
     createMaster,
     updateMaster,
     deleteMaster,
+    toggleMaster,
     loading,
     error,
     pagination,
@@ -78,6 +79,24 @@ export default function MasterPageClient() {
     setShowModal(true);
   };
 
+  const handleToggleAtivo = (master: Master) => {
+    const newAtivo = master.ativo ? 0 : 1;
+
+    useMasterStore.setState((state) => ({
+      masters: state.masters.map((s) =>
+        s.id === master.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleMaster(master.id ?? 0).catch(() => {
+      useMasterStore.setState((state) => ({
+        masters: state.masters.map((s) =>
+          s.id === master.id ? { ...s, ativo: master.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Master>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -95,6 +114,11 @@ export default function MasterPageClient() {
             icon="/Icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(master)}
+          />
+          <Icon
+            icon={master.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(master)}
           />
         </div>
       ),

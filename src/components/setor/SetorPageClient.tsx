@@ -17,6 +17,7 @@ export default function SetorPageClient() {
     createSetor,
     updateSetor,
     deleteSetor,
+    toggleSetor,
     loading,
     error,
     pagination,
@@ -79,6 +80,23 @@ export default function SetorPageClient() {
       setEditSetor(null);
     }
   };
+  const handleToggleAtivo = (setor: Setor) => {
+    const newAtivo = setor.ativo ? 0 : 1;
+
+    useSetorStore.setState((state) => ({
+      setores: state.setores.map((s) =>
+        s.id === setor.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleSetor(setor.id).catch(() => {
+      useSetorStore.setState((state) => ({
+        setores: state.setores.map((s) =>
+          s.id === setor.id ? { ...s, ativo: setor.ativo } : s
+        ),
+      }));
+    });
+  };
 
   const handleEdit = (setor: Setor) => {
     setEditSetor(setor);
@@ -99,10 +117,11 @@ export default function SetorPageClient() {
             onClick={() => handleEdit(setor)}
           />
           <Icon
-            icon="/Icons/LightOff.svg"
+            icon={setor.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
-            onClick={() => console.log("Desativou", setor)}
+            onClick={() => handleToggleAtivo(setor)}
           />
+
           <Icon
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"

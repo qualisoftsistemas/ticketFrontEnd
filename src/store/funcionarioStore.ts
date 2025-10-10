@@ -16,6 +16,7 @@ interface FuncionarioState {
   createFuncionario: (data: Partial<Funcionario>) => Promise<void>;
   updateFuncionario: (data: Partial<Funcionario>) => Promise<void>;
   deleteFuncionario: (id: number) => Promise<void>;
+  toggleFuncionario: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -144,6 +145,27 @@ export const useFuncionarioStore = create<FuncionarioState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  }, 
+
+  toggleFuncionario: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/funcionario/toggle/${id}`,
+      });
+      showRequestToast("success", "Dados salvos com sucesso!");
+      set({ loading: false });
+    } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

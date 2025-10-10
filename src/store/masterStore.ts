@@ -16,6 +16,7 @@ interface MasterState {
   createMaster: (data: Partial<Master>) => Promise<void>;
   updateMaster: (data: Partial<Master>) => Promise<void>;
   deleteMaster: (id: number) => Promise<void>;
+  toggleMaster: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -141,6 +142,27 @@ export const useMasterStore = create<MasterState>((set, get) => ({
       });
       set({
         masters: get().masters.filter((m) => m.id !== id),
+        loading: false,
+      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  toggleMaster: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/master/toggle/${id}`,
+      });
+      set({
         loading: false,
       });
     } catch (err: unknown) {

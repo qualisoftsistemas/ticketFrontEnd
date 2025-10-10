@@ -17,6 +17,7 @@ export default function CategoriaPageClient() {
     createCategoria,
     updateCategoria,
     deleteCategoria,
+    toggleCategoria,
     loading,
     error,
     pagination,
@@ -80,6 +81,23 @@ export default function CategoriaPageClient() {
       setEditCategoria(null);
     }
   };
+  const handleToggleAtivo = (categoria: Categoria) => {
+    const newAtivo = categoria.ativo ? 0 : 1;
+
+    useCategoriaStore.setState((state) => ({
+      categorias: state.categorias.map((s) =>
+        s.id === categoria.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleCategoria(categoria.id ?? 0).catch(() => {
+      useCategoriaStore.setState((state) => ({
+        categorias: state.categorias.map((s) =>
+          s.id === categoria.id ? { ...s, ativo: categoria.ativo } : s
+        ),
+      }));
+    });
+  };
 
   const handleEdit = (categoria: Categoria) => {
     setEditCategoria(categoria);
@@ -104,6 +122,13 @@ export default function CategoriaPageClient() {
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(categoria.id)}
+          />
+          <Icon
+            icon={
+              categoria.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+            }
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(categoria)}
           />
         </div>
       ),

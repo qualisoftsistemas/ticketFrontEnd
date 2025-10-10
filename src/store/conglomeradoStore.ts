@@ -15,6 +15,7 @@ interface ConglomeradoState {
   createConglomerado: (data: Partial<Conglomerado>) => Promise<void>;
   updateConglomerado: (data: Partial<Conglomerado>) => Promise<void>;
   deleteConglomerado: (id: number) => Promise<void>;
+  toggleConglomerado: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -153,6 +154,28 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
         conglomerados: get().conglomerados.filter((c) => c.id !== id),
         loading: false,
       });
+    } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+
+  toggleConglomerado: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/conglomerado/toggle/${id}`,
+      });
+      showRequestToast("success", "Dados salvos com sucesso!");
+      set({ loading: false });
     } catch (err: unknown) {
       showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {

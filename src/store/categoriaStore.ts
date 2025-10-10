@@ -15,6 +15,7 @@ interface CategoriaState {
   createCategoria: (data: Partial<Categoria>) => Promise<void>;
   updateCategoria: (data: Partial<Categoria>) => Promise<void>;
   deleteCategoria: (id: number) => Promise<void>;
+  toggleCategoria: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -158,6 +159,27 @@ export const useCategoriaStore = create<CategoriaState>((set, get) => ({
         categorias: get().categorias.filter((c) => c.id !== id),
         loading: false,
       });
+    } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  toggleCategoria: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/categoria/toggle/${id} `,
+      });
+      showRequestToast("success", "Dados salvos com sucesso!");
+      set({ loading: false });
     } catch (err: unknown) {
       showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {

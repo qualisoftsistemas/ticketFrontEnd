@@ -8,7 +8,7 @@ import ModalCadastroFuncionario from "./CadastroFuncionario";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
 import Icon from "../ui/icon";
- 
+
 export default function FuncionarioPageClient() {
   const {
     funcionarios,
@@ -16,6 +16,7 @@ export default function FuncionarioPageClient() {
     createFuncionario,
     updateFuncionario,
     deleteFuncionario,
+    toggleFuncionario,
     loading,
     error,
     pagination,
@@ -82,6 +83,24 @@ export default function FuncionarioPageClient() {
     }
   };
 
+  const handleToggleAtivo = (funcionario: Funcionario) => {
+    const newAtivo = funcionario.ativo ? 0 : 1;
+
+    useFuncionarioStore.setState((state) => ({
+      funcionarios: state.funcionarios.map((s) =>
+        s.id === funcionario.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleFuncionario(funcionario.id ?? 0).catch(() => {
+      useFuncionarioStore.setState((state) => ({
+        funcionarios: state.funcionarios.map((s) =>
+          s.id === funcionario.id ? { ...s, ativo: funcionario.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const handleEdit = (funcionario: Funcionario) => {
     setEditFuncionario(funcionario);
     setShowModal(true);
@@ -104,6 +123,13 @@ export default function FuncionarioPageClient() {
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(funcionario.id)}
+          />
+          <Icon
+            icon={
+              funcionario.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+            }
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(funcionario)}
           />
         </div>
       ),

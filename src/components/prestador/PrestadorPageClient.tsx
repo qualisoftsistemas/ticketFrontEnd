@@ -15,6 +15,7 @@ export default function PrestadorPageClient() {
     fetchPrestadores,
     createPrestador,
     updatePrestador,
+    togglePrestador,
     deletePrestador,
     loading,
     error,
@@ -80,6 +81,24 @@ export default function PrestadorPageClient() {
     setShowModal(true);
   };
 
+  const handleToggleAtivo = (prestador: Prestador) => {
+    const newAtivo = prestador.ativo ? 0 : 1;
+
+    usePrestadorStore.setState((state) => ({
+      prestadores: state.prestadores.map((s) =>
+        s.id === prestador.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    togglePrestador(prestador.id ?? 0).catch(() => {
+      usePrestadorStore.setState((state) => ({
+        prestadores: state.prestadores.map((s) =>
+          s.id === prestador.id ? { ...s, ativo: prestador.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Prestador>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -92,6 +111,13 @@ export default function PrestadorPageClient() {
             icon="/Icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(prestador)}
+          />
+          <Icon
+            icon={
+              prestador.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+            }
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(prestador)}
           />
         </div>
       ),

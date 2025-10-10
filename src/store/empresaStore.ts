@@ -18,6 +18,7 @@ interface EmpresaState {
   createEmpresa: (data: Partial<Empresa>) => Promise<void>;
   updateEmpresa: (data: Partial<Empresa>) => Promise<void>;
   deleteEmpresa: (id: number) => Promise<void>;
+  toggleEmpresa: (id: number) => Promise<void>;
   clearError: () => void;
 
   setEmpresaSelecionada: (empresa: Empresa | null) => void;
@@ -164,6 +165,29 @@ export const useEmpresaStore = create<EmpresaState>()(
             empresas: get().empresas.filter((e) => e.id !== id),
             loading: false,
           });
+        } catch (err: unknown) {
+          if (err instanceof Error) {
+            console.error(err);
+            set({
+              error: err.message || "Erro ao buscar admins",
+              loading: false,
+            });
+          } else {
+            console.error(err);
+            set({ error: "Erro desconhecido", loading: false });
+          }
+        }
+      },
+
+      toggleEmpresa: async (id: number) => {
+        set({ loading: true, error: null });
+        try {
+          await apiFetchClient({
+            method: "PATCH",
+            endpoint: `/empresa/toggle/${id}`,
+          });
+          showRequestToast("success", "Dados salvos com sucesso!");
+          set({ loading: false });
         } catch (err: unknown) {
           if (err instanceof Error) {
             console.error(err);

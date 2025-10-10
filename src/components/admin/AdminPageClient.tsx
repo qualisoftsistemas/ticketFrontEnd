@@ -16,6 +16,7 @@ export default function AdminPageClient() {
     createAdmin,
     updateAdmin,
     deleteAdmin,
+    toggleAdmin,
     loading,
     error,
     pagination,
@@ -78,6 +79,24 @@ export default function AdminPageClient() {
     }
   };
 
+  const handleToggleAtivo = (admin: Admin) => {
+    const newAtivo = admin.ativo ? 0 : 1;
+
+    useAdminStore.setState((state) => ({
+      admins: state.admins.map((s) =>
+        s.id === admin.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleAdmin(admin.id ?? 0).catch(() => {
+      useAdminStore.setState((state) => ({
+        admins: state.admins.map((s) =>
+          s.id === admin.id ? { ...s, ativo: admin.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const handleEdit = (admin: Admin) => {
     setEditAdmin(admin);
     setShowModal(true);
@@ -100,6 +119,11 @@ export default function AdminPageClient() {
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(admin.id)}
+          />
+          <Icon
+            icon={admin.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(admin)}
           />
         </div>
       ),

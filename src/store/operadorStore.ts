@@ -15,7 +15,7 @@ interface OperadorState {
   fetchOperadorById: (id: number) => Promise<void>;
   createOperador: (data: Partial<Operador>) => Promise<void>;
   updateOperador: (data: Partial<Operador>) => Promise<void>;
-
+  toggleOperador: (id: number) => Promise<void>;
   deleteOperador: (id: number) => Promise<void>;
   clearError: () => void;
 }
@@ -145,6 +145,27 @@ export const useOperadorStore = create<OperadorState>((set, get) => ({
         loading: false,
       });
     } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  toggleOperador: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/operador/toggle/${id}`,
+      });
+      showRequestToast("success", "Dados salvos com sucesso!");
+      set({ loading: false });
+    } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {
         console.error(err);
         set({ error: err.message || "Erro ao buscar admins", loading: false });

@@ -4,6 +4,7 @@ export interface Funcionario {
   id: number;
   nome: string;
   senha: string;
+  ativo: number;
   email?: string;
   whatsapp?: string;
   facebook?: string;

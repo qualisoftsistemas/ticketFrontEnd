@@ -16,6 +16,7 @@ interface PrestadorState {
   createPrestador: (data: Partial<Prestador>) => Promise<void>;
   updatePrestador: (data: Partial<Prestador>) => Promise<void>;
   deletePrestador: (id: number) => Promise<void>;
+  togglePrestador: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -143,6 +144,25 @@ export const usePrestadorStore = create<PrestadorState>((set, get) => ({
         prestadores: get().prestadores.filter((p) => p.id !== id),
         loading: false,
       });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  togglePrestador: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/prestador/toggle/${id}`,
+      });
+      set({ loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);

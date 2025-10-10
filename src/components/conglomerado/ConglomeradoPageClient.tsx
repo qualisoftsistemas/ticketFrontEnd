@@ -16,6 +16,7 @@ export default function ConglomeradoPageClient() {
     createConglomerado,
     updateConglomerado,
     deleteConglomerado,
+    toggleConglomerado,
     loading,
     error,
     pagination,
@@ -88,6 +89,24 @@ export default function ConglomeradoPageClient() {
     setShowModal(true);
   };
 
+  const handleToggleAtivo = (conglomerados: Conglomerado) => {
+    const newAtivo = conglomerados.ativo ? 0 : 1;
+
+    useConglomeradoStore.setState((state) => ({
+      conglomerados: state.conglomerados.map((s) =>
+        s.id === conglomerados.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleConglomerado(conglomerados.id ?? 0).catch(() => {
+      useConglomeradoStore.setState((state) => ({
+        conglomerados: state.conglomerados.map((s) =>
+          s.id === conglomerados.id ? { ...s, ativo: conglomerados.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Conglomerado>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -105,6 +124,13 @@ export default function ConglomeradoPageClient() {
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(conglomerado.id)}
+          />
+          <Icon
+            icon={
+              conglomerado.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+            }
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(conglomerado)}
           />
         </div>
       ),

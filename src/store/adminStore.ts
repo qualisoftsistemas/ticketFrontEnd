@@ -16,6 +16,7 @@ interface AdminState {
   createAdmin: (data: Partial<Admin>) => Promise<void>;
   updateAdmin: (data: Partial<Admin>) => Promise<void>;
   deleteAdmin: (id: number) => Promise<void>;
+  toggleAdmin: (id: number) => Promise<void>;
   clearError: () => void;
 }
 
@@ -139,6 +140,27 @@ export const useAdminStore = create<AdminState>((set, get) => ({
       });
       showRequestToast("success", "Dados salvos com sucesso!");
       set({ admins: get().admins.filter((a) => a.id !== id), loading: false });
+    } catch (err: unknown) {
+      showRequestToast("error", "Erro ao buscar admins");
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
+    }
+  },
+
+  toggleAdmin: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/admin/toggle/${id} `,
+      });
+      showRequestToast("success", "Dados salvos com sucesso!");
+      set({ loading: false });
     } catch (err: unknown) {
       showRequestToast("error", "Erro ao buscar admins");
       if (err instanceof Error) {

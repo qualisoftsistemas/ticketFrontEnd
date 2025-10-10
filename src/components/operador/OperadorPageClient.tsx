@@ -18,6 +18,7 @@ export default function OperadorPageClient() {
     createOperador,
     updateOperador,
     deleteOperador,
+    toggleOperador,
     loading,
     error,
     pagination,
@@ -112,6 +113,24 @@ export default function OperadorPageClient() {
     }
   };
 
+  const handleToggleAtivo = (operador: Operador) => {
+    const newAtivo = operador.ativo ? 0 : 1;
+
+    useOperadorStore.setState((state) => ({
+      operadores: state.operadores.map((s) =>
+        s.id === operador.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleOperador(operador.id ?? 0).catch(() => {
+      useOperadorStore.setState((state) => ({
+        operadores: state.operadores.map((s) =>
+          s.id === operador.id ? { ...s, ativo: operador.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Operador>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -134,6 +153,11 @@ export default function OperadorPageClient() {
             icon="/Icons/SectorTree.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleSelectSetores(operador)}
+          />
+          <Icon
+            icon={operador.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(operador)}
           />
         </div>
       ),

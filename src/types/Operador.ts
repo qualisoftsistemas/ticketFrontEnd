@@ -3,7 +3,7 @@ import { Setor } from "./Setor";
 
 export interface Operador {
   id: number;
-
+  ativo: number;
   nome: string;
   whatsapp?: string;
   email?: string;

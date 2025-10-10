@@ -7,6 +7,7 @@ export interface Admin {
     nome: string;
     ativo: number;
   };
+  ativo: number;
   conglomerado_id?: number;
   nome: string;
   senha: string;

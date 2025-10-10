@@ -17,7 +17,7 @@ export default function EmpresaPageClient() {
     createEmpresa,
     updateEmpresa,
     deleteEmpresa,
-
+    toggleEmpresa,
     loading,
     error,
     pagination,
@@ -85,6 +85,24 @@ export default function EmpresaPageClient() {
     setShowModal(true);
   };
 
+  const handleToggleAtivo = (empresa: Empresa) => {
+    const newAtivo = empresa.ativo ? 0 : 1;
+
+    useEmpresaStore.setState((state) => ({
+      empresas: state.empresas.map((s) =>
+        s.id === empresa.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleEmpresa(empresa.id ?? 0).catch(() => {
+      useEmpresaStore.setState((state) => ({
+        empresas: state.empresas.map((s) =>
+          s.id === empresa.id ? { ...s, ativo: empresa.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Empresa>[] = [
     { header: "ID", key: "id" },
     { header: "Nome", key: "nome" },
@@ -102,6 +120,11 @@ export default function EmpresaPageClient() {
             icon="/Icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(empresa.id)}
+          />
+          <Icon
+            icon={empresa.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+            onClick={() => handleToggleAtivo(empresa)}
           />
         </div>
       ),
