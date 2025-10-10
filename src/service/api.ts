@@ -22,6 +22,16 @@ const apiFetchClient = async <T>({
       ? localStorage.getItem("empresa-store")
       : null;
 
+  const userString = localStorage.getItem("user");
+  let prestadorId: string | null = null;
+
+  if (userString) {
+    try {
+      const user = JSON.parse(userString);
+      prestadorId = user.prestador_id;
+    } catch (err) {}
+  }
+
   const isChamadoEndpoint = endpoint.startsWith("/chamado");
   let url = `${
     isChamadoEndpoint ? `${API_BASE_URL}` : API_BASE_URL
@@ -42,6 +52,7 @@ const apiFetchClient = async <T>({
         }
       } else {
         if (empresaId) url += `${separator}empresa_id=${empresaId}`;
+
         if (conglomeradoId) {
           const sep = url.includes("?") ? "&" : "?";
           url += `${sep}conglomerado_id=${conglomeradoId}`;
@@ -49,6 +60,14 @@ const apiFetchClient = async <T>({
       }
     } catch (err) {
       console.error("Erro ao parsear empresa-store:", err);
+    }
+  }
+
+  if (userString) {
+    const separator = url.includes("?") ? "&" : "?";
+
+    if (prestadorId) {
+      url += `${separator}prestador_id=${prestadorId}`;
     }
   }
 

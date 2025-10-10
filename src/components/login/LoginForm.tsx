@@ -55,7 +55,7 @@ const LoginForm: React.FC = () => {
       if (user.tipo === "ADMIN" || user.tipo === "FUNCIONÁRIO") {
         router.push("/selecionar-empresa");
       } else {
-        router.push("/chamados");
+        router.push("/conglomerado");
       }
     } catch (err: unknown) {
       showRequestToast("error", "Erro ao fazer login!");

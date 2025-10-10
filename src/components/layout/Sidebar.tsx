@@ -16,6 +16,8 @@ interface NavItem {
   href?: string;
   icon?: string;
   subItems?: NavItem[];
+  items?: NavItem[];
+  type?: "section";
 }
 
 interface DropdownNavItemProps {
@@ -69,15 +71,35 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
             open ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
           }`}
         >
-          {item.subItems.map((subItem, idx) => (
-            <Link
-              key={idx}
-              href={subItem.href ?? "#"}
-              className="px-4 py-2 hover:-translate-y-0.5 hover:brightness-200 transition text-sm"
-            >
-              {subItem.label}
-            </Link>
-          ))}
+          {item.subItems.map((subItem, idx) => {
+            if (subItem.type === "section") {
+              return (
+                <div key={idx} className="flex flex-col gap-1 my-1">
+                  <p className="text-xs font-bold px-4 py-1">{subItem.label}</p>
+                  {subItem.items?.map((i, iIdx) => (
+                    <Link
+                      key={iIdx}
+                      href={i.href ?? "#"}
+                      className="px-6 py-1 text-sm hover:-translate-y-0.5 hover:brightness-200 transition"
+                    >
+                      {i.label}
+                    </Link>
+                  ))}
+                  <hr className="border-[var(--primary-foreground)]/20 my-1" />
+                </div>
+              );
+            }
+
+            return (
+              <Link
+                key={idx}
+                href={subItem.href ?? "#"}
+                className="px-4 py-1 text-sm hover:-translate-y-0.5 hover:brightness-200 transition"
+              >
+                {subItem.label}
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>
@@ -114,12 +136,24 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
       label: "Master",
       icon: "/Icons/Master.svg",
       subItems: [
-        { label: "Setor", href: "/setor" },
-        { label: "Categoria", href: "/categoria" },
-        { label: "Empresa", href: "/empresa" },
-        { label: "Admin", href: "/admin" },
-        { label: "Operador", href: "/operador" },
-        { label: "Conglomerado", href: "/conglomerado" },
+        {
+          label: "Clientes",
+          type: "section", // tipo custom para renderizar título
+          items: [
+            { label: "Empresa", href: "/empresa" },
+            { label: "Conglomerado", href: "/conglomerado" },
+            { label: "Admin", href: "/admin" },
+          ],
+        },
+        {
+          label: "Cadastro",
+          type: "section",
+          items: [
+            { label: "Setor", href: "/setor" },
+            { label: "Categoria", href: "/categoria" },
+            { label: "Operadores", href: "/operador" },
+          ],
+        },
       ],
     },
     ...links,
