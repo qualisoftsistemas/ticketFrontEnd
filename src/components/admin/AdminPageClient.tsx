@@ -31,7 +31,7 @@ export default function AdminPageClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchTableData = useCallback(
-    (page: number, search = "") => fetchAdmins({ page, search }),
+    (page: number, nome = "") => fetchAdmins({ page, nome }),
     [fetchAdmins]
   );
 
@@ -127,6 +127,7 @@ export default function AdminPageClient() {
           setEditAdmin(null);
           setShowModal(true);
         }}
+        setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}
         onPageChange={handlePageChange}

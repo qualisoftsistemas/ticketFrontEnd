@@ -17,6 +17,7 @@ export default function EmpresaPageClient() {
     createEmpresa,
     updateEmpresa,
     deleteEmpresa,
+
     loading,
     error,
     pagination,

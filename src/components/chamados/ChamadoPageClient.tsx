@@ -18,7 +18,8 @@ import apiFetchClient from "@/service/api";
 export default function ChamadoPageClient() {
   const router = useRouter();
 
-  const { chamados, loading, fetchChamados, pagination } = useChamadoStore();
+  const { chamados, loading, fetchChamados, pagination, statusQtde } =
+    useChamadoStore();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState<string[]>([
@@ -165,7 +166,11 @@ export default function ChamadoPageClient() {
 
   return (
     <>
-      <FilterBox loading={loading} onFilterChange={handleStatusChange} />
+      <FilterBox
+        loading={loading}
+        statusQtde={statusQtde}
+        onFilterChange={handleStatusChange}
+      />
 
       <Table
         columns={columns}

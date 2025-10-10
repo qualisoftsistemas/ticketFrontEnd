@@ -1,5 +1,5 @@
 // service/apiClient.ts
-export const API_BASE_URL = "http://192.168.5.43:8000/api";
+export const API_BASE_URL = "http://192.168.5.46:8000/api";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
@@ -22,7 +22,10 @@ const apiFetchClient = async <T>({
       ? localStorage.getItem("empresa-store")
       : null;
 
-  let url = `${API_BASE_URL}${endpoint}`;
+  const isChamadoEndpoint = endpoint.startsWith("/chamado");
+  let url = `${
+    isChamadoEndpoint ? `${API_BASE_URL}` : API_BASE_URL
+  }${endpoint}`;
 
   if (empresaStore) {
     try {
@@ -31,14 +34,18 @@ const apiFetchClient = async <T>({
       const conglomeradoId =
         parsed?.state?.empresaSelecionada?.conglomerado?.id;
 
-      if (empresaId) {
-        const separator = url.includes("?") ? "&" : "?";
-        url += `${separator}empresa_id=${empresaId}`;
-      }
+      const separator = url.includes("?") ? "&" : "?";
 
-      if (conglomeradoId) {
-        const separator = url.includes("?") ? "&" : "?";
-        url += `${separator}conglomerado_id=${conglomeradoId}`;
+      if (isChamadoEndpoint) {
+        if (conglomeradoId) {
+          url += `${separator}conglomerado_id=${conglomeradoId}`;
+        }
+      } else {
+        if (empresaId) url += `${separator}empresa_id=${empresaId}`;
+        if (conglomeradoId) {
+          const sep = url.includes("?") ? "&" : "?";
+          url += `${sep}conglomerado_id=${conglomeradoId}`;
+        }
       }
     } catch (err) {
       console.error("Erro ao parsear empresa-store:", err);

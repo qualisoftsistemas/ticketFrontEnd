@@ -11,7 +11,7 @@ interface AdminState {
   adminSelecionado: Admin | null;
   pagination: Pagination | null;
 
-  fetchAdmins: (options?: { page?: number; search?: string }) => Promise<void>;
+  fetchAdmins: (options?: FetchAdminsOptions) => Promise<void>;
   fetchAdminById: (id: number) => Promise<void>;
   createAdmin: (data: Partial<Admin>) => Promise<void>;
   updateAdmin: (data: Partial<Admin>) => Promise<void>;
@@ -19,6 +19,10 @@ interface AdminState {
   clearError: () => void;
 }
 
+interface FetchAdminsOptions {
+  page?: number;
+  nome?: string;
+}
 export const useAdminStore = create<AdminState>((set, get) => ({
   admins: [],
   loading: false,
@@ -26,12 +30,12 @@ export const useAdminStore = create<AdminState>((set, get) => ({
   adminSelecionado: null,
   pagination: null,
 
-  fetchAdmins: async (options = { page: 1, search: "" }) => {
+  fetchAdmins: async (options: FetchAdminsOptions = { page: 1 }) => {
     set({ loading: true, error: null });
     try {
       let endpoint = `/admin?page=${options.page}`;
-      if (options.search) {
-        endpoint += `&search=${encodeURIComponent(options.search)}`;
+      if (options.nome) {
+        endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }
 
       const response = await apiFetchClient<{

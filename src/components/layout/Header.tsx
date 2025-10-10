@@ -70,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
       </div>
 
       <div className="w-full mx-auto flex items-center justify-between px-4">
-        {role !== "Master" && role !== "Operador" && (
+        {role !== "Master" && role !== "Operador" && role !== "Sistema" && (
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center cursor-pointer">

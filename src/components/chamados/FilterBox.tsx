@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
+export interface StatusQtde {
+  [key: string]: number;
+}
+
 interface Props {
   loading?: boolean;
   onFilterChange: (status: string[]) => void;
+  statusQtde?: StatusQtde | null;
 }
 
 const statuses = [
@@ -18,12 +23,13 @@ const defaultStatuses = [
   "aguardando_avaliacao",
 ];
 
-const statusConfig: {
-  [key: string]: {
+const statusConfig: Record<
+  string,
+  {
     label: string;
     icon: string;
-  };
-} = {
+  }
+> = {
   pendente_pelo_operador: {
     label: "Pendente Operador",
     icon: "🕵️‍♀️",
@@ -42,9 +48,11 @@ const statusConfig: {
   },
 };
 
-const FilterBox = ({ onFilterChange, loading }: Props) => {
+const FilterBox = ({ onFilterChange, loading, statusQtde = {} }: Props) => {
   const [selected, setSelected] = useState<string[]>(defaultStatuses);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  console.log(statusQtde);
 
   useEffect(() => {
     onFilterChange(selected);
@@ -70,29 +78,34 @@ const FilterBox = ({ onFilterChange, loading }: Props) => {
       {statuses.map((status) => {
         const isSelected = selected.includes(status);
         const config = statusConfig[status];
+        const qtde = statusQtde?.[status] ?? 0;
 
         return (
           <button
             key={status}
             className={`
-          flex-1 sm:flex-auto cursor-pointer transition-all duration-200 ease-in-out
-          p-2 md:p-3 rounded-lg border font-medium text-center
-          hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
-          focus:outline-none focus:ring-2 focus:ring-offset-2
-          ${
-            isSelected
-              ? `bg-[var(--secondary)] text-[var(--secondary-foreground)]`
-              : "bg-[var(--primary)] text-[var(--primary-foreground)] border-gray-300"
-          }
-          min-w-[140px]
-        `}
+        flex-1 sm:flex-auto cursor-pointer transition-all duration-200 ease-in-out
+        p-2 md:p-3 rounded-lg border font-medium text-center
+        hover:shadow-md hover:scale-[1.02] active:scale-[0.98]
+        focus:outline-none focus:ring-2 focus:ring-offset-2
+        ${
+          isSelected
+            ? `bg-[var(--secondary)] text-[var(--secondary-foreground)]`
+            : "bg-[var(--primary)] text-[var(--primary-foreground)] border-gray-300"
+        }
+        min-w-[140px]
+      `}
             onClick={() => handleClick(status)}
           >
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-lg">{config.icon}</span>
-              <span className="text-xs md:text-sm whitespace-nowrap">
-                {config.label}
-              </span>
+            <div className="flex  items-center justify-between gap-2">
+              <div className="flex items-center justify-center gap-2">
+                <span className="text-lg">{config.icon}</span>
+                <span className="text-xs md:text-sm whitespace-nowrap">
+                  {config.label}
+                </span>
+              </div>
+
+              <span className="text-xs font-semibold opacity-80">{qtde}</span>  
             </div>
           </button>
         );

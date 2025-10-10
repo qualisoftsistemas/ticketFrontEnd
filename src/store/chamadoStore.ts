@@ -4,13 +4,14 @@ import { Chamado, ChamadoApiResponse } from "@/types/Chamado";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
 import { showRequestToast } from "@/components/ui/toast";
-
+import { StatusQtde } from "@/components/chamados/FilterBox";
 interface ChamadoState {
   chamados: Chamado[];
   loading: boolean;
   error: string | null;
   chamadoSelecionado: ChamadoApiResponse | null;
   pagination: Pagination | null;
+  statusQtde: StatusQtde | null;
 
   fetchChamados: (options?: FetchChamadosOptions) => Promise<void>;
   fetchChamadoById: (id: number) => Promise<void>;
@@ -37,6 +38,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
   error: null,
   chamadoSelecionado: null,
   pagination: null,
+  statusQtde: null,
 
   fetchChamados: async (
     options: FetchChamadosOptions = { page: 1, status: [] }
@@ -66,6 +68,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
       const response = await apiFetchClient<{
         chamados: Chamado[];
         pagination: Pagination;
+        status_counts: Record<string, number>;
       }>({
         method: "GET",
         endpoint,
@@ -74,6 +77,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
       set({
         chamados: response.chamados || [],
         pagination: response.pagination || null,
+        statusQtde: response.status_counts || null,
         loading: false,
       });
     } catch (err: any) {

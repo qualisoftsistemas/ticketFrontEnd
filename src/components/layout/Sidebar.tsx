@@ -134,7 +134,6 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
         { label: "Master", href: "/master" },
       ],
     },
-    ...links,
   ];
 
   const navItems: NavItem[] = (() => {
