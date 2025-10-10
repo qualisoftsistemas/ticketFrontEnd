@@ -8,6 +8,7 @@ import ModalCadastroConglomerado from "./CadastroConglomerado";
 import ModalDeletar from "@/components/ui/modalDelete";
 import Table from "../table/Table";
 import Icon from "../ui/icon";
+import { useEmpresaStore } from "@/store/empresaStore";
 
 export default function ConglomeradoPageClient() {
   const {
@@ -17,6 +18,7 @@ export default function ConglomeradoPageClient() {
     updateConglomerado,
     deleteConglomerado,
     toggleConglomerado,
+    setConglomeradoSelecionadoAndReload,
     loading,
     error,
     pagination,
@@ -157,6 +159,7 @@ export default function ConglomeradoPageClient() {
           setEditConglomerado(null);
           setShowModal(true);
         }}
+        onRowClick={setConglomeradoSelecionadoAndReload}
         setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
         pagination={pagination}

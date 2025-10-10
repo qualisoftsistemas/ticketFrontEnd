@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Role } from "@/hooks/useUserRole";
 import Icon from "../ui/icon";
 import { useEmpresaStore } from "@/store/empresaStore";
+import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -27,11 +28,19 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
     setEmpresaSelecionadaAndReload,
   } = useEmpresaStore();
 
+  const {
+    conglomerados,
+    conglomeradoSelecionado,
+    fetchConglomerados,
+    setConglomeradoSelecionadoAndReload,
+  } = useConglomeradoStore();
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     fetchEmpresas();
-  }, [fetchEmpresas]);
+    fetchConglomerados();
+  }, []);
 
   const handleLogout = () => {
     try {
@@ -70,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
       </div>
 
       <div className="w-full mx-auto flex items-center justify-between px-4">
-        {role !== "Master" && role !== "Operador" && role !== "Sistema" && (
+        {role !== "Sistema" && role !== "Master" && role !== "Operador" && (
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center cursor-pointer">
@@ -115,6 +124,55 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
                     <span className="text-xs text-muted-foreground">
                       CNPJ: {empresa.cnpj}
                     </span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        {role !== "Sistema" && (
+          <DropdownMenu open={open} onOpenChange={setOpen}>
+            <DropdownMenuTrigger asChild>
+              <div className="flex gap-2 items-center cursor-pointer">
+                <img
+                  src="/Icons/BuildingFill.svg"
+                  alt="empresa"
+                  className="w-8 h-8"
+                />
+                <div>
+                  <h1 className="font-bold">
+                    {conglomeradoSelecionado
+                      ? conglomeradoSelecionado.nome
+                      : "Empresa"}
+                  </h1>
+                </div>
+                {open ? (
+                  <Icon
+                    icon="/Icons/ArrowUp.svg"
+                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                  />
+                ) : (
+                  <Icon
+                    icon="/Icons/ArrowDown.svg"
+                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                  />
+                )}
+              </div>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent
+              align="start"
+              className="bg-[var(--secondary)] text-[var(--extra)] mt-1"
+            >
+              {conglomerados.map((conglomerado) => (
+                <DropdownMenuItem
+                  key={conglomerado.id}
+                  onClick={() =>
+                    setConglomeradoSelecionadoAndReload(conglomerado)
+                  }
+                >
+                  <div className="flex flex-col">
+                    <span className="font-bold">{conglomerado.nome}</span>
                   </div>
                 </DropdownMenuItem>
               ))}
