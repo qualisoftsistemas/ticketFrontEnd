@@ -3,12 +3,14 @@ import { Conglomerado } from "@/types/Conglomerado";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
 import { showRequestToast } from "@/components/ui/toast";
+import { useEmpresaStore } from "./empresaStore";
 
 interface ConglomeradoState {
   conglomerados: Conglomerado[];
   loading: boolean;
   error: string | null;
   conglomeradoSelecionado: Conglomerado | null;
+
   pagination: Pagination | null;
   fetchConglomerados: (options?: FetchConglomeradoOptions) => Promise<void>;
   fetchConglomeradoById: (id: number) => Promise<void>;
@@ -17,6 +19,8 @@ interface ConglomeradoState {
   deleteConglomerado: (id: number) => Promise<void>;
   toggleConglomerado: (id: number) => Promise<void>;
   setConglomeradoSelecionadoAndReload: (conglomerado: Conglomerado) => void;
+  setConglomeradoSelecionado: (conglomerado: Conglomerado) => void;
+  loadConglomeradoFromStorage: () => void;
   clearError: () => void;
 }
 
@@ -198,8 +202,44 @@ export const useConglomeradoStore = create<ConglomeradoState>((set, get) => ({
 
   setConglomeradoSelecionadoAndReload: (conglomerado: Conglomerado) => {
     set({ conglomeradoSelecionado: conglomerado });
+
     if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "conglomeradoSelecionado",
+        JSON.stringify(conglomerado)
+      );
       window.location.reload();
+    }
+  },
+
+  setConglomeradoSelecionado: (conglomerado: Conglomerado) => {
+    set({ conglomeradoSelecionado: conglomerado });
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "conglomeradoSelecionado",
+        JSON.stringify(conglomerado)
+      );
+      useEmpresaStore.getState().setEmpresaSelecionada(null);
+
+      localStorage.setItem("empresa-store", JSON.stringify(null));
+    }
+  },
+
+  /**
+   * Carrega o conglomerado salvo no localStorage (para usar no layout, por exemplo)
+   */
+  loadConglomeradoFromStorage: () => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("conglomeradoSelecionado");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved) as Conglomerado;
+          set({ conglomeradoSelecionado: parsed });
+        } catch (e) {
+          console.error("Erro ao carregar conglomerado do storage:", e);
+        }
+      }
     }
   },
 

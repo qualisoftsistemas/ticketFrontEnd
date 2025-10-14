@@ -24,7 +24,7 @@ interface FetchCategoriasOptions {
   nome?: string;
   setor_id?: number;
 }
-
+ 
 export const useCategoriaStore = create<CategoriaState>((set, get) => ({
   categorias: [],
   loading: false,

@@ -26,20 +26,22 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
     fetchEmpresas,
     empresaSelecionada,
     setEmpresaSelecionadaAndReload,
+    setEmpresaSelecionada
   } = useEmpresaStore();
 
   const {
     conglomerados,
     conglomeradoSelecionado,
     fetchConglomerados,
-    setConglomeradoSelecionadoAndReload,
+    loadConglomeradoFromStorage,
+    setConglomeradoSelecionado,
   } = useConglomeradoStore();
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
-    fetchEmpresas();
     fetchConglomerados();
+    loadConglomeradoFromStorage();
   }, []);
 
   const handleLogout = () => {
@@ -52,11 +54,16 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("empresa-store");
+      localStorage.removeItem("conglomeradoSelecionado");
       window.location.href = "/";
     } catch (error) {
       console.error("Erro ao fazer logout:", error);
     }
   };
+
+  useEffect(() => {
+    fetchEmpresas();
+  }, [conglomeradoSelecionado]);
 
   return (
     <header className="fixed flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
@@ -130,7 +137,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
             </DropdownMenuContent>
           </DropdownMenu>
         )}
-        {role !== "Sistema" && (
+        {role !== "Sistema" && role !== "Admin" && role !== "Funcionario" && (
           <DropdownMenu open={open} onOpenChange={setOpen}>
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center cursor-pointer">
@@ -142,21 +149,16 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
                 <div>
                   <h1 className="font-bold">
                     {conglomeradoSelecionado
-                      ? conglomeradoSelecionado.nome
-                      : "Empresa"}
+                      ? `${conglomeradoSelecionado.nome} - ${
+                          empresaSelecionada?.nome ?? "Selecione a empresa"
+                        }`
+                      : "Conglomerado - Empresa"}
                   </h1>
                 </div>
-                {open ? (
-                  <Icon
-                    icon="/Icons/ArrowUp.svg"
-                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
-                  />
-                ) : (
-                  <Icon
-                    icon="/Icons/ArrowDown.svg"
-                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
-                  />
-                )}
+                <Icon
+                  icon={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
+                  className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                />
               </div>
             </DropdownMenuTrigger>
 
@@ -167,15 +169,30 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
               {conglomerados.map((conglomerado) => (
                 <DropdownMenuItem
                   key={conglomerado.id}
-                  onClick={() =>
-                    setConglomeradoSelecionadoAndReload(conglomerado)
-                  }
+                  onSelect={(e) => {
+                    e.preventDefault();
+                    setConglomeradoSelecionado(conglomerado);
+                  }}
                 >
-                  <div className="flex flex-col">
-                    <span className="font-bold">{conglomerado.nome}</span>
-                  </div>
+                  <span className="font-bold">{conglomerado.nome}</span>
                 </DropdownMenuItem>
               ))}
+
+              <div className="border-t border-[var(--secondary-foreground)] my-1" />
+
+              {conglomeradoSelecionado &&
+                empresas
+                  .filter(
+                    (e) => e.conglomerado?.id === conglomeradoSelecionado.id
+                  )
+                  .map((empresa) => (
+                    <DropdownMenuItem
+                      key={empresa.id}
+                      onClick={() => setEmpresaSelecionadaAndReload(empresa)}
+                    >
+                      <span>{empresa.nome}</span>
+                    </DropdownMenuItem>
+                  ))}
             </DropdownMenuContent>
           </DropdownMenu>
         )}

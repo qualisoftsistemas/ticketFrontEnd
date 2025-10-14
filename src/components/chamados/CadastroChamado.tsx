@@ -56,7 +56,6 @@ const CadastroChamado = () => {
   const [categorias, setCategorias] = useState<SelectsData["categorias"]>([]);
   const [operadores, setOperadores] = useState<SelectsData["operadores"]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-
   useEffect(() => {
     const fetchSelectsData = async () => {
       try {
@@ -67,13 +66,57 @@ const CadastroChamado = () => {
 
         setEmpresas(data.empresas || []);
         setSetores(data.setores || []);
+
+        // 🔹 Seleciona a empresa padrão do localStorage, se existir
+        if (typeof window !== "undefined") {
+          const saved = localStorage.getItem("empresa-store");
+          console.log("saved", saved);
+          if (saved) {
+            try {
+              const parsed = JSON.parse(saved) as any;
+              const savedEmpresaId = parsed?.state?.empresaSelecionada?.id;
+              if (savedEmpresaId) {
+                const empresaExistente = data.empresas.find(
+                  (e) => e.id === savedEmpresaId
+                );
+                if (empresaExistente) {
+                  setValue("empresa_id", empresaExistente.id, {
+                    shouldValidate: true,
+                  });
+                }
+              }
+            } catch (e) {
+              console.error("Erro ao ler empresa do localStorage", e);
+            }
+          }
+        }
       } catch (err) {
         console.error("Erro ao buscar selects:", err);
       }
     };
 
     fetchSelectsData();
-  }, []);
+  }, [setValue]);
+
+  useEffect(() => {
+    let savedEmpresaId: number | undefined;
+
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("empresa-store");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved) as { id: number };
+          savedEmpresaId = parsed.id;
+        } catch (e) {
+          console.error("Erro ao ler empresa do localStorage", e);
+        }
+      }
+    }
+
+    if (savedEmpresaId) {
+      setValue("empresa_id", savedEmpresaId, { shouldValidate: true });
+    }
+  }, [setValue]);
 
   const empresasOptions: SelectOption[] = empresas.map((s) => ({
     id: s.id,
@@ -133,18 +176,22 @@ const CadastroChamado = () => {
           <Controller
             name="empresa_id"
             control={control}
-            render={({ field }) => (
-              <Select
-                label="Empresa"
-                options={empresasOptions}
-                placeholder="Selecione a empresa"
-                selectedOption={
-                  empresasOptions.find((opt) => opt.id === field.value) || null
-                }
-                onSelect={(option) => field.onChange(Number(option.id))}
-              />
-            )}
+            render={({ field }) => {
+              const selectedOption =
+                empresasOptions.find((opt) => opt.id === field.value) || null;
+
+              return (
+                <Select
+                  label="Empresa"
+                  options={empresasOptions}
+                  placeholder="Selecione a empresa"
+                  selectedOption={selectedOption} // <-- aqui mostra a label corretamente
+                  onSelect={(option) => field.onChange(Number(option.id))}
+                />
+              );
+            }}
           />
+
           {errors.empresa_id && (
             <p className="text-[var(--destructive)] text-sm">
               {errors.empresa_id.message}

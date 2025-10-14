@@ -29,7 +29,17 @@ const Select: React.FC<SelectProps> = ({
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Calcula a posição do dropdown quando ele abre
+  // 🔹 Estado interno para refletir o valor atual, mesmo se o pai não re-renderizar
+  const [selectedOption, setSelectedOption] = useState<SelectOption | null>(
+    propSelectedOption || null
+  );
+
+  // 🔹 Mantém sincronizado caso o valor venha de fora (ex: React Hook Form)
+  useEffect(() => {
+    setSelectedOption(propSelectedOption || null);
+  }, [propSelectedOption]);
+
+  // 🔹 Posiciona o portal corretamente
   useEffect(() => {
     if (isOpen && dropdownRef.current) {
       const rect = dropdownRef.current.getBoundingClientRect();
@@ -42,24 +52,20 @@ const Select: React.FC<SelectProps> = ({
   }, [isOpen]);
 
   const handleToggle = () => {
-    if (!disabled) {
-      setIsOpen(!isOpen);
-    }
+    if (!disabled) setIsOpen(!isOpen);
   };
 
   const handleSelectOption = (option: SelectOption) => {
-    if (!disabled) {
-      onSelect(option);
-      setIsOpen(false);
-    }
+    if (disabled) return;
+    setSelectedOption(option); // atualiza localmente
+    onSelect(option); // notifica o pai
+    setTimeout(() => setIsOpen(false), 0); // fecha o menu
   };
 
-  const displayValue = propSelectedOption
-    ? propSelectedOption.label
-    : placeholder;
+  const displayValue = selectedOption ? selectedOption.label : placeholder;
 
   return (
-    <div className="relative text-white" ref={dropdownRef}>
+    <div className="relative z-30 text-white" ref={dropdownRef}>
       <label
         className={`block text-sm font-medium mb-1 ${
           disabled ? "text-gray-400" : ""
@@ -96,21 +102,21 @@ const Select: React.FC<SelectProps> = ({
       {!disabled && isOpen && (
         <Portal>
           <div
-            className="absolute z-50 rounded-lg overflow-auto bg-[var(--secondary)] text-[var(--extra)] shadow-lg"
+            className="absolute z-30 rounded-lg overflow-auto bg-[var(--secondary)] text-[var(--extra)] shadow-lg"
             style={{
               top: position.top,
               left: position.left,
               width: position.width,
-              maxHeight: "300px", 
+              maxHeight: "300px",
             }}
           >
             {options.map((option) => (
               <div
                 key={option.id}
-                className="p-3 cursor-pointer hover:bg-opacity-80 transition-colors duration-200"
+                className="p-3 cursor-pointer  hover:bg-opacity-80 transition-colors duration-200"
                 style={{
                   backgroundColor:
-                    propSelectedOption?.id === option.id ? "#e5533d" : "",
+                    selectedOption?.id === option.id ? "#e5533d" : "",
                 }}
                 onClick={() => handleSelectOption(option)}
               >

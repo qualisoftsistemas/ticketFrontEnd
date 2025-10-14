@@ -16,7 +16,7 @@ const schema = z
   .object({
     id: z.number().optional(),
     nome: z.string().min(1, "Nome é obrigatório"),
-    email: z.string().email("Email inválido").min(1, "Email é obrigatório"),
+    email: z.string().email("Email inválido"),
     conglomerado_id: z.number().min(1, "Conglomerado é obrigatório"),
     senha: z.string().optional(),
   })
@@ -75,12 +75,29 @@ export default function ModalCadastroAdmin({
   }, [initialData, reset]);
 
   useEffect(() => {
-    fetchConglomerados();
-    if (initialData?.conglomerado?.id) {
-      setValue("conglomerado_id", initialData.conglomerado?.id, {
-        shouldValidate: true,
-      });
+    // 1️⃣ busca o conglomerado do localStorage, se existir
+    let savedConglomeradoId: number | undefined = undefined;
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("conglomeradoSelecionado");
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved) as { id: number };
+          savedConglomeradoId = parsed.id;
+        } catch (e) {
+          console.error("Erro ao ler conglomerado do localStorage", e);
+        }
+      }
     }
+
+    // 2️⃣ busca os conglomerados do backend
+    fetchConglomerados().then(() => {
+      // 3️⃣ se não houver initialData, seta o valor do select
+      if (!initialData?.conglomerado?.id && savedConglomeradoId) {
+        setValue("conglomerado_id", savedConglomeradoId, {
+          shouldValidate: true,
+        });
+      }
+    });
   }, [fetchConglomerados, initialData, setValue]);
 
   const conglomeradoOptions: SelectOption[] = conglomerados.map((c) => ({

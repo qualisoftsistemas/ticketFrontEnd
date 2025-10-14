@@ -10,8 +10,6 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import Select, { SelectOption } from "@/components/ui/select";
 import InputCNPJ from "../ui/inputCnpj";
-// Se quiser usar componente custom de CPF/CNPJ:
-// import CpfCnpjInput from "../ui/cpfCnpjInput";
 
 const schema = z.object({
   id: z.number().optional(),
@@ -35,6 +33,9 @@ export default function CadastroEmpresa({
   onSubmit,
   initialData,
 }: Props) {
+  const { conglomerados, fetchConglomerados, conglomeradoSelecionado } =
+    useConglomeradoStore();
+
   const {
     handleSubmit,
     control,
@@ -47,29 +48,29 @@ export default function CadastroEmpresa({
     defaultValues: {
       nome: initialData?.nome || "",
       cnpj: initialData?.cnpj || "",
-      conglomerado_id: initialData?.conglomerado_id || undefined,
+      conglomerado_id:
+        initialData?.conglomerado_id ||
+        conglomeradoSelecionado?.id ||
+        undefined,
     },
   });
 
-  const { conglomerados, fetchConglomerados } = useConglomeradoStore();
-
+  // Reseta valores sempre que inicialData ou conglomeradoSelecionado mudarem
   useEffect(() => {
     reset({
       id: initialData?.id,
       nome: initialData?.nome || "",
       cnpj: initialData?.cnpj || "",
-      conglomerado_id: initialData?.conglomerado?.id || undefined,
+      conglomerado_id:
+        initialData?.conglomerado_id ||
+        conglomeradoSelecionado?.id ||
+        undefined,
     });
-  }, [initialData, reset]);
+  }, [initialData, conglomeradoSelecionado, reset]);
 
   useEffect(() => {
     fetchConglomerados();
-    if (initialData?.conglomerado_id) {
-      setValue("conglomerado_id", initialData.conglomerado_id, {
-        shouldValidate: true,
-      });
-    }
-  }, [fetchConglomerados, initialData, setValue]);
+  }, [fetchConglomerados]);
 
   const conglomeradoOptions: SelectOption[] = conglomerados.map((c) => ({
     id: c.id,
@@ -104,9 +105,7 @@ export default function CadastroEmpresa({
                 options={conglomeradoOptions}
                 placeholder="Selecione o conglomerado"
                 selectedOption={selectedOption}
-                onSelect={(option) => {
-                  field.onChange(Number(option.id));
-                }}
+                onSelect={(option) => field.onChange(Number(option.id))}
               />
             );
           }}
@@ -131,6 +130,7 @@ export default function CadastroEmpresa({
           </p>
         )}
 
+        {/* CNPJ */}
         <InputCNPJ
           label="CNPJ"
           value={cnpjValue}
@@ -142,12 +142,6 @@ export default function CadastroEmpresa({
             {errors.cnpj.message}
           </p>
         )}
-        {/*
-        <CpfCnpjInput
-          value={cnpjValue}
-          onChange={(val) => setValue("cnpj", val, { shouldValidate: true })}
-        />
-        */}
 
         <div className="flex justify-end gap-3 w-full">
           <Button variant="confirm" type="submit">

@@ -17,66 +17,68 @@ const apiFetchClient = async <T>({
 }: ApiFetchOptions): Promise<T> => {
   const token =
     typeof window !== "undefined" ? localStorage.getItem("token") : null;
-  const empresaStore =
+
+  const empresaStoreRaw =
     typeof window !== "undefined"
       ? localStorage.getItem("empresa-store")
       : null;
 
-  const userString = localStorage.getItem("user");
-  let prestadorId: string | null = null;
+  const conglomeradoSelecionadoRaw =
+    typeof window !== "undefined"
+      ? localStorage.getItem("conglomeradoSelecionado")
+      : null;
 
+  const userString =
+    typeof window !== "undefined" ? localStorage.getItem("user") : null;
+
+  let prestadorId: string | null = null;
   if (userString) {
     try {
       const user = JSON.parse(userString);
-      prestadorId = user.prestador_id;
-    } catch (err) {}
+      prestadorId = user?.prestador_id ?? null;
+    } catch {}
   }
 
-  const isChamadoEndpoint = endpoint.startsWith("/chamado");
-  let url = `${
-    isChamadoEndpoint ? `${API_BASE_URL}` : API_BASE_URL
-  }${endpoint}`;
+  let empresaId: string | null = null;
+  let conglomeradoId: string | null = null;
 
-  if (empresaStore) {
+  if (empresaStoreRaw) {
     try {
-      const parsed = JSON.parse(empresaStore);
-      const empresaId = parsed?.state?.empresaSelecionada?.id;
-      const conglomeradoId =
-        parsed?.state?.empresaSelecionada?.conglomerado?.id;
-
-      const separator = url.includes("?") ? "&" : "?";
-
-      if (isChamadoEndpoint) {
-        if (conglomeradoId) {
-          url += `${separator}conglomerado_id=${conglomeradoId}`;
-        }
-      } else {
-        if (empresaId) url += `${separator}empresa_id=${empresaId}`;
-
-        if (conglomeradoId) {
-          const sep = url.includes("?") ? "&" : "?";
-          url += `${sep}conglomerado_id=${conglomeradoId}`;
-        }
-      }
+      const parsed = JSON.parse(empresaStoreRaw);
+      empresaId = parsed?.state?.empresaSelecionada?.id ?? null;
     } catch (err) {
       console.error("Erro ao parsear empresa-store:", err);
     }
   }
 
-  if (userString) {
-    const separator = url.includes("?") ? "&" : "?";
-
-    if (prestadorId) {
-      url += `${separator}prestador_id=${prestadorId}`;
+  if (conglomeradoSelecionadoRaw) {
+    try {
+      const parsed = JSON.parse(conglomeradoSelecionadoRaw);
+      conglomeradoId = parsed?.id ?? null;
+    } catch (err) {
+      console.error("Erro ao parsear conglomeradoSelecionado:", err);
     }
   }
 
+  const isChamadoEndpoint = endpoint.startsWith("/chamado");
+  let url = `${API_BASE_URL}${endpoint}`;
+
+  const appendParam = (key: string, value: string | null) => {
+    if (!value) return;
+    const separator = url.includes("?") ? "&" : "?";
+    url += `${separator}${key}=${value}`;
+  };
+
+  if (empresaId && !isChamadoEndpoint) appendParam("empresa_id", empresaId);
+  if (conglomeradoId) appendParam("conglomerado_id", conglomeradoId);
+  if (prestadorId) appendParam("prestador_id", prestadorId);
+
+  // 🟨 Monta headers e corpo
   const headers: Record<string, string> = {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
   let body: BodyInit | undefined;
-
   if (method !== "GET" && data) {
     if (data instanceof FormData) {
       body = data;
@@ -102,7 +104,6 @@ const apiFetchClient = async <T>({
     }
 
     return res.json();
-    // eslint-disable-next-line
   } catch (error: any) {
     console.error("API fetch client error:", error);
     throw error;

@@ -110,10 +110,20 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
   const { empresaSelecionada } = useEmpresaStore();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+  // 🟦 Verifica se há conglomeradoSelecionado no localStorage
+  const conglomeradoSelecionado =
+    typeof window !== "undefined"
+      ? localStorage.getItem("conglomeradoSelecionado")
+      : null;
+
+  const hasConglomerado = Boolean(conglomeradoSelecionado);
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("empresa-store");
+    localStorage.removeItem("conglomeradoSelecionado");
+
     window.location.href = "/";
   };
 
@@ -131,6 +141,17 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
     ...links,
   ];
 
+  // 🟩 Filtra Empresa/Admin dependendo do conglomeradoSelecionado
+  const masterClienteItems: NavItem[] = [
+    ...(hasConglomerado
+      ? [
+          { label: "Empresa", href: "/empresa" },
+          { label: "Admin", href: "/admin" },
+        ]
+      : []),
+    { label: "Conglomerado", href: "/conglomerado" },
+  ];
+
   const masterLinks: NavItem[] = [
     {
       label: "Master",
@@ -138,12 +159,8 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
       subItems: [
         {
           label: "Clientes",
-          type: "section", // tipo custom para renderizar título
-          items: [
-            { label: "Empresa", href: "/empresa" },
-            { label: "Conglomerado", href: "/conglomerado" },
-            { label: "Admin", href: "/admin" },
-          ],
+          type: "section",
+          items: masterClienteItems,
         },
         {
           label: "Cadastro",
@@ -197,8 +214,8 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
         ))}
       </nav>
 
-      <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2   text-sm">
-        <div className="w-full flex justify-center border-b border-[var(--primary-foreground)]/50   items-center gap-6   px-2 py-2">
+      <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2 text-sm">
+        <div className="w-full flex justify-center border-b border-[var(--primary-foreground)]/50 items-center gap-6 px-2 py-2">
           <Link href="/sobre">
             <img src="/Icons/Settings.svg" alt="config" className="w-6 h-6" />
           </Link>

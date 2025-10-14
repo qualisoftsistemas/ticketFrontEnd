@@ -9,6 +9,12 @@ interface RotinaState {
   error: string | null;
 
   fetchRotinas: (mes?: number, ano?: number) => Promise<void>;
+  createRotina: (data: {
+    empresa_id: number;
+    nome: string;
+    setor_id: number;
+    categoria_id: number;
+  }) => Promise<void>;
   uploadRotina: (data: {
     mes: string;
     ano: string;
@@ -66,12 +72,31 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
     }
   },
 
+  createRotina: async (data) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "POST",
+        endpoint: "/rotina/criar",
+        data,
+      });
+      await get().fetchRotinas();
+    } catch (error: any) {
+      set({
+        error: error.message || "Erro ao enviar rotina.",
+        loading: false,
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
   uploadRotina: async (data) => {
     set({ loading: true, error: null });
     try {
       await apiFetchClient({
         method: "POST",
-        endpoint: "/rotina",
+        endpoint: "/rotina/upload",
         data,
       });
       await get().fetchRotinas();

@@ -60,6 +60,13 @@ const TableSelectSetores = ({
       setSelectedSetores([...selectedSetores, setorId]);
     }
   };
+  const toggleSelectAll = () => {
+    if (selectedSetores.length === setores.length) {
+      setSelectedSetores([]);
+    } else {
+      setSelectedSetores(setores.map((s) => s.id));
+    }
+  };
 
   const removeSelected = (id: number) => {
     setSelectedSetores(selectedSetores.filter((s) => s !== id));
@@ -74,6 +81,15 @@ const TableSelectSetores = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex gap-4">
         <div className="flex-1">
+          <div className="flex justify-between mb-2">
+            <Button variant="default" size="sm" onClick={toggleSelectAll}>
+              {selectedSetores.length === setores.length
+                ? "Desmarcar Todos"
+                : "Selecionar Todos"}
+            </Button>
+            <span>{selectedSetores.length} selecionados</span>
+          </div>
+
           <table className="w-full border-collapse">
             <thead>
               <tr>

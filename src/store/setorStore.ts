@@ -25,6 +25,7 @@ interface FetchSetoresOptions {
   page?: number;
   withPagination?: boolean;
   nome?: string;
+ 
 }
 
 export const useSetorStore = create<SetorState>((set, get) => ({
@@ -42,7 +43,6 @@ export const useSetorStore = create<SetorState>((set, get) => ({
       if (options.withPagination) {
         endpoint += `?page=${options.page}`;
       }
-
       if (options.nome) {
         endpoint += `&nome=${encodeURIComponent(options.nome)}`;
       }

@@ -9,6 +9,11 @@ import { Rotina, Upload } from "@/types/Arquivo";
 import { useUserRole } from "@/hooks/useUserRole";
 import Select from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
+import { useConglomeradoStore } from "@/store/conglomeradoStore";
+
+import ModalCadastroDice from "./ModalCadastroDICE";
+import Modal from "../ui/modal";
+import ModalEnviarArquivo from "./ModalEnviar";
 
 export default function RotinasPage() {
   const { rotinas, uploads, fetchRotinas, loading } = useRotinaStore();
@@ -19,8 +24,13 @@ export default function RotinasPage() {
     empresaSelecionada,
     setEmpresaSelecionada,
   } = useEmpresaStore();
+
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [modalData, setModalData] = useState<Upload | null>(null);
+  const [modalCadastro, setModalCadastro] = useState(false);
+  const [rotinaSelecionada, setRotinaSelecionada] = useState<Rotina | null>(
+    null
+  );
 
   const role = useUserRole();
 
@@ -29,7 +39,7 @@ export default function RotinasPage() {
 
   useEffect(() => {
     fetchRotinas(mes, ano);
-  }, [mes, ano, fetchRotinas]);
+  }, [mes, ano, fetchRotinas, empresaSelecionada]);
 
   const uploadsMap = new Map(
     uploads.map((u) => [`${u.rotina.id}-${u.mes}-${u.ano}`, u])
@@ -38,8 +48,15 @@ export default function RotinasPage() {
   const handleShowModalEnviar = (rotina: Rotina) => {
     const key = `${rotina.id}-${mes}-${ano}`;
     const upload = uploadsMap.get(key) ?? null;
-    setModalData(upload);
-    setShowModalEnviar(true);
+
+    if (upload) {
+      // Já existe upload: abre modal detalhes
+      setModalData(upload);
+    } else {
+      // Não existe upload: abre modal de envio
+      setRotinaSelecionada(rotina);
+      setShowModalEnviar(true);
+    }
   };
 
   const columns: Column<Rotina>[] = [
@@ -134,24 +151,43 @@ export default function RotinasPage() {
         columns={columns}
         data={rotinas}
         loading={loading}
-        showCadastro={() => {}}
+        showCadastro={
+          role !== "Admin" && role !== "Funcionario"
+            ? () => setModalCadastro(true)
+            : undefined
+        }
         legendasAcoes={[]}
         pagination={null}
-        onRowClick={handleShowModalEnviar}
+        onRowClick={(rotina) => handleShowModalEnviar(rotina)}
         onPageChange={() => {}}
         searchTerm={""}
         onSearchChange={() => {}}
         setSearchTerm={() => {}}
       />
 
-      {showModalEnviar && modalData && (
-        <ModalDetalhes
-          modalData={modalData}
-          setModalData={setModalData}
-          mes={mes}
-          ano={ano}
-        />
-      )}
+      <ModalCadastroDice
+        open={modalCadastro}
+        onClose={() => setModalCadastro(false)}
+      />
+
+      <ModalDetalhes
+        modalData={modalData}
+        setModalData={setModalData}
+        open={!!modalData}
+        onClose={() => setModalData(null)}
+        mes={mes}
+        ano={ano}
+      />
+
+      <ModalEnviarArquivo
+        open={showModalEnviar}
+        onClose={() => setShowModalEnviar(false)}
+        rotina={rotinaSelecionada}
+        conglomeradoId={empresaSelecionada?.conglomerado?.id ?? 0}
+        empresaId={empresaSelecionada?.id ?? 0}
+        mes={mes}
+        ano={ano}
+      />
     </div>
   );
 }
