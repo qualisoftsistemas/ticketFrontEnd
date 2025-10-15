@@ -12,21 +12,33 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import apiFetchClient from "@/service/api";
+import { Button } from "../ui/button";
+import { UserLogin } from "@/types/UserLogin";
+import { useRouter } from "next/navigation";
 
 type HeaderProps = {
   toggleSidebar: () => void;
   isOpen: boolean;
   role: Role;
+  user: UserLogin;
+  handleShowSectorTree: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
+const Header: React.FC<HeaderProps> = ({
+  toggleSidebar,
+  isOpen,
+  role,
+  user,
+  handleShowSectorTree,
+}) => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const {
     empresas,
     fetchEmpresas,
     empresaSelecionada,
     setEmpresaSelecionadaAndReload,
-    setEmpresaSelecionada
+    setEmpresaSelecionada,
   } = useEmpresaStore();
 
   const {
@@ -34,10 +46,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
     conglomeradoSelecionado,
     fetchConglomerados,
     loadConglomeradoFromStorage,
-    setConglomeradoSelecionado,
   } = useConglomeradoStore();
-
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   useEffect(() => {
     fetchConglomerados();
@@ -138,63 +147,53 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
           </DropdownMenu>
         )}
         {role !== "Sistema" && role !== "Admin" && role !== "Funcionario" && (
-          <DropdownMenu open={open} onOpenChange={setOpen}>
-            <DropdownMenuTrigger asChild>
-              <div className="flex gap-2 items-center cursor-pointer">
-                <img
-                  src="/Icons/BuildingFill.svg"
-                  alt="empresa"
-                  className="w-8 h-8"
-                />
-                <div>
-                  <h1 className="font-bold">
-                    {conglomeradoSelecionado
-                      ? `${conglomeradoSelecionado.nome} - ${
-                          empresaSelecionada?.nome ?? "Selecione a empresa"
-                        }`
-                      : "Conglomerado - Empresa"}
-                  </h1>
+          <div className="flex gap-2">
+            <img
+              src="/Icons/BuildingFill.svg"
+              alt="empresa"
+              className="w-8 h-8 cursor-pointer"
+              onClick={() => router.push("/conglomerado")}
+            />
+            <DropdownMenu open={open} onOpenChange={setOpen}>
+              <DropdownMenuTrigger asChild>
+                <div className="flex gap-2 items-center cursor-pointer">
+                  <div>
+                    <h1 className="font-bold">
+                      {conglomeradoSelecionado
+                        ? `${conglomeradoSelecionado.nome} - ${
+                            empresaSelecionada?.nome ?? "Selecione a empresa"
+                          }`
+                        : "Conglomerado - Empresa"}
+                    </h1>
+                  </div>
+                  <Icon
+                    icon={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
+                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                  />
                 </div>
-                <Icon
-                  icon={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
-                  className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
-                />
-              </div>
-            </DropdownMenuTrigger>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent
-              align="start"
-              className="bg-[var(--secondary)] text-[var(--extra)] mt-1"
-            >
-              {conglomerados.map((conglomerado) => (
-                <DropdownMenuItem
-                  key={conglomerado.id}
-                  onSelect={(e) => {
-                    e.preventDefault();
-                    setConglomeradoSelecionado(conglomerado);
-                  }}
-                >
-                  <span className="font-bold">{conglomerado.nome}</span>
-                </DropdownMenuItem>
-              ))}
-
-              <div className="border-t border-[var(--secondary-foreground)] my-1" />
-
-              {conglomeradoSelecionado &&
-                empresas
-                  .filter(
-                    (e) => e.conglomerado?.id === conglomeradoSelecionado.id
-                  )
-                  .map((empresa) => (
-                    <DropdownMenuItem
-                      key={empresa.id}
-                      onClick={() => setEmpresaSelecionadaAndReload(empresa)}
-                    >
-                      <span>{empresa.nome}</span>
-                    </DropdownMenuItem>
-                  ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <DropdownMenuContent
+                align="start"
+                className="bg-[var(--secondary)] text-[var(--extra)] mt-1"
+              >
+                {conglomeradoSelecionado &&
+                  empresas
+                    .filter(
+                      (e) => e.conglomerado?.id === conglomeradoSelecionado.id
+                    )
+                    .map((empresa) => (
+                      <DropdownMenuItem
+                        key={empresa.id}
+                        className="cursor-pointer"
+                        onClick={() => setEmpresaSelecionadaAndReload(empresa)}
+                      >
+                        <span>{empresa.nome}</span>
+                      </DropdownMenuItem>
+                    ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )}
 
         <div className="hidden md:flex items-center gap-6">
@@ -204,6 +203,11 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isOpen, role }) => {
           <Link href="/notificacoes">
             <img src="/Icons/Bell.svg" alt="bell" className="w-6 h-6" />
           </Link>
+          {role == "Master" && (
+            <Button variant={"ghost"} onClick={handleShowSectorTree}>
+              <img src="/Icons/SectorTree.svg" alt="bell" className="w-6 h-6" />
+            </Button>
+          )}
         </div>
 
         <div className="hidden md:flex  items-center gap-2">

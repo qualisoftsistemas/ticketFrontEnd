@@ -1,3 +1,5 @@
+import { Categoria } from "./Categoria";
+
 export interface Empresa {
   id: number;
   nome: string;
@@ -9,6 +11,7 @@ export interface Rotina {
   id: number;
   nome: string;
   ativo: number;
+  categoria: Categoria;
 }
 
 export interface User {
@@ -28,7 +31,7 @@ export interface Upload {
   id: number;
   empresa: Empresa;
   rotina: Rotina;
-  arquivo: Arquivo;
+  arquivos: Arquivo[];
   user: User;
   mes: number;
   ano: number;

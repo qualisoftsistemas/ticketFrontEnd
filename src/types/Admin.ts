@@ -1,3 +1,4 @@
+import { Foto } from "./Foto";
 import { Pagination } from "./Pagination";
 
 export interface Admin {
@@ -16,6 +17,9 @@ export interface Admin {
   facebook?: string;
   instagram?: string;
   cpf?: string;
+  foto_id?: number;
+    foto: Foto;
+
 }
 
 export interface AdminApiResponse {
@@ -25,4 +29,4 @@ export interface AdminApiResponse {
   };
   admins: Admin[];
   pagination: Pagination;
-}
+ }

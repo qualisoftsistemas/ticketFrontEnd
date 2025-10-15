@@ -65,7 +65,7 @@ const Select: React.FC<SelectProps> = ({
   const displayValue = selectedOption ? selectedOption.label : placeholder;
 
   return (
-    <div className="relative z-30 text-white" ref={dropdownRef}>
+    <div className="relative text-white" ref={dropdownRef}>
       <label
         className={`block text-sm font-medium mb-1 ${
           disabled ? "text-gray-400" : ""
@@ -102,7 +102,7 @@ const Select: React.FC<SelectProps> = ({
       {!disabled && isOpen && (
         <Portal>
           <div
-            className="absolute z-30 rounded-lg overflow-auto bg-[var(--secondary)] text-[var(--extra)] shadow-lg"
+            className="absolute z-50 rounded-lg overflow-auto bg-[var(--secondary)] text-[var(--extra)] shadow-lg"
             style={{
               top: position.top,
               left: position.left,
@@ -113,7 +113,7 @@ const Select: React.FC<SelectProps> = ({
             {options.map((option) => (
               <div
                 key={option.id}
-                className="p-3 cursor-pointer  hover:bg-opacity-80 transition-colors duration-200"
+                className="p-3 cursor-pointer hover:bg-opacity-80 transition-colors duration-200"
                 style={{
                   backgroundColor:
                     selectedOption?.id === option.id ? "#e5533d" : "",

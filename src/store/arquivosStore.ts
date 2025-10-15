@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import apiFetchClient from "@/service/api";
 import { Rotina, Upload } from "@/types/Arquivo";
+import { showRequestToast } from "@/components/ui/toast";
 
 interface RotinaState {
   rotinas: Rotina[];
@@ -9,6 +10,7 @@ interface RotinaState {
   error: string | null;
 
   fetchRotinas: (mes?: number, ano?: number) => Promise<void>;
+  toggleRotina: (id: number) => Promise<void>;
   createRotina: (data: {
     empresa_id: number;
     nome: string;
@@ -21,7 +23,7 @@ interface RotinaState {
     conglomerado_id: number;
     empresa_id: number;
     rotina_id: number;
-    arquivo_id: number;
+    arquivos: number[];
     observacao?: string;
   }) => Promise<void>;
 
@@ -115,8 +117,26 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
     try {
       await apiFetchClient({
         method: "PATCH",
-        endpoint: "/rotina",
+        endpoint: "/rotina/dispensar",
         data,
+      });
+      await get().fetchRotinas();
+    } catch (error: any) {
+      set({
+        error: error.message || "Erro ao dispensar rotina.",
+        loading: false,
+      });
+    } finally {
+      set({ loading: false });
+    }
+  },
+
+  toggleRotina: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      await apiFetchClient({
+        method: "PATCH",
+        endpoint: `/rotina/toggle/${id}`,
       });
       await get().fetchRotinas();
     } catch (error: any) {

@@ -1,4 +1,6 @@
+import { Foto } from "./Foto";
 import { Pagination } from "./Pagination";
+import { Setor } from "./Setor";
 
 export interface Master {
   id: number;
@@ -11,6 +13,9 @@ export interface Master {
     nome: string;
     ativo: number;
   };
+  setores: Setor[];
+  foto_id?: number;
+  foto?: Foto;
 }
 
 export interface MasterApiResponse {
@@ -20,4 +25,5 @@ export interface MasterApiResponse {
   };
   master: Master[];
   pagination: Pagination;
+  
 }

@@ -4,10 +4,12 @@ import Link from "next/link";
 import { Role } from "@/hooks/useUserRole";
 import Icon from "../ui/icon";
 import { useEmpresaStore } from "@/store/empresaStore";
+import { UserLogin } from "@/types/UserLogin";
 
 interface SidebarProps {
   role: Role;
   isOpen: boolean;
+  user: UserLogin;
   toggleSidebar: () => void;
 }
 
@@ -106,11 +108,14 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  role,
+  isOpen,
+  toggleSidebar,
+  user,
+}) => {
   const { empresaSelecionada } = useEmpresaStore();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  // 🟦 Verifica se há conglomeradoSelecionado no localStorage
   const conglomeradoSelecionado =
     typeof window !== "undefined"
       ? localStorage.getItem("conglomeradoSelecionado")
@@ -128,18 +133,11 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
   };
 
   const links: NavItem[] = [
-    { label: "Chamados", href: "/chamados", icon: "/Icons/Message.svg" },
-    { label: "Arquivos", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
+    { label: "Ticket", href: "/chamados", icon: "/Icons/Message.svg" },
+    { label: "DICE", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
   ];
 
-  const adminLinks: NavItem[] = [
-    {
-      label: "Funcionários",
-      href: "/funcionario",
-      icon: "/Icons/Employee.svg",
-    },
-    ...links,
-  ];
+  const adminLinks: NavItem[] = [...links];
 
   // 🟩 Filtra Empresa/Admin dependendo do conglomeradoSelecionado
   const masterClienteItems: NavItem[] = [
@@ -147,6 +145,10 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
       ? [
           { label: "Empresa", href: "/empresa" },
           { label: "Admin", href: "/admin" },
+          {
+            label: "Funcionários",
+            href: "/funcionario",
+          },
         ]
       : []),
     { label: "Conglomerado", href: "/conglomerado" },
@@ -208,11 +210,19 @@ const Sidebar: React.FC<SidebarProps> = ({ role, isOpen, toggleSidebar }) => {
       className={`fixed top-0 left-0 h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col z-50 transform transition-transform duration-300
     ${isOpen ? "translate-x-0" : "-translate-x-full"}  `}
     >
-      <nav className="flex flex-col gap-1 w-full mt-20 p-1 overflow-y-auto">
-        {navItems.map((item, idx) => (
-          <DropdownNavItem key={idx} item={item} />
-        ))}
-      </nav>
+      <div className=" mt-20 ">
+        {role === "Operador" ||
+          (role === "Master" && (
+            <h2 className="mx-auto mb-4 font-bold text-center">
+              {user.prestador.nome ?? ""}
+            </h2>
+          ))}
+        <nav className="flex flex-col gap-1 w-full   p-1 overflow-y-auto">
+          {navItems.map((item, idx) => (
+            <DropdownNavItem key={idx} item={item} />
+          ))}
+        </nav>
+      </div>
 
       <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2 text-sm">
         <div className="w-full flex justify-center border-b border-[var(--primary-foreground)]/50 items-center gap-6 px-2 py-2">

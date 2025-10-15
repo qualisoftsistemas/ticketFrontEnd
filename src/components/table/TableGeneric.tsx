@@ -109,7 +109,7 @@ export default function TableGeneric<T>({
                 {columns.map((col, j) => (
                   <td
                     key={j}
-                    className={`px-2 py-1 text-sm text-left border border-[var(--primary-foreground)]/50 ${
+                    className={`px-2 py-2 text-sm text-left border border-[var(--primary-foreground)]/50 ${
                       onRowClick ? "cursor-pointer" : ""
                     }`}
                   >

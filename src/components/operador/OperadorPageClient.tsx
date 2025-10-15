@@ -214,6 +214,7 @@ export default function OperadorPageClient() {
 
       {showTableSetores && (
         <TableSelectSetores
+          title="Atribuir Setores ao Operador"
           prestadorId={editOperador?.id || 0}
           isOpen={showTableSetores}
           onClose={() => setShowTableSetores(false)}

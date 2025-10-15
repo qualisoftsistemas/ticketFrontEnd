@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Master } from "@/types/Master";
+import { Master, MasterApiResponse } from "@/types/Master";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
 import { showRequestToast } from "@/components/ui/toast";
@@ -71,11 +71,15 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         method: "GET",
         endpoint: `/master/${id}`,
       });
+
       set({ masterSelecionado: response, loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
-        set({ error: err.message || "Erro ao buscar admins", loading: false });
+        set({
+          error: err.message || "Erro ao buscar admin",
+          loading: false,
+        });
       } else {
         console.error(err);
         set({ error: "Erro desconhecido", loading: false });

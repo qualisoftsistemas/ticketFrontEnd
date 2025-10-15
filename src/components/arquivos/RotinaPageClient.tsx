@@ -14,9 +14,11 @@ import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import ModalCadastroDice from "./ModalCadastroDICE";
 import Modal from "../ui/modal";
 import ModalEnviarArquivo from "./ModalEnviar";
+import Icon from "../ui/icon";
 
 export default function RotinasPage() {
-  const { rotinas, uploads, fetchRotinas, loading } = useRotinaStore();
+  const { rotinas, uploads, fetchRotinas, loading, toggleRotina } =
+    useRotinaStore();
   const {
     empresas,
     fetchEmpresas,
@@ -59,8 +61,30 @@ export default function RotinasPage() {
     }
   };
 
+  const handleToggleAtivo = (rotina: Rotina) => {
+    const newAtivo = rotina.ativo ? 0 : 1;
+
+    useRotinaStore.setState((state) => ({
+      rotinas: state.rotinas.map((s) =>
+        s.id === rotina.id ? { ...s, ativo: newAtivo } : s
+      ),
+    }));
+
+    toggleRotina(rotina.id ?? 0).catch(() => {
+      useRotinaStore.setState((state) => ({
+        rotinas: state.rotinas.map((s) =>
+          s.id === rotina.id ? { ...s, ativo: rotina.ativo } : s
+        ),
+      }));
+    });
+  };
+
   const columns: Column<Rotina>[] = [
-    { header: "ID", key: "id" },
+    {
+      header: "Categoria",
+      key: "categoria" as keyof Rotina,
+      render: (c) => c.categoria?.nome ?? "-",
+    },
     { header: "Arquivo", key: "nome" },
     {
       header: "Status",
@@ -70,7 +94,7 @@ export default function RotinasPage() {
         const upload = uploadsMap.get(key);
         return (
           <span
-            className={`px-2 py-1 rounded ${
+            className={`px-2 py-1 rounded flex items-center justify-center ${
               upload
                 ? "bg-green-100 text-green-700"
                 : "bg-yellow-100 text-yellow-700"
@@ -87,18 +111,39 @@ export default function RotinasPage() {
       render: (rotina: Rotina) => {
         const key = `${rotina.id}-${mes}-${ano}`;
         const upload = uploadsMap.get(key);
-        return upload ? (
-          <button
-            onClick={() => setModalData(upload)}
-            className="text-blue-600 underline hover:text-blue-800"
-          >
-            {upload.arquivo.name}
-          </button>
-        ) : (
-          "-"
+        if (!upload || !upload.arquivos) return "-";
+        const firstFile = upload.arquivos[0];
+        return (
+          <span className="flex gap-2">
+            <span>{firstFile.name}</span>
+            {upload.arquivos.length > 1 && (
+              <span className="text-[var(--secondary)] ">
+                + {upload.arquivos.length - 1}
+              </span>
+            )}
+          </span>
         );
       },
     },
+    ...(role === "Master" || role === "Operador"
+      ? [
+          {
+            header: "Ações",
+            key: "actions" as keyof Rotina,
+            render: (rotina: Rotina) => (
+              <div className="flex justify-start gap-4 py-1">
+                <Icon
+                  icon={
+                    rotina.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+                  }
+                  className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
+                  onClick={() => handleToggleAtivo(rotina)}
+                />
+              </div>
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -158,7 +203,11 @@ export default function RotinasPage() {
         }
         legendasAcoes={[]}
         pagination={null}
-        onRowClick={(rotina) => handleShowModalEnviar(rotina)}
+        onRowClick={(rotina) =>
+          role === "Admin" || role === "Funcionario"
+            ? handleShowModalEnviar(rotina)
+            : undefined
+        }
         onPageChange={() => {}}
         searchTerm={""}
         onSearchChange={() => {}}

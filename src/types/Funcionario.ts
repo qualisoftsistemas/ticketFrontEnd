@@ -1,3 +1,4 @@
+import { Foto } from "./Foto";
 import { Pagination } from "./Pagination";
 
 export interface Funcionario {
@@ -10,6 +11,8 @@ export interface Funcionario {
   facebook?: string;
   instagram?: string;
   cpf?: string;
+  foto_id?: number;
+   foto: Foto;
 }
 
 export interface FuncionarioApiResponse {
@@ -19,4 +22,4 @@ export interface FuncionarioApiResponse {
   };
   funcionarios: Funcionario[];
   pagination: Pagination;
-}
+ }

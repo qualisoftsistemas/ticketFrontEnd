@@ -13,6 +13,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Select, { SelectOption } from "../ui/select";
 import InputText from "@/components/ui/inputText";
+import { showRequestToast } from "../ui/toast";
 
 const schema = z.object({
   empresa_id: z.number().min(1, "Selecione uma empresa"),
@@ -95,13 +96,13 @@ export default function ModalCadastroDice({
         categoria_id: data.categoria_id,
       });
 
-      toast.success("Arquivo cadastrado com sucesso!");
+      showRequestToast("success", "Arquivo cadastrado com sucesso!");
       await fetchRotinas?.();
       reset();
       onClose();
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao cadastrar o arquivo.");
+      showRequestToast("error", "Erro ao cadastrar arquivo");
     } finally {
       setLoading(false);
     }
@@ -125,7 +126,7 @@ export default function ModalCadastroDice({
   return (
     <Modal isOpen={open} onClose={onClose} maxWidth="max-w-md">
       <h2 className="text-xl font-semibold text-[var(--extra)] mb-4">
-        Cadastro de novo arquivo
+        Cadastro de novo DICE
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-2">

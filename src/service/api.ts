@@ -46,6 +46,7 @@ const apiFetchClient = async <T>({
     try {
       const parsed = JSON.parse(empresaStoreRaw);
       empresaId = parsed?.state?.empresaSelecionada?.id ?? null;
+      conglomeradoId = parsed?.state?.empresaSelecionada?.conglomerado?.id ?? null;
     } catch (err) {
       console.error("Erro ao parsear empresa-store:", err);
     }

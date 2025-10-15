@@ -9,8 +9,7 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import InputCPF from "../ui/inputCpf";
 
-// 🔹 Schema condicional
-const schema = z
+ const schema = z
   .object({
     id: z.number().optional(),
     nome: z.string().min(1, "Nome é obrigatório"),
@@ -48,7 +47,6 @@ export default function CadastroFuncionario({
 }: Props) {
   const {
     handleSubmit,
-    control,
     setValue,
     watch,
     reset,
@@ -88,11 +86,10 @@ export default function CadastroFuncionario({
   const facebookValue = watch("facebook");
   const instagramValue = watch("instagram");
 
-  // 🔹 Tratamento do payload antes de enviar
   const handleFormSubmit = (data: FormData) => {
     const payload = { ...data };
     if (initialData?.id && !data.senha) {
-      delete payload.senha; // remove senha no editar
+      delete payload.senha; // 🔸 Remove senha se for edição e estiver vazia
     }
     onSubmit(payload);
   };
@@ -100,7 +97,7 @@ export default function CadastroFuncionario({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
-        Cadastro de Funcionário
+        {initialData ? "Editar Funcionário" : "Cadastrar Funcionário"}
       </h2>
 
       <form
@@ -125,6 +122,7 @@ export default function CadastroFuncionario({
           </p>
         )}
 
+        {/* Senha */}
         <InputText
           label="Senha"
           labelColor="text-[var(--extra)]"
@@ -142,6 +140,7 @@ export default function CadastroFuncionario({
             {errors.senha.message}
           </p>
         )}
+
         {/* CPF */}
         <InputCPF
           label="CPF"
@@ -177,7 +176,7 @@ export default function CadastroFuncionario({
           onChange={(val) =>
             setValue("whatsapp", val, { shouldValidate: true })
           }
-          placeholder="Digite o WhatsApp"
+          placeholder="Digite o número do WhatsApp"
         />
 
         {/* Facebook */}
@@ -202,6 +201,7 @@ export default function CadastroFuncionario({
           placeholder="Digite o perfil do Instagram"
         />
 
+        {/* Botões */}
         <div className="flex justify-end gap-3 w-full">
           <Button variant="confirm" type="submit">
             Salvar

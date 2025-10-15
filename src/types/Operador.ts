@@ -1,3 +1,4 @@
+import { Foto } from "./Foto";
 import { Pagination } from "./Pagination";
 import { Setor } from "./Setor";
 
@@ -9,6 +10,8 @@ export interface Operador {
   email?: string;
   senha: string;
   setores: Setor[];
+  foto_id?: number;
+  foto?: Foto;
 }
 
 export interface OperadorApiResponse {

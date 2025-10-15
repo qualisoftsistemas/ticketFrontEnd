@@ -10,13 +10,13 @@ export const downloadAnexo = async (anexo: Anexo) => {
   const token = localStorage.getItem("token");
 
   try {
-    if (anexo.arquivo?.url) {
-      window.open(anexo.arquivo.url, "_blank");
-      return;
-    }
+    // if (anexo.arquivo?.url) {
+    //   window.open(anexo.arquivo.url, "_blank");
+    //   return;
+    // }
 
     if (anexo.id) {
-      const res = await fetch(`${API_BASE_URL}/arquivo/download/${anexo.id}`, {
+      const res = await fetch(`${API_BASE_URL}/arquivo/download/${anexo.arquivo?.id}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

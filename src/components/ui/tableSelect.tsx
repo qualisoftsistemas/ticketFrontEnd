@@ -3,11 +3,14 @@ import { useSetorStore } from "@/store/setorStore";
 import { useOperadorStore } from "@/store/operadorStore";
 import Modal from "./modal";
 import { Button } from "../ui/button";
+import { useMasterStore } from "@/store/masterStore";
 
 interface TableSelectSetoresProps {
   isOpen: boolean;
   onClose: () => void;
-  prestadorId: number;
+  prestadorId?: number;
+  masterId?: number | null;
+  title: string;
   onConfirm: (selectedSetores: number[]) => void;
 }
 
@@ -17,20 +20,25 @@ const TableSelectSetores = ({
   isOpen,
   onClose,
   prestadorId,
+  masterId,
+  title,
   onConfirm,
 }: TableSelectSetoresProps) => {
   const { setores, fetchSetores } = useSetorStore();
   const { operadorSelecionado, fetchOperadorById } = useOperadorStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSetores, setSelectedSetores] = useState<number[]>([]);
+  const { fetchMasterById, masterSelecionado } = useMasterStore();
 
   // Busca operador e setores selecionados
   useEffect(() => {
-    if (prestadorId == null) return;
-
     const fetchData = async () => {
       try {
-        await fetchOperadorById(prestadorId);
+        if (prestadorId) {
+          await fetchOperadorById(prestadorId);
+        } else if (masterId) {
+          await fetchMasterById(masterId);
+        }
       } catch (error) {
         console.error("Erro ao buscar operador:", error);
       }
@@ -44,6 +52,12 @@ const TableSelectSetores = ({
     console.log(operadorSelecionado);
     setSelectedSetores(operadorSelecionado.setores.map((s) => s.id));
   }, [operadorSelecionado]);
+
+  useEffect(() => {
+    if (!masterSelecionado) return;
+    console.log(masterSelecionado);
+    setSelectedSetores(masterSelecionado.master.setores.map((s) => s.id));
+  }, [masterSelecionado]);
 
   useEffect(() => {
     fetchSetores();
@@ -81,6 +95,7 @@ const TableSelectSetores = ({
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex gap-4">
         <div className="flex-1">
+          <h2 className="font-semibold font-lg mb-2">{title}</h2>
           <div className="flex justify-between mb-2">
             <Button variant="default" size="sm" onClick={toggleSelectAll}>
               {selectedSetores.length === setores.length

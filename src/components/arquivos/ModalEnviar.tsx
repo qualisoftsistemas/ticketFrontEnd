@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import Modal from "@/components/ui/modal"; // seu modal genérico
+import Modal from "@/components/ui/modal";
 import { Button } from "../ui/button";
 import { useRotinaStore } from "@/store/arquivosStore";
-import { toast } from "sonner";
 import InputText from "../ui/inputText";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import FileBadge from "../ui/fileBadge";
+import { showRequestToast } from "../ui/toast";
 
 interface ModalEnviarArquivoProps {
   open: boolean;
@@ -28,32 +28,56 @@ export default function ModalEnviarArquivo({
   mes,
   ano,
 }: ModalEnviarArquivoProps) {
-  const { uploadRotina, fetchRotinas } = useRotinaStore();
+  const { uploadRotina, fetchRotinas, dispensarMes } = useRotinaStore();
   const [observacao, setObservacao] = useState<string>("");
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]); // <-- array
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [loading, setLoading] = useState(false);
-
-  console.log(rotina);
+  const [dispensar, setDispensar] = useState(false);
 
   const handleUpload = async () => {
+    if (!rotina) return;
+
+    if (!dispensar && !uploadedFiles.length) {
+      showRequestToast(
+        "error",
+        "Selecione ao menos um arquivo antes de enviar!"
+      );
+      return;
+    }
+
     setLoading(true);
-    console.log(uploadedFiles);
     try {
-      await uploadRotina({
-        mes: mes.toString(),
-        ano: ano.toString(),
-        rotina_id: rotina.id,
-        conglomerado_id: conglomeradoId,
-        empresa_id: empresaId,
-        arquivo_id: uploadedFiles[0]?.id,  
-        observacao: observacao,
-      });
-      toast.success("Arquivo enviado com sucesso!");
+      if (dispensar) {
+        await dispensarMes({
+          mes: mes.toString(),
+          ano: ano.toString(),
+          conglomerado_id: conglomeradoId,
+          empresa_id: empresaId,
+          rotina_id: rotina.id,
+          observacao,
+        });
+        showRequestToast("success", "Rotina dispensada com sucesso!");
+      } else {
+        const arquivo_ids = uploadedFiles.map((f) => f.id);
+
+        await uploadRotina({
+          mes: mes.toString(),
+          ano: ano.toString(),
+          rotina_id: rotina.id,
+          conglomerado_id: conglomeradoId,
+          empresa_id: empresaId,
+          arquivos: arquivo_ids,
+          observacao,
+        });
+
+        showRequestToast("success", "Arquivos enviados com sucesso!");
+      }
+
       await fetchRotinas(mes, ano);
       onClose();
     } catch (err) {
       console.error(err);
-      toast.error("Erro ao enviar o arquivo.");
+      showRequestToast("error", "Erro ao processar a solicitação.");
     } finally {
       setLoading(false);
     }
@@ -66,16 +90,34 @@ export default function ModalEnviarArquivo({
           Enviar arquivo para {rotina?.nome}
         </h2>
 
-        {/* Upload de arquivos */}
-        <InputFile
-          multiple={false}
-          onUpload={(files) => setUploadedFiles(files)}
-        />
+        {!dispensar && (
+          <>
+            <InputFile
+              multiple={true}
+              onUpload={(files) => setUploadedFiles(files)}
+            />
 
-        <div className="flex flex-wrap gap-2">
-          {uploadedFiles.map((file) => (
-            <FileBadge fileIcon={<span>📎</span>} key={file.id} file={file} />
-          ))}
+            <div className="flex flex-wrap gap-2">
+              {uploadedFiles.map((file) => (
+                <FileBadge
+                  fileIcon={<span>📎</span>}
+                  key={file.id}
+                  file={file}
+                />
+              ))}
+            </div>
+          </>
+        )}
+        <div className="flex items-center gap-2 mt-2">
+          <label className="flex items-center cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={dispensar}
+              onChange={(e) => setDispensar(e.target.checked)}
+              className="mr-2 accent-[var(--destructive)]"
+            />
+            <span className="text-sm text-[var(--extra)]">Dispensar</span>
+          </label>
         </div>
 
         <InputText
@@ -91,7 +133,13 @@ export default function ModalEnviarArquivo({
             Cancelar
           </Button>
           <Button onClick={handleUpload} disabled={loading}>
-            {loading ? "Enviando..." : "Enviar"}
+            {loading
+              ? dispensar
+                ? "Dispensando..."
+                : "Enviando..."
+              : dispensar
+              ? "Dispensar"
+              : "Enviar"}
           </Button>
         </div>
       </div>

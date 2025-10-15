@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../ui/modal";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -10,6 +10,8 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import Select, { SelectOption } from "@/components/ui/select";
 import InputCNPJ from "../ui/inputCnpj";
+import ModalImage from "../ui/modalImage";
+import { showRequestToast } from "../ui/toast";
 
 const schema = z.object({
   id: z.number().optional(),
@@ -36,6 +38,11 @@ export default function CadastroEmpresa({
   const { conglomerados, fetchConglomerados, conglomeradoSelecionado } =
     useConglomeradoStore();
 
+  const [fotoId, setFotoId] = useState<number | null>(
+    initialData?.foto_id || null
+  );
+  const [openModalImage, setOpenModalImage] = useState(false);
+
   const {
     handleSubmit,
     control,
@@ -55,7 +62,6 @@ export default function CadastroEmpresa({
     },
   });
 
-  // Reseta valores sempre que inicialData ou conglomeradoSelecionado mudarem
   useEffect(() => {
     reset({
       id: initialData?.id,
@@ -66,6 +72,7 @@ export default function CadastroEmpresa({
         conglomeradoSelecionado?.id ||
         undefined,
     });
+    setFotoId(initialData?.foto_id || null);
   }, [initialData, conglomeradoSelecionado, reset]);
 
   useEffect(() => {
@@ -81,77 +88,135 @@ export default function CadastroEmpresa({
   const nomeValue = watch("nome");
   const cnpjValue = watch("cnpj");
 
+  const handleSave = (data: FormData) => {
+    if (!fotoId) {
+      showRequestToast("error", "Envie uma foto antes de salvar!");
+      return;
+    }
+
+    const payload = {
+      ...data,
+      foto_id: fotoId,
+    };
+
+    onSubmit(payload);
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
-        Cadastro de Empresa
-      </h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
-        {initialData?.id && (
-          <input type="hidden" name="id" value={initialData.id} />
-        )}
+    <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <h2 className="text-xl text-[var(--primary-foreground)] mb-4">
+          {initialData ? "Editar Empresa" : "Cadastrar Empresa"}
+        </h2>
 
-        {/* Conglomerado */}
-        <Controller
-          name="conglomerado_id"
-          control={control}
-          render={({ field }) => {
-            const selectedOption =
-              conglomeradoOptions.find((opt) => opt.id === field.value) || null;
+        <form
+          onSubmit={handleSubmit(handleSave)}
+          className="flex flex-col gap-6"
+        >
+          {initialData?.id && (
+            <input type="hidden" name="id" value={initialData.id} />
+          )}
 
-            return (
-              <Select
-                label="Conglomerado"
-                options={conglomeradoOptions}
-                placeholder="Selecione o conglomerado"
-                selectedOption={selectedOption}
-                onSelect={(option) => field.onChange(Number(option.id))}
-              />
-            );
-          }}
-        />
-        {errors.conglomerado_id && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.conglomerado_id.message}
-          </p>
-        )}
+          {/* Conglomerado */}
+          <Controller
+            name="conglomerado_id"
+            control={control}
+            render={({ field }) => {
+              const selectedOption =
+                conglomeradoOptions.find((opt) => opt.id === field.value) ||
+                null;
 
-        {/* Nome */}
-        <InputText
-          label="Nome"
-          labelColor="text-[var(--extra)]"
-          value={nomeValue}
-          onChange={(val) => setValue("nome", val, { shouldValidate: true })}
-          placeholder="Digite o nome da empresa"
-        />
-        {errors.nome && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.nome.message}
-          </p>
-        )}
+              return (
+                <Select
+                  label="Conglomerado"
+                  options={conglomeradoOptions}
+                  placeholder="Selecione o conglomerado"
+                  selectedOption={selectedOption}
+                  onSelect={(option) => field.onChange(Number(option.id))}
+                />
+              );
+            }}
+          />
+          {errors.conglomerado_id && (
+            <p className="text-[var(--destructive)] text-sm">
+              {errors.conglomerado_id.message}
+            </p>
+          )}
 
-        {/* CNPJ */}
-        <InputCNPJ
-          label="CNPJ"
-          value={cnpjValue}
-          onChange={(val) => setValue("cnpj", val, { shouldValidate: true })}
-          placeholder="Digite o CNPJ"
-        />
-        {errors.cnpj && (
-          <p className="text-[var(--destructive)] text-sm">
-            {errors.cnpj.message}
-          </p>
-        )}
+          {/* Nome */}
+          <InputText
+            label="Nome"
+            labelColor="text-[var(--extra)]"
+            value={nomeValue}
+            onChange={(val) => setValue("nome", val, { shouldValidate: true })}
+            placeholder="Digite o nome da empresa"
+          />
+          {errors.nome && (
+            <p className="text-[var(--destructive)] text-sm">
+              {errors.nome.message}
+            </p>
+          )}
 
-        <div className="flex justify-end gap-3 w-full">
-          <Button variant="confirm" type="submit">
-            Salvar
-          </Button>
-          <Button variant="destructive" type="button" onClick={onClose}>
-            Cancelar
-          </Button>
-        </div>
-      </form>
-    </Modal>
+          {/* CNPJ */}
+          <InputCNPJ
+            label="CNPJ"
+            value={cnpjValue}
+            onChange={(val) => setValue("cnpj", val, { shouldValidate: true })}
+            placeholder="Digite o CNPJ"
+          />
+          {errors.cnpj && (
+            <p className="text-[var(--destructive)] text-sm">
+              {errors.cnpj.message}
+            </p>
+          )}
+
+          {/* Foto */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[var(--extra)] font-medium">Foto</label>
+            {initialData?.foto?.url && !openModalImage ? (
+              <div className="flex items-center gap-3">
+                <img
+                  src={initialData.foto.url}
+                  alt="Foto da empresa"
+                  className="w-20 h-20 object-cover rounded"
+                />
+                <Button
+                  variant="default"
+                  type="button"
+                  onClick={() => setOpenModalImage(true)}
+                >
+                  Alterar
+                </Button>
+              </div>
+            ) : (
+              <Button
+                variant="default"
+                type="button"
+                onClick={() => setOpenModalImage(true)}
+              >
+                Enviar Foto
+              </Button>
+            )}
+          </div>
+
+          <div className="flex justify-end gap-3 w-full">
+            <Button variant="confirm" type="submit">
+              Salvar
+            </Button>
+            <Button variant="destructive" type="button" onClick={onClose}>
+              Cancelar
+            </Button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal de envio de imagem */}
+      <ModalImage
+        open={openModalImage}
+        onClose={() => setOpenModalImage(false)}
+        onConfirm={() => {}}
+        setId={(id) => setFotoId(id)}
+      />
+    </>
   );
 }

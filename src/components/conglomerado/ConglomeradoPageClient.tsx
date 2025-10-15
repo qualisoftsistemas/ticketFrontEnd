@@ -18,6 +18,7 @@ export default function ConglomeradoPageClient() {
     updateConglomerado,
     deleteConglomerado,
     toggleConglomerado,
+    setConglomeradoSelecionado,
     loading,
     error,
     pagination,
@@ -160,6 +161,7 @@ export default function ConglomeradoPageClient() {
         }}
         setSearchTerm={setSearchTerm}
         loading={loading || isSubmitting}
+        onRowClick={setConglomeradoSelecionado}
         pagination={pagination}
         onPageChange={handlePageChange}
         searchTerm={searchTerm}

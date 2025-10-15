@@ -54,6 +54,8 @@ const LoginForm: React.FC = () => {
 
       if (user.tipo === "ADMIN" || user.tipo === "FUNCIONÁRIO") {
         router.push("/selecionar-empresa");
+      } else if (user.tipo === "SISTEMA") {
+        router.push("/prestador");
       } else {
         router.push("/conglomerado");
       }

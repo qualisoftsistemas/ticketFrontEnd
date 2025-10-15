@@ -1,3 +1,4 @@
+import { Foto } from "./Foto";
 import { Pagination } from "./Pagination";
 
 export interface Empresa {
@@ -11,6 +12,8 @@ export interface Empresa {
   nome: string;
   cnpj: string;
   ativo: number;
+  foto_id?: number;
+   foto: Foto;
 }
 
 export interface EmpresaApiResponse {
@@ -20,4 +23,4 @@ export interface EmpresaApiResponse {
   };
   empresas: Empresa[];
   pagination: Pagination;
-}
+ }
