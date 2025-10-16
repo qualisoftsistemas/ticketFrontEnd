@@ -1,21 +1,24 @@
 "use client";
 
 import { formatDate } from "@/utils/formatDate";
-import React from "react";
+import React, { useState } from "react";
 import FileBadge from "../ui/fileBadge";
 import { UploadedFile } from "../ui/inputFile";
-import { API_BASE_URL } from "@/service/api";
-import {downloadAnexo} from "@/utils/downloadAnexo";
+import { downloadAnexo } from "@/utils/downloadAnexo";
+import { useRotinaStore } from "@/store/arquivosStore";
+import Modal from "@/components/ui/modal";
+import { Button } from "../ui/button";
 
-interface User {
+export interface User {
   id: number;
   nome: string;
-  foto: string | null;
+  foto?: { url: string } | null;
 }
 
 export interface Anexo {
   id: number;
   arquivo: UploadedFile;
+  dispensado?: boolean; // flag para indicar dispensado
 }
 
 export interface MensagemType {
@@ -39,6 +42,37 @@ const Mensagem: React.FC<MensagemProps> = ({
   numero,
   showRespostaInput,
 }) => {
+  const { desconsiderarArquivo } = useRotinaStore();
+  const [selectedAnexo, setSelectedAnexo] = useState<Anexo | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [anexos, setAnexos] = useState<Anexo[]>(mensagem.anexos);
+
+  const handleDispensarClick = (anexo: Anexo) => {
+    setSelectedAnexo(anexo);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmDispensar = async () => {
+    if (!selectedAnexo) return;
+
+    await desconsiderarArquivo(selectedAnexo.arquivo.id);
+
+    // marca o anexo como dispensado localmente
+    setAnexos((prev) =>
+      prev.map((a) =>
+        a.id === selectedAnexo.id ? { ...a, dispensado: true } : a
+      )
+    );
+
+    setShowConfirmModal(false);
+    setSelectedAnexo(null);
+  };
+
+  const handleCancelDispensar = () => {
+    setShowConfirmModal(false);
+    setSelectedAnexo(null);
+  };
+
   return (
     <div className="bg-[var(--extra)] p-2 rounded space-y-2 text-[var(--primary)]">
       <div className="flex flex-col gap-2">
@@ -52,7 +86,7 @@ const Mensagem: React.FC<MensagemProps> = ({
         <div className="flex items-center gap-2">
           {mensagem.user.foto ? (
             <img
-              src={mensagem.user.foto}
+              src={mensagem.user.foto.url}
               alt={mensagem.user.nome}
               className="w-7 h-7 rounded-full object-cover"
             />
@@ -68,40 +102,86 @@ const Mensagem: React.FC<MensagemProps> = ({
       <div
         className="p-2 rounded text-[var(--primary)] [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:mb-1"
         dangerouslySetInnerHTML={{ __html: mensagem.mensagem }}
-      ></div>
+      />
 
-      {mensagem.anexos.length > 0 && (
-        <div className="flex flex-wrap gap-2 mt-2">
-          {mensagem.anexos.map((anexo) => (
-            <div key={anexo.id} className="flex flex-wrap gap-2">
-              <FileBadge
-                key={anexo.id}
-                file={anexo.arquivo}
-                onClick={() => downloadAnexo(anexo)}
-                fileIcon={
-                  anexo?.arquivo?.extension?.match(
-                    /(jpg|jpeg|png|gif|bmp|webp)$/i
-                  ) ? (
-                    <img
-                      src="/Icons/Eye.svg"
-                      alt="Eye"
-                      className="w-6 h-6 object-contain"
-                    />
-                  ) : (
-                    <img
-                      src="/Icons/Download.svg"
-                      alt="Download"
-                      className="w-6 h-6 object-contain"
-                    />
-                  )
-                }
-              />
-            </div>
-          ))}
-        </div>
-      )}
+      {anexos.map((anexo) => {
+        const isDispensado =
+          anexo.dispensado === true || anexo.arquivo.desconsiderado === 1;
+
+        return (
+          <div key={anexo.id} className="relative group">
+            <FileBadge
+              file={anexo.arquivo}
+              onClick={() => !isDispensado && downloadAnexo(anexo)}
+              fileIcon={
+                anexo.arquivo.extension?.match(
+                  /(jpg|jpeg|png|gif|bmp|webp)$/i
+                ) ? (
+                  <img
+                    src="/Icons/Eye.svg"
+                    alt="Eye"
+                    className={`w-6 h-6 object-contain ${
+                      isDispensado ? "opacity-40" : ""
+                    }`}
+                  />
+                ) : (
+                  <img
+                    src="/Icons/Download.svg"
+                    alt="Download"
+                    className={`w-6 h-6 object-contain ${
+                      isDispensado ? "opacity-40" : ""
+                    }`}
+                  />
+                )
+              }
+              className={`${
+                isDispensado ? "line-through opacity-50 cursor-not-allowed" : ""
+              }`}
+            />
+
+            {!isDispensado && (
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
+                <button
+                  className="bg-red-600 text-white px-2 py-1 cursor-pointer rounded text-sm"
+                  onClick={() => handleDispensarClick(anexo)}
+                >
+                  Dispensar
+                </button>
+              </div>
+            )}
+
+            {isDispensado && (
+              <div className="absolute top-0 right-0 p-1">
+                <img
+                  src="/Icons/Lock.svg"
+                  alt="Bloqueado"
+                  className="w-4 h-4 opacity-60"
+                />
+              </div>
+            )}
+          </div>
+        );
+      })}
 
       <hr />
+
+      {showConfirmModal && selectedAnexo && (
+        <Modal isOpen={showConfirmModal} onClose={handleCancelDispensar}>
+          <div className="p-4">
+            <h2 className="text-lg font-semibold mb-4">
+              Confirmar remoção do arquivo?
+            </h2>
+            <div className="flex justify-end gap-2">
+              <Button variant="default" onClick={handleCancelDispensar}>
+                Cancelar
+              </Button>
+              <Button variant="destructive" onClick={handleConfirmDispensar}>
+                Dispensar
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };

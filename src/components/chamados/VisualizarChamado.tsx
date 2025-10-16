@@ -33,12 +33,32 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
   const respostaRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    setMensagens(chamado?.chamado?.mensagens || []);
+    if (!chamado) return;
+
+    const mensagensNormalizadas: MensagemType[] = chamado.chamado.mensagens.map(
+      (msg) => ({
+        ...msg,
+        user: {
+          ...msg.user,
+          foto: msg.user.foto
+            ? typeof msg.user.foto === "string"
+              ? { url: msg.user.foto }
+              : msg.user.foto
+            : null,
+        },
+      })
+    );
+
+    setMensagens(mensagensNormalizadas);
     setShowModalAvaliar(false);
     setShowModalFinalizar(false);
     setShowRespostaInput(false);
     setIsReabrindo(false);
   }, [chamado]);
+
+  useEffect(() => {
+    console.log("mensagens", mensagens);
+  }, [mensagens]);
 
   useEffect(() => {
     if (!role || !chamado) return;
@@ -95,7 +115,9 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
         user: {
           id: 0,
           nome: "Você",
-          foto: null,
+          foto: {
+            url: "",
+          },
         },
         anexos: arquivos?.map((file) => ({ id: file.id, arquivo: file })) || [],
       };

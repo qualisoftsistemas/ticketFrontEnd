@@ -320,7 +320,7 @@ export default function ChamadoPageClient() {
             <div className="flex w-full gap-2 flex-wrap">
               <div className="flex-1">
                 <label className="text-sm text-[var(--extra)] block mb-1">
-                  Data Inicial
+                  Data de Abertura
                 </label>
                 <input
                   type="date"
@@ -331,7 +331,7 @@ export default function ChamadoPageClient() {
               </div>
               <div className="flex-1">
                 <label className="text-sm text-[var(--extra)] block mb-1">
-                  Data Final
+                  Data de Fechamento
                 </label>
                 <input
                   type="date"

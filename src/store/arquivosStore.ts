@@ -26,7 +26,7 @@ interface RotinaState {
     arquivos: number[];
     observacao?: string;
   }) => Promise<void>;
-
+  desconsiderarArquivo: (id: number) => Promise<void>;
   dispensarMes: (data: {
     mes: string;
     ano: string;
@@ -146,6 +146,24 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
       });
     } finally {
       set({ loading: false });
+    }
+  },
+
+  desconsiderarArquivo: async (id: number) => {
+    set({ loading: true, error: null });
+    try {
+      apiFetchClient({
+        method: "PATCH",
+        endpoint: `/arquivo/desconsiderar/${id}`,
+      });
+      showRequestToast("success", "Arquivo desconsiderado com sucesso!");
+      get().fetchRotinas();
+    } catch (error: any) {
+      showRequestToast("error", "Erro ao desconsiderar arquivo!");
+      set({
+        error: error.message || "Erro ao desconsiderar arquivo.",
+        loading: false,
+      });
     }
   },
 
