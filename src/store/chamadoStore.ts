@@ -30,6 +30,8 @@ interface FetchChamadosOptions {
   operador_id?: number | null;
   categoria_id?: number | null;
   empresa_id?: number | null;
+  abertura_inicial?: string;
+  abertura_final?: string;
 }
 
 export const useChamadoStore = create<ChamadoState>((set, get) => ({
@@ -58,6 +60,10 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         query.set("categoria_id", String(options.categoria_id));
       if (options.empresa_id != null)
         query.set("empresa_id", String(options.empresa_id));
+      if (options.abertura_inicial)
+        query.set("abertura_inicial", options.abertura_inicial);
+      if (options.abertura_final)
+        query.set("abertura_final", options.abertura_final);
 
       if (options.status && options.status.length > 0) {
         options.status.forEach((s) => query.append("status[]", s));

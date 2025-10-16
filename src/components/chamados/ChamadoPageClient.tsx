@@ -40,6 +40,8 @@ export default function ChamadoPageClient() {
   const [setores, setSetores] = useState<SelectsData["setores"]>([]);
   const [categorias, setCategorias] = useState<SelectsData["categorias"]>([]);
   const [operadores, setOperadores] = useState<SelectsData["operadores"]>([]);
+  const [dataInicial, setDataInicial] = useState<string>("");
+  const [dataFinal, setDataFinal] = useState<string>("");
 
   const handleStatusChange = (status: string[]) => {
     setSelectedStatus(status);
@@ -108,7 +110,7 @@ export default function ChamadoPageClient() {
       header: "Cód",
       key: "id",
       render: (chamado) => (
-        <div   className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Icon icon="/Icons/Eye.svg" className="w-5 h-5 bg-white" />
           <span>{chamado.id}</span>
         </div>
@@ -214,6 +216,8 @@ export default function ChamadoPageClient() {
               selectedEmpresa[0]?.id !== undefined
                 ? Number(selectedEmpresa[0].id)
                 : null,
+            abertura_inicial: dataInicial || "",
+            abertura_final: dataFinal || "",
           });
         }}
         onClearFilters={() => {
@@ -222,6 +226,8 @@ export default function ChamadoPageClient() {
           setSelectedCategoria([]);
           setSelectedEmpresa([]);
           setSearchTerm("");
+          setDataInicial("");
+          setDataFinal("");
 
           fetchChamados({
             page: 1,
@@ -235,11 +241,13 @@ export default function ChamadoPageClient() {
             operador_id: null,
             categoria_id: null,
             empresa_id: null,
+            abertura_inicial: "",
+            abertura_final: "",
           });
         }}
         renderFilters={({ onApply, onClear }) => (
           <div className="flex flex-col gap-4 w-full">
-            {/* Linha 1: Empresa + Setor */}
+            {/* Linha 1: Empresa + Setor + Operador + Categoria */}
             <div className="flex w-full gap-2 flex-wrap">
               <div className="flex-1">
                 <Select
@@ -304,6 +312,32 @@ export default function ChamadoPageClient() {
                   disabled={categorias.length === 0}
                   selectedOption={selectedCategoria[0] || null}
                   onSelect={(option) => setSelectedCategoria([option])}
+                />
+              </div>
+            </div>
+
+            {/* Linha 2: Filtro por período */}
+            <div className="flex w-full gap-2 flex-wrap">
+              <div className="flex-1">
+                <label className="text-sm text-[var(--extra)] block mb-1">
+                  Data Inicial
+                </label>
+                <input
+                  type="date"
+                  className="w-full border bg-[var(--extra)] rounded p-2  text-[var(--primary)]"
+                  value={dataInicial || ""}
+                  onChange={(e) => setDataInicial(e.target.value)}
+                />
+              </div>
+              <div className="flex-1">
+                <label className="text-sm text-[var(--extra)] block mb-1">
+                  Data Final
+                </label>
+                <input
+                  type="date"
+                  className="w-full border rounded p-2 bg-[var(--extra)] text-[var(--primary)]"
+                  value={dataFinal || ""}
+                  onChange={(e) => setDataFinal(e.target.value)}
                 />
               </div>
             </div>

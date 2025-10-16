@@ -81,6 +81,18 @@ export default function RotinasPage() {
 
   const columns: Column<Rotina>[] = [
     {
+      header: "Ver",  
+      key: "visualizar" as keyof Rotina,
+      render: () => (
+        <div className="flex justify-center">
+          <Icon
+            icon="/Icons/Eye.svg"
+            className="w-5 h-5 cursor-pointer bg-[var(--primary-foreground)]"
+          />
+        </div>
+      ),
+    },
+    {
       header: "Categoria",
       key: "categoria" as keyof Rotina,
       render: (c) => c.categoria?.nome ?? "-",
