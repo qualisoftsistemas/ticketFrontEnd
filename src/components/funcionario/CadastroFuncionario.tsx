@@ -10,6 +10,8 @@ import InputText from "../ui/inputText";
 import InputCPF from "../ui/inputCpf";
 import ModalImage from "../ui/modalImage";
 import { showRequestToast } from "../ui/toast";
+import InputFile, { UploadedFile } from "../ui/inputFile";
+import FileBadge from "../ui/fileBadge";
 
 // 🔹 Schema com validação condicional
 const schema = z
@@ -96,19 +98,16 @@ export default function CadastroFuncionario({
   const instagramValue = watch("instagram");
 
   const handleFormSubmit = (data: FormData) => {
-    if (!fotoId) {
-      showRequestToast("error", "Envie uma foto antes de salvar!");
-      return;
-    }
-
     const payload = { ...data, foto_id: fotoId };
 
     if (initialData?.id && !data.senha) {
-      delete payload.senha; // 🔸 Remove senha se for edição e estiver vazia
+      delete payload.senha;
     }
 
-    onSubmit(payload);
+    onSubmit(payload as Partial<Funcionario>);
   };
+
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   return (
     <>
@@ -219,32 +218,73 @@ export default function CadastroFuncionario({
           />
 
           {/* Foto */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[var(--extra)] font-medium">Foto</label>
-            {fotoId && initialData?.foto?.url ? (
-              <div className="flex items-center gap-3">
-                <img
-                  src={initialData.foto.url}
-                  alt="Foto atual"
-                  className="w-16 h-16 object-cover rounded-md"
-                />
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={() => setOpenModalImage(true)}
-                >
-                  Alterar
-                </Button>
-              </div>
-            ) : (
-              <Button
-                variant="default"
-                type="button"
-                onClick={() => setOpenModalImage(true)}
-              >
-                Enviar Foto
-              </Button>
-            )}
+          <div className="flex flex-col items-center justify-center ">
+            <InputFile
+              multiple={false}
+              accept="image/*"
+              label="Selecionar Foto"
+              onUpload={(files) => {
+                const uploaded = files.slice(0, 1);
+                setUploadedFiles(uploaded);
+                if (uploaded[0]?.id) {
+                  setFotoId(uploaded[0].id);
+                }
+              }}
+            />
+
+             <div className="flex flex-wrap gap-2 mt-2">
+               {uploadedFiles.length > 0
+                ? uploadedFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="relative group w-20 h-20 rounded overflow-hidden shadow"
+                    >
+                      <img
+                        src={file.url}
+                        alt={file.nome}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setUploadedFiles([]);
+                            setFotoId(null);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                : // Caso tenha foto já salva
+                  initialData?.foto?.url && (
+                    <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
+                      <img
+                        src={initialData.foto.url}
+                        alt="Foto atual"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setFotoId(null);
+                            setUploadedFiles([]);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+            </div>
           </div>
 
           {/* Botões */}
@@ -258,14 +298,6 @@ export default function CadastroFuncionario({
           </div>
         </form>
       </Modal>
-
-      {/* Modal de envio de imagem */}
-      <ModalImage
-        open={openModalImage}
-        onClose={() => setOpenModalImage(false)}
-        onConfirm={() => {}}
-        setId={(id) => setFotoId(id)}
-      />
     </>
   );
 }

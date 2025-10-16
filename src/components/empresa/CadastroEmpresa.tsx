@@ -12,6 +12,8 @@ import Select, { SelectOption } from "@/components/ui/select";
 import InputCNPJ from "../ui/inputCnpj";
 import ModalImage from "../ui/modalImage";
 import { showRequestToast } from "../ui/toast";
+import InputFile, { UploadedFile } from "../ui/inputFile";
+import FileBadge from "../ui/fileBadge";
 
 const schema = z.object({
   id: z.number().optional(),
@@ -41,7 +43,7 @@ export default function CadastroEmpresa({
   const [fotoId, setFotoId] = useState<number | null>(
     initialData?.foto_id || null
   );
-  const [openModalImage, setOpenModalImage] = useState(false);
+   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   const {
     handleSubmit,
@@ -89,17 +91,12 @@ export default function CadastroEmpresa({
   const cnpjValue = watch("cnpj");
 
   const handleSave = (data: FormData) => {
-    if (!fotoId) {
-      showRequestToast("error", "Envie uma foto antes de salvar!");
-      return;
-    }
-
     const payload = {
       ...data,
       foto_id: fotoId,
     };
 
-    onSubmit(payload);
+    onSubmit(payload as Partial<Empresa>);
   };
 
   return (
@@ -172,30 +169,29 @@ export default function CadastroEmpresa({
 
           {/* Foto */}
           <div className="flex flex-col gap-2">
-            <label className="text-[var(--extra)] font-medium">Foto</label>
-            {initialData?.foto?.url && !openModalImage ? (
-              <div className="flex items-center gap-3">
-                <img
-                  src={initialData.foto.url}
-                  alt="Foto da empresa"
-                  className="w-20 h-20 object-cover rounded"
-                />
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={() => setOpenModalImage(true)}
-                >
-                  Alterar
-                </Button>
+            <InputFile
+              multiple={false}
+              accept="image/*"
+              label="Selecionar Foto"
+              onUpload={(files) => {
+                const uploaded = files.slice(0, 1);
+                setUploadedFiles(uploaded);
+                if (uploaded[0]?.id) {
+                  setFotoId(uploaded[0].id);
+                }
+              }}
+            />
+
+            {uploadedFiles.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {uploadedFiles.map((file) => (
+                  <FileBadge
+                    key={file.id}
+                    file={file}
+                    fileIcon={<span>📷</span>}
+                  />
+                ))}
               </div>
-            ) : (
-              <Button
-                variant="default"
-                type="button"
-                onClick={() => setOpenModalImage(true)}
-              >
-                Enviar Foto
-              </Button>
             )}
           </div>
 
@@ -211,12 +207,6 @@ export default function CadastroEmpresa({
       </Modal>
 
       {/* Modal de envio de imagem */}
-      <ModalImage
-        open={openModalImage}
-        onClose={() => setOpenModalImage(false)}
-        onConfirm={() => {}}
-        setId={(id) => setFotoId(id)}
-      />
     </>
   );
 }

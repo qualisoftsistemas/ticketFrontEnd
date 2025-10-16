@@ -9,6 +9,8 @@ import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import ModalImage from "../ui/modalImage";
 import { showRequestToast } from "../ui/toast";
+import InputFile, { UploadedFile } from "../ui/inputFile";
+import FileBadge from "../ui/fileBadge";
 
 const schema = z.object({
   id: z.number().optional(),
@@ -49,7 +51,7 @@ export default function CadastroPrestador({
   const [fotoUrl, setFotoUrl] = useState<string | null>(
     initialData?.foto?.url || null
   );
-  const [openModalImage, setOpenModalImage] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   useEffect(() => {
     reset({
@@ -63,17 +65,12 @@ export default function CadastroPrestador({
   const nomeValue = watch("nome");
 
   const handleSave = (data: FormData) => {
-    if (!fotoId) {
-      showRequestToast("error", "Envie uma foto antes de salvar!");
-      return;
-    }
-
     const payload = {
       ...data,
       foto_id: fotoId,
     };
 
-    onSubmit(payload);
+    onSubmit(payload as Partial<Prestador>);
   };
 
   return (
@@ -106,37 +103,73 @@ export default function CadastroPrestador({
           )}
 
           {/* Foto */}
-          <div className="flex flex-col gap-3">
-            <label className="text-[var(--extra)] font-medium">Foto</label>
+          <div className="flex flex-col items-center justify-center ">
+            <InputFile
+              multiple={false}
+              accept="image/*"
+              label="Selecionar Foto"
+              onUpload={(files) => {
+                const uploaded = files.slice(0, 1);
+                setUploadedFiles(uploaded);
+                if (uploaded[0]?.id) {
+                  setFotoId(uploaded[0].id);
+                }
+              }}
+            />
 
-            {/* Se já houver foto cadastrada */}
-            {fotoUrl && (
-              <div className="flex flex-col items-start gap-2">
-                <img
-                  src={fotoUrl}
-                  alt="Foto do Prestador"
-                  className="w-32 h-32 rounded-lg object-cover border border-[var(--border)]"
-                />
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={() => setOpenModalImage(true)}
-                >
-                  Alterar Foto
-                </Button>
-              </div>
-            )}
-
-            {/* Caso ainda não tenha foto */}
-            {!fotoUrl && (
-              <Button
-                variant="default"
-                type="button"
-                onClick={() => setOpenModalImage(true)}
-              >
-                Enviar Foto
-              </Button>
-            )}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {uploadedFiles.length > 0
+                ? uploadedFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="relative group w-20 h-20 rounded overflow-hidden shadow"
+                    >
+                      <img
+                        src={file.url}
+                        alt={file.nome}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setUploadedFiles([]);
+                            setFotoId(null);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                : // Caso tenha foto já salva
+                  initialData?.foto?.url && (
+                    <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
+                      <img
+                        src={initialData.foto.url}
+                        alt="Foto atual"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setFotoId(null);
+                            setUploadedFiles([]);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 w-full">
@@ -149,18 +182,6 @@ export default function CadastroPrestador({
           </div>
         </form>
       </Modal>
-
-      {/* Modal para envio de imagem */}
-      <ModalImage
-        open={openModalImage}
-        onClose={() => setOpenModalImage(false)}
-        onConfirm={() => {}}
-        setId={(id) => {
-          setFotoId(id);
-          // Assim que enviar uma nova, remove a antiga da tela
-          setFotoUrl(null);
-        }}
-      />
     </>
   );
 }

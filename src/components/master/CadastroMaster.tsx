@@ -10,8 +10,9 @@ import { usePrestadorStore } from "@/store/prestadorStore";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import Select, { SelectOption } from "@/components/ui/select";
-import ModalImage from "../ui/modalImage";
 import { showRequestToast } from "../ui/toast";
+import InputFile, { UploadedFile } from "../ui/inputFile";
+import FileBadge from "../ui/fileBadge";
 
 // 🔹 Schema: senha obrigatória só na criação
 const schema = z
@@ -68,7 +69,7 @@ export default function CadastroMaster({
   const [fotoId, setFotoId] = useState<number | null>(
     initialData?.foto_id || null
   );
-  const [openModalImage, setOpenModalImage] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
   useEffect(() => {
     reset({
@@ -97,22 +98,16 @@ export default function CadastroMaster({
   const senhaValue = watch("senha");
 
   const handleFormSubmit = (data: FormData) => {
-    if (!fotoId) {
-      showRequestToast("error", "Envie uma foto antes de salvar!");
-      return;
-    }
-
     const payload: Partial<Master> = {
       ...data,
-      foto_id: fotoId,
+      foto_id: fotoId === null ? undefined : fotoId,
     };
 
-    // Remove senha se estiver editando e o campo estiver vazio
     if (initialData?.id && !data.senha) {
       delete payload.senha;
     }
 
-    onSubmit(payload);
+    onSubmit(payload as Partial<Master>);
   };
 
   return (
@@ -188,44 +183,73 @@ export default function CadastroMaster({
           )}
 
           {/* Foto */}
-          <div className="flex flex-col gap-2">
-            <label className="text-[var(--extra)] font-medium">Foto</label>
+          <div className="flex flex-col items-center justify-center ">
+            <InputFile
+              multiple={false}
+              accept="image/*"
+              label="Selecionar Foto"
+              onUpload={(files) => {
+                const uploaded = files.slice(0, 1);
+                setUploadedFiles(uploaded);
+                if (uploaded[0]?.id) {
+                  setFotoId(uploaded[0].id);
+                }
+              }}
+            />
 
-            {initialData?.foto?.url && !openModalImage ? (
-              <div className="flex items-center gap-3">
-                <img
-                  src={initialData.foto.url}
-                  alt="Foto do master"
-                  className="w-16 h-16 object-cover rounded-full border"
-                />
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={() => setOpenModalImage(true)}
-                >
-                  Alterar
-                </Button>
-              </div>
-            ) : fotoId ? (
-              <div className="flex items-center gap-3">
-                <span className="text-[var(--success)]">📷 Foto enviada</span>
-                <Button
-                  variant="default"
-                  type="button"
-                  onClick={() => setOpenModalImage(true)}
-                >
-                  Alterar
-                </Button>
-              </div>
-            ) : (
-              <Button
-                variant="default"
-                type="button"
-                onClick={() => setOpenModalImage(true)}
-              >
-                Enviar Foto
-              </Button>
-            )}
+             <div className="flex flex-wrap gap-2 mt-2">
+               {uploadedFiles.length > 0
+                ? uploadedFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="relative group w-20 h-20 rounded overflow-hidden shadow"
+                    >
+                      <img
+                        src={file.url}
+                        alt={file.nome}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setUploadedFiles([]);
+                            setFotoId(null);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                : // Caso tenha foto já salva
+                  initialData?.foto?.url && (
+                    <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
+                      <img
+                        src={initialData.foto.url}
+                        alt="Foto atual"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setFotoId(null);
+                            setUploadedFiles([]);
+                          }}
+                        >
+                          Remover
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+            </div>
           </div>
 
           <div className="flex justify-end gap-3 w-full">
@@ -238,14 +262,6 @@ export default function CadastroMaster({
           </div>
         </form>
       </Modal>
-
-      {/* Modal de upload de imagem */}
-      <ModalImage
-        open={openModalImage}
-        onClose={() => setOpenModalImage(false)}
-        onConfirm={() => {}}
-        setId={(id) => setFotoId(id)}
-      />
     </>
   );
 }
