@@ -16,6 +16,10 @@ export type UserLogin = {
     tipo: string;
     updated_at: string;
   };
+  foto: {
+    id: number;
+    url: string;
+  };
   prestador_id: number;
   tipo: string;
   updated_at: string;

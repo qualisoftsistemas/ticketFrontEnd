@@ -123,11 +123,6 @@ export default function ChamadoPageClient() {
       render: (chamado) => chamado.empresa?.nome || "—",
     },
     {
-      header: "Operador",
-      key: "operador",
-      render: (chamado) => chamado.operador?.nome || "—",
-    },
-    {
       header: "Aberto",
       key: "created_at",
       render: (chamado) =>
@@ -136,33 +131,64 @@ export default function ChamadoPageClient() {
           : "—",
     },
     {
-      header: "Atualizado",
-      key: "updated_at",
+      header: "Operador",
+      key: "operador",
       render: (chamado) =>
-        chamado.updated_at
-          ? new Date(chamado.updated_at).toLocaleDateString("pt-BR")
-          : "—",
+        chamado.operador ? (
+          <div className="flex items-center gap-2">
+            {chamado.operador.foto && (
+              <img
+                src={String(chamado.operador.foto)}
+                alt={chamado.operador.nome}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            )}
+            <span>{chamado.operador.nome}</span>
+          </div>
+        ) : (
+          "—"
+        ),
     },
+    {
+      header: "Solicitante",
+      key: "solicitante",
+      render: (chamado) =>
+        chamado.solicitante ? (
+          <div className="flex items-center gap-2">
+            {chamado.solicitante.foto && (
+              <img
+                src={String(chamado.solicitante.foto)}
+                alt={chamado.solicitante.nome || chamado.solicitante.email}
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            )}
+            <span>{chamado.solicitante.nome || chamado.solicitante.email}</span>
+          </div>
+        ) : (
+          "—"
+        ),
+    },
+
     {
       header: "Status",
       key: "status",
       render: (chamado) => {
         const statusMap: Record<string, { label: string; color: string }> = {
           pendente_pelo_operador: {
-            label: "Pendente Operador",
-            color: "bg-yellow-200 text-yellow-800",
+            label: "Pend. Operador",
+            color: "bg-yellow-200 text-yellow-800 text-xs",
           },
           pendente_pelo_usuario: {
-            label: "Pendente Usuário",
-            color: "bg-blue-200 text-blue-800",
+            label: "Pend. Usuário",
+            color: "bg-blue-200 text-blue-800 text-xs",
           },
           aguardando_avaliacao: {
             label: "Aguardando Avaliação",
-            color: "bg-orange-200 text-orange-800",
+            color: "bg-orange-200 text-orange-800 text-xs",
           },
           concluido: {
             label: "Concluído",
-            color: "bg-green-200 text-green-800",
+            color: "bg-green-200 text-green-800 text-xs",
           },
         };
 

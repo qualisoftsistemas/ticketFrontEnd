@@ -43,8 +43,10 @@ export default function CadastroEmpresa({
   const [fotoId, setFotoId] = useState<number | null>(
     initialData?.foto_id || null
   );
-   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [fotoAtual, setFotoAtual] = useState<string | null>(
+    initialData?.foto?.url || null
+  );
   const {
     handleSubmit,
     control,
@@ -98,7 +100,9 @@ export default function CadastroEmpresa({
 
     onSubmit(payload as Partial<Empresa>);
   };
-
+  useEffect(() => {
+    setFotoAtual(initialData?.foto?.url || null);
+  }, [initialData]);
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose}>
@@ -168,31 +172,55 @@ export default function CadastroEmpresa({
           )}
 
           {/* Foto */}
-          <div className="flex flex-col gap-2">
-            <InputFile
-              multiple={false}
-              accept="image/*"
-              label="Selecionar Foto"
-              onUpload={(files) => {
-                const uploaded = files.slice(0, 1);
-                setUploadedFiles(uploaded);
-                if (uploaded[0]?.id) {
-                  setFotoId(uploaded[0].id);
-                }
-              }}
-            />
-
-            {uploadedFiles.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {uploadedFiles.map((file) => (
-                  <FileBadge
+          <div className="flex flex-wrap gap-2 mt-2">
+            {uploadedFiles.length > 0
+              ? uploadedFiles.map((file) => (
+                  <div
                     key={file.id}
-                    file={file}
-                    fileIcon={<span>📷</span>}
-                  />
-                ))}
-              </div>
-            )}
+                    className="relative group w-20 h-20 rounded overflow-hidden shadow"
+                  >
+                    <img
+                      src={file.url}
+                      alt={file.nome}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          setUploadedFiles([]);
+                          setFotoId(null);
+                        }}
+                      >
+                        Remover
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              : fotoAtual && (
+                  <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
+                    <img
+                      src={fotoAtual}
+                      alt="Foto atual"
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => {
+                          setFotoAtual(null); // aqui substituímos a foto antiga
+                          setFotoId(null);
+                        }}
+                      >
+                        Remover
+                      </Button>
+                    </div>
+                  </div>
+                )}
           </div>
 
           <div className="flex justify-end gap-3 w-full">

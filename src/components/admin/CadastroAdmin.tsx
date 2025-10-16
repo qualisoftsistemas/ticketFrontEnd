@@ -78,6 +78,9 @@ export default function ModalCadastroAdmin({
   );
   const [openModalImage, setOpenModalImage] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [fotoAtual, setFotoAtual] = useState<string | null>(
+    initialData?.foto?.url || null
+  );
 
   useEffect(() => {
     reset({
@@ -136,6 +139,9 @@ export default function ModalCadastroAdmin({
 
     onSubmit(payload as Partial<Admin>);
   };
+  useEffect(() => {
+    setFotoAtual(initialData?.foto?.url || null);
+  }, [initialData]);
 
   return (
     <>
@@ -238,14 +244,13 @@ export default function ModalCadastroAdmin({
                     <img
                       src={file.url}
                       alt={file.nome}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        className="text-xs px-2 py-1"
                         onClick={() => {
                           setUploadedFiles([]);
                           setFotoId(null);
@@ -256,23 +261,21 @@ export default function ModalCadastroAdmin({
                     </div>
                   </div>
                 ))
-              : // Caso tenha foto já salva
-                initialData?.foto?.url && (
+              : fotoAtual && (
                   <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
                     <img
-                      src={initialData.foto.url}
+                      src={fotoAtual}
                       alt="Foto atual"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        className="text-xs px-2 py-1"
                         onClick={() => {
+                          setFotoAtual(null); // aqui substituímos a foto antiga
                           setFotoId(null);
-                          setUploadedFiles([]);
                         }}
                       >
                         Remover

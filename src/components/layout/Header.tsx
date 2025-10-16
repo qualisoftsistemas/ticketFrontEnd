@@ -15,6 +15,7 @@ import apiFetchClient from "@/service/api";
 import { Button } from "../ui/button";
 import { UserLogin } from "@/types/UserLogin";
 import { useRouter } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type HeaderProps = {
   toggleSidebar: () => void;
@@ -73,6 +74,10 @@ const Header: React.FC<HeaderProps> = ({
   useEffect(() => {
     fetchEmpresas();
   }, [conglomeradoSelecionado]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   return (
     <header className="fixed flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
@@ -214,11 +219,10 @@ const Header: React.FC<HeaderProps> = ({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
-                <img
-                  src="/Icons/UserCircle.svg"
-                  alt="user"
-                  className="w-10 h-10"
-                />
+                <Avatar>
+                  <AvatarImage src={user.foto?.url} />
+                  <AvatarFallback>{user.nome[0]}</AvatarFallback>
+                </Avatar>
                 <h1 className="font-bold">{user.nome}</h1>
                 <Icon
                   icon="/Icons/ArrowDown.svg"
