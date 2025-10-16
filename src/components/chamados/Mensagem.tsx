@@ -139,6 +139,10 @@ const Mensagem: React.FC<MensagemProps> = ({
               }`}
             />
 
+            {isDispensado && (
+              <div className="text-xs text-[var(--secondary)]  ">Arquivo dispensado</div>
+            )}
+
             {!isDispensado && (
               <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded">
                 <button
@@ -147,16 +151,6 @@ const Mensagem: React.FC<MensagemProps> = ({
                 >
                   Dispensar
                 </button>
-              </div>
-            )}
-
-            {isDispensado && (
-              <div className="absolute top-0 right-0 p-1">
-                <img
-                  src="/Icons/Lock.svg"
-                  alt="Bloqueado"
-                  className="w-4 h-4 opacity-60"
-                />
               </div>
             )}
           </div>
