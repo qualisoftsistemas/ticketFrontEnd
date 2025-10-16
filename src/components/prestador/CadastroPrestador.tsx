@@ -103,22 +103,8 @@ export default function CadastroPrestador({
           )}
 
           {/* Foto */}
-          <div className="flex flex-col items-center justify-center ">
-            <InputFile
-              multiple={false}
-              accept="image/*"
-              label="Selecionar Foto"
-              onUpload={(files) => {
-                const uploaded = files.slice(0, 1);
-                setUploadedFiles(uploaded);
-                if (uploaded[0]?.id) {
-                  setFotoId(uploaded[0].id);
-                }
-              }}
-            />
-
-            <div className="flex flex-wrap gap-2 mt-2">
-              {uploadedFiles.length > 0
+           <div className="flex flex-wrap gap-2 mt-2">
+               {uploadedFiles.length > 0
                 ? uploadedFiles.map((file) => (
                     <div
                       key={file.id}
@@ -170,7 +156,6 @@ export default function CadastroPrestador({
                     </div>
                   )}
             </div>
-          </div>
 
           <div className="flex justify-end gap-3 w-full">
             <Button variant="confirm" type="submit">
