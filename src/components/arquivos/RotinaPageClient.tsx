@@ -124,10 +124,16 @@ export default function RotinasPage() {
         const key = `${rotina.id}-${mes}-${ano}`;
         const upload = uploadsMap.get(key);
         if (!upload || !upload.arquivos) return "-";
-        const firstFile = upload.arquivos[0];
+        const firstFile = upload.arquivos[0] ?? null;
         return (
           <span className="flex gap-2">
-            <span>{firstFile.name}</span>
+            {firstFile ? (
+              <span>
+                {firstFile.name}
+              </span>
+            ) : (
+              <span>-</span>
+            )}
             {upload.arquivos.length > 1 && (
               <span className="text-[var(--secondary)] ">
                 + {upload.arquivos.length - 1}
