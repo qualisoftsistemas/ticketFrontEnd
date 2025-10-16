@@ -164,7 +164,7 @@ const ModalDetalhes = ({
           </div>
 
           {/* Informações principais */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-[var(--extra)] rounded-lg">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-600">
                 Empresa
@@ -185,7 +185,7 @@ const ModalDetalhes = ({
           </div>
 
           {/* Status */}
-          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+          <div className="flex items-center gap-3 p-4 bg-[var(--extra)] rounded-lg">
             <label className="text-sm font-medium text-gray-600">Status:</label>
             <Badge
               label={modalData.status}
@@ -218,7 +218,7 @@ const ModalDetalhes = ({
                 return (
                   <div
                     key={arquivo.id}
-                    className="flex items-center text-[var(--primary)] justify-between p-4 border border-gray-200  rounded-lg hover:border-gray-300 transition-colors bg-white"
+                    className="flex items-center text-[var(--primary)] justify-between p-4 border border-gray-200  rounded-lg hover:border-gray-300 transition-colors bg-[var(--extra)]"
                   >
                     <div className="flex items-center gap-3 flex-1 min-w-0">
                       {getFileIcon(arquivo.name)}

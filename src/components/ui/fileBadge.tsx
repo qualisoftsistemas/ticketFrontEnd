@@ -5,16 +5,24 @@ interface FileBadgeProps {
   fileIcon: React.ReactNode;
   file: UploadedFile;
   onClick?: () => void;
+  className?: string;
 }
 
-const FileBadge: React.FC<FileBadgeProps> = ({ fileIcon, file, onClick }) => {
+const FileBadge: React.FC<FileBadgeProps> = ({
+  fileIcon,
+  file,
+  onClick,
+  className,
+}) => {
   const isImage =
     file.mimeType?.split("/")[0] === "image" ||
     file.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i);
 
- 
   return (
-    <div onClick={onClick} className={onClick ? "cursor-pointer" : ""}>
+    <div
+      onClick={onClick}
+      className={`${onClick ? "cursor-pointer" : ""} ${className}`}
+    >
       {isImage && file.url ? (
         <div className="w-22 h-22 rounded-lg overflow-hidden border border-gray-300">
           <img

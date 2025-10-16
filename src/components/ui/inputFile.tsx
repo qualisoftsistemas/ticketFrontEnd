@@ -8,6 +8,7 @@ export type UploadedFile = {
   nome?: string;
   extension?: string;
   mimeType?: string;
+  desconsiderado?: number;
 };
 
 type InputFileProps = {

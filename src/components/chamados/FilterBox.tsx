@@ -97,15 +97,15 @@ const FilterBox = ({ onFilterChange, loading, statusQtde = {} }: Props) => {
       `}
             onClick={() => handleClick(status)}
           >
-            <div className="flex  items-center justify-between gap-2">
-              <div className="flex items-center justify-center gap-2">
+            <div className="flex flex-wrap justify-center items-center md:justify-between gap-1">
+              <div className="flex flex-wrap items-center justify-center gap-1">
                 <span className="text-lg">{config.icon}</span>
                 <span className="text-xs md:text-sm whitespace-nowrap">
                   {config.label}
                 </span>
               </div>
 
-              <span className="text-xs font-semibold opacity-80">{qtde}</span>  
+              <span className="text-xs font-bold">{qtde}</span>
             </div>
           </button>
         );
