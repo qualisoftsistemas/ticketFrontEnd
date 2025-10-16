@@ -207,7 +207,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       className={`fixed top-0 left-0 h-screen w-64 bg-[var(--primary)] text-[var(--primary-foreground)] flex flex-col z-50 transform transition-transform duration-300
     ${isOpen ? "translate-x-0" : "-translate-x-full"}  `}
     >
-      <div className=" mt-20 ">
+      <div className="mt-20">
         {role === "Operador" ||
           (role === "Master" && (
             <h2 className="mx-auto mb-2 font-bold text-center">
@@ -230,7 +230,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <img src="/Icons/Bell.svg" alt="bell" className="w-6 h-6" />
           </Link>
         </div>
-        <div>
+        <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
             <p className="font-bold">{user.nome}</p>

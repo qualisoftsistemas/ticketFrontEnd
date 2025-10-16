@@ -76,7 +76,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="fixed flex justify-center items-center w-full bg-[var(--secondary)] text-[var(--secondary-foreground)] z-50">
-      <div className="flex items-center justify-center border-r-2 min-w-44 py-3 border-[var(--secondary-foreground)]">
+      <div className="flex items-center justify-center border-r-2 min-w-24 md:min-w-44 py-3 border-[var(--secondary-foreground)]">
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (
             <img
@@ -104,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({
                   alt="empresa"
                   className="w-8 h-8"
                 />
-                <div>
+                <div className="text-sm sm:text-base">
                   <h1 className="font-bold">
                     {empresaSelecionada ? empresaSelecionada.nome : "Empresa"}
                   </h1>
@@ -115,12 +115,12 @@ const Header: React.FC<HeaderProps> = ({
                 {open ? (
                   <Icon
                     icon="/Icons/ArrowUp.svg"
-                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                    className="w-6 h-6 sm:w-4 sm:h-4 sm:ml-2 bg-[var(--secondary-foreground)]"
                   />
                 ) : (
                   <Icon
                     icon="/Icons/ArrowDown.svg"
-                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                    className="w-6 h-6 sm:w-4 sm:h-4 sm:ml-2 bg-[var(--secondary-foreground)]"
                   />
                 )}
               </div>
@@ -147,7 +147,7 @@ const Header: React.FC<HeaderProps> = ({
           </DropdownMenu>
         )}
         {role !== "Sistema" && role !== "Admin" && role !== "Funcionario" && (
-          <div className="flex gap-2">
+          <div className="flex items-center gap-2">
             <img
               src="/Icons/BuildingFill.svg"
               alt="empresa"
@@ -158,7 +158,7 @@ const Header: React.FC<HeaderProps> = ({
               <DropdownMenuTrigger asChild>
                 <div className="flex gap-2 items-center cursor-pointer">
                   <div>
-                    <h1 className="font-bold">
+                    <h1 className="font-bold text-sm sm:text-base">
                       {conglomeradoSelecionado
                         ? `${conglomeradoSelecionado.nome} - ${
                             empresaSelecionada?.nome ?? "Selecione a empresa"
@@ -168,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({
                   </div>
                   <Icon
                     icon={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
-                    className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
+                    className="w-6 h-6 sm:w-4 sm:h-4 ml-2 bg-[var(--secondary-foreground)]"
                   />
                 </div>
               </DropdownMenuTrigger>
