@@ -10,6 +10,7 @@ import { useUserRole } from "@/hooks/useUserRole";
 import Select from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
 import { useConglomeradoStore } from "@/store/conglomeradoStore";
+import { getStatusColor } from "./ModalDetalhes";
 
 import ModalCadastroDice from "./ModalCadastroDICE";
 import Modal from "../ui/modal";
@@ -81,7 +82,7 @@ export default function RotinasPage() {
 
   const columns: Column<Rotina>[] = [
     {
-      header: "Ver",  
+      header: "Ver",
       key: "visualizar" as keyof Rotina,
       render: () => (
         <div className="flex justify-center">
@@ -104,15 +105,15 @@ export default function RotinasPage() {
       render: (rotina: Rotina) => {
         const key = `${rotina.id}-${mes}-${ano}`;
         const upload = uploadsMap.get(key);
+
+        const status = upload ? upload.status.toLowerCase() : "pendente";
+        const colorClasses = getStatusColor(status);
+
         return (
           <span
-            className={`px-2 py-1 rounded flex items-center justify-center ${
-              upload
-                ? "bg-green-100 text-green-700"
-                : "bg-yellow-100 text-yellow-700"
-            }`}
+            className={`px-2 py-1 rounded flex items-center justify-center border ${colorClasses}`}
           >
-            {upload ? upload.status : "Pendente"}
+            {upload?.status}
           </span>
         );
       },
@@ -127,13 +128,7 @@ export default function RotinasPage() {
         const firstFile = upload.arquivos[0] ?? null;
         return (
           <span className="flex gap-2">
-            {firstFile ? (
-              <span>
-                {firstFile.name}
-              </span>
-            ) : (
-              <span>-</span>
-            )}
+            {firstFile ? <span>{firstFile.name}</span> : <span>-</span>}
             {upload.arquivos.length > 1 && (
               <span className="text-[var(--secondary)] ">
                 + {upload.arquivos.length - 1}

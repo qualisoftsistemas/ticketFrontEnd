@@ -6,7 +6,7 @@ import { Arquivo, Upload } from "@/types/Arquivo";
 import { Button } from "../ui/button";
 import Badge from "../ui/badge";
 import { API_BASE_URL } from "@/service/api";
-import {downloadAnexo} from "@/utils/downloadAnexo";
+import { downloadAnexo } from "@/utils/downloadAnexo";
 
 import {
   Download,
@@ -31,12 +31,13 @@ interface ModalDataProps {
   onClose: () => void;
 }
 
-const getStatusColor = (status: string) => {
+export const getStatusColor = (status: string) => {
   const colors: Record<string, string> = {
     aprovado: "text-green-600 bg-green-50 border-green-200",
     rejeitado: "text-red-600 bg-red-50 border-red-200",
     pendente: "text-yellow-600 bg-yellow-50 border-yellow-200",
     processando: "text-blue-600 bg-blue-50 border-blue-200",
+    dispensado: "text-gray-600 bg-gray-50 border-gray-200",
   };
   return colors[status] || "text-gray-600 bg-gray-50 border-gray-200";
 };

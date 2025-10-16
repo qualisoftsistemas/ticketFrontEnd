@@ -240,56 +240,57 @@ export default function CadastroFuncionario({
             />
 
             <div className="flex flex-wrap gap-2 mt-2">
-              <div className="flex flex-wrap gap-2 mt-2">
-                {uploadedFiles.length > 0
-                  ? uploadedFiles.map((file) => (
-                      <div
-                        key={file.id}
-                        className="relative group w-20 h-20 rounded overflow-hidden shadow"
-                      >
-                        <img
-                          src={file.url}
-                          alt={file.nome}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => {
-                              setUploadedFiles([]);
-                              setFotoId(null);
-                            }}
-                          >
-                            Remover
-                          </Button>
-                        </div>
+              {uploadedFiles.length > 0
+                ? uploadedFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="relative group w-20 h-20 rounded overflow-hidden shadow"
+                    >
+                      <img
+                        src={file.url}
+                        alt={file.nome}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setUploadedFiles([]);
+                            setFotoId(null);
+                          }}
+                        >
+                          Remover
+                        </Button>
                       </div>
-                    ))
-                  : fotoAtual && (
-                      <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
-                        <img
-                          src={fotoAtual}
-                          alt="Foto atual"
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center">
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => {
-                              setFotoAtual(null); // aqui substituímos a foto antiga
-                              setFotoId(null);
-                            }}
-                          >
-                            Remover
-                          </Button>
-                        </div>
+                    </div>
+                  ))
+                : // Caso tenha foto já salva
+                  initialData?.foto?.url && (
+                    <div className="relative group w-20 h-20 rounded overflow-hidden shadow">
+                      <img
+                        src={initialData.foto.url}
+                        alt="Foto atual"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="text-xs px-2 py-1"
+                          onClick={() => {
+                            setFotoId(null);
+                            setUploadedFiles([]);
+                          }}
+                        >
+                          Remover
+                        </Button>
                       </div>
-                    )}
-              </div>
+                    </div>
+                  )}
             </div>
           </div>
 
