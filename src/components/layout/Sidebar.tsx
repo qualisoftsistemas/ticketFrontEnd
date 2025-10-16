@@ -137,7 +137,14 @@ const Sidebar: React.FC<SidebarProps> = ({
     { label: "DICE", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
   ];
 
-  const adminLinks: NavItem[] = [...links];
+  const adminLinks: NavItem[] = [
+    {
+      label: "Funcionários",
+      href: "/funcionario",
+      icon: "/Icons/Employee.svg",
+    },
+    ...links,
+  ];
 
   // 🟩 Filtra Empresa/Admin dependendo do conglomeradoSelecionado
   const masterClienteItems: NavItem[] = [
@@ -145,10 +152,6 @@ const Sidebar: React.FC<SidebarProps> = ({
       ? [
           { label: "Empresa", href: "/empresa" },
           { label: "Admin", href: "/admin" },
-          {
-            label: "Funcionários",
-            href: "/funcionario",
-          },
         ]
       : []),
     { label: "Conglomerado", href: "/conglomerado" },

@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import Select, { SelectOption } from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
+import Modal from "../ui/modal";
 
 const SelectEmpresa: React.FC = () => {
   const router = useRouter();
@@ -40,34 +41,7 @@ const SelectEmpresa: React.FC = () => {
   };
 
   return (
-    <form
-      className="max-w-lg w-full mx-auto rounded-lg bg-[var(--primary)]"
-      onSubmit={handleSelectEmpresa}
-    >
-      <div className="bg-[var(--secondary)] p-3 rounded-t-md">
-        <h1 className="text-center text-2xl font-bold text-[var(--secondary-foreground)]">
-          Seleção de Empresa
-        </h1>
-      </div>
-      <div className="p-8 flex flex-col gap-4 items-center">
-        <div className="my-8">
-          <Select
-            label="Empresa"
-            placeholder="Selecione a empresa"
-            options={empresas.map((e) => ({ id: e.id, label: e.nome }))}
-            selectedOption={selectedEmpresa}
-            onSelect={(option) => setSelectedEmpresa(option)}
-          />
-        </div>
-        <Button
-          type="submit"
-          variant={"default"}
-          disabled={loading || !selectedEmpresa}
-        >
-          {loading ? "Entrando..." : "Entrar"}
-        </Button>
-      </div>
-    </form>
+    Modal
   );
 };
 

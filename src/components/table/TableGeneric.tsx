@@ -68,24 +68,26 @@ export default function TableGeneric<T>({
             ))}
           </tbody>
         </table>
-      ) : data.length === 0 ? (
-        <Empty className="my-4">
-          <EmptyHeader>
-            <EmptyMedia variant="icon">
-              <Icon
-                icon="/Icons/Warning.svg"
-                className="w-24 h-24 bg-[var(--primary-foreground)]"
-              />
-            </EmptyMedia>
-            <EmptyTitle>Nenhum registro encontrado</EmptyTitle>
-          </EmptyHeader>
-          <EmptyContent>
-            <EmptyDescription>
-              Não há dados para exibir com os filtros atuais.
-            </EmptyDescription>
-          </EmptyContent>
-        </Empty>
-      ) : (
+      )
+      //  : data.length === 0 ? (
+      //   <Empty className="my-4">
+      //     <EmptyHeader>
+      //       <EmptyMedia variant="icon">
+      //         <Icon
+      //           icon="/Icons/Warning.svg"
+      //           className="w-24 h-24 bg-[var(--primary-foreground)]"
+      //         />
+      //       </EmptyMedia>
+      //       <EmptyTitle>Nenhum registro encontrado</EmptyTitle>
+      //     </EmptyHeader>
+      //     <EmptyContent>
+      //       <EmptyDescription>
+      //         Não há dados para exibir com os filtros atuais.
+      //       </EmptyDescription>
+      //     </EmptyContent>
+      //   </Empty>
+      // ) 
+      : (
         <table className="w-full min-w-full border border-[var(--secondary-foreground)]">
           <thead className="bg-[var(--secondary)]">
             <tr>
