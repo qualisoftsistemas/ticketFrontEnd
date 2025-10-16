@@ -157,6 +157,7 @@ export default function CadastroPrestador({
         onConfirm={() => {}}
         setId={(id) => {
           setFotoId(id);
+          // Assim que enviar uma nova, remove a antiga da tela
           setFotoUrl(null);
         }}
       />

@@ -14,6 +14,7 @@ import Select, { SelectOption } from "../ui/select";
 
 import { SelectsData } from "./CadastroChamado";
 import apiFetchClient from "@/service/api";
+import Icon from "../ui/icon";
 
 export default function ChamadoPageClient() {
   const router = useRouter();
@@ -103,7 +104,16 @@ export default function ChamadoPageClient() {
   }));
 
   const columns: Column<Chamado>[] = [
-    { header: "Cód", key: "id" },
+    {
+      header: "Cód",
+      key: "id",
+      render: (chamado) => (
+        <div   className="flex items-center gap-2">
+          <Icon icon="/Icons/Eye.svg" className="w-5 h-5 bg-white" />
+          <span>{chamado.id}</span>
+        </div>
+      ),
+    },
     { header: "Assunto", key: "assunto" },
     {
       header: "Empresa",

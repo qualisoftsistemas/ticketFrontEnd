@@ -15,6 +15,7 @@ import { MensagemType } from "./Mensagem";
 import { useRouter } from "next/navigation";
 import ModalFinalizarChamado from "./ModalFinalizarChamado";
 import ModalAvaliacao from "./ModalAvaliacao";
+import { Button } from "../ui/button";
 
 export interface VisualizarChamadoProps {
   chamado: ChamadoApiResponse | null;
@@ -196,6 +197,7 @@ const VisualizarChamado = ({ chamado }: VisualizarChamadoProps) => {
 
   return (
     <div className="bg-[var(--primary)] p-6 rounded-lg space-y-4">
+      <Button onClick={() => router.back()}>Voltar</Button>
       <div className="flex flex-wrap   items-center justify-center md:justify-between gap-2">
         <div className="flex items-center gap-4">
           <h2 className="text-2xl font-semibold text-[var(--extra)]">

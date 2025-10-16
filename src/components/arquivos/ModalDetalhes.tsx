@@ -6,6 +6,8 @@ import { Arquivo, Upload } from "@/types/Arquivo";
 import { Button } from "../ui/button";
 import Badge from "../ui/badge";
 import { API_BASE_URL } from "@/service/api";
+import {downloadAnexo} from "@/utils/downloadAnexo";
+
 import {
   Download,
   Eye,
@@ -176,7 +178,9 @@ const ModalDetalhes = ({
               <label className="text-sm font-medium text-gray-600">
                 Usuário
               </label>
-              <p className="font-medium text-[var(--primary)]">{modalData.user.nome}</p>
+              <p className="font-medium text-[var(--primary)]">
+                {modalData.user.nome}
+              </p>
             </div>
           </div>
 
@@ -251,7 +255,7 @@ const ModalDetalhes = ({
 
                       <Button
                         size="sm"
-                        onClick={() => handleDownload(arquivo)}
+                        onClick={() => downloadAnexo(arquivo)}
                         disabled={downloadingFile === arquivo.id}
                         className="flex items-center gap-2"
                       >
