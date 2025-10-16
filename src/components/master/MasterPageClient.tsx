@@ -99,7 +99,22 @@ export default function MasterPageClient() {
 
   const columns: Column<Master>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (master: Master) => (
+        <div className="flex items-center gap-2">
+          {master.foto && (
+            <img
+              src={String(master.foto.url)}
+              alt={master.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{master.nome}</span>
+        </div>
+      ),
+    },
     {
       header: "Prestador",
       key: "prestador_id",

@@ -108,7 +108,22 @@ export default function FuncionarioPageClient() {
 
   const columns: Column<Funcionario>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (funcionario: Funcionario) => (
+        <div className="flex items-center gap-2">
+          {funcionario.foto && (
+            <img
+              src={String(funcionario.foto.url)}
+              alt={funcionario.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{funcionario.nome}</span>
+        </div>
+      ),
+    },
     {
       header: "Ações",
       key: "actions" as keyof Funcionario,

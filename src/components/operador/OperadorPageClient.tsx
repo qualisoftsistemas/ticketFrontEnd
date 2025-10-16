@@ -133,7 +133,22 @@ export default function OperadorPageClient() {
 
   const columns: Column<Operador>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (operador: Operador) => (
+        <div className="flex items-center gap-2">
+          {operador.foto && (
+            <img
+              src={String(operador.foto.url)}
+              alt={operador.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{operador.nome}</span>
+        </div>
+      ),
+    },
     {
       header: "Ações",
       key: "actions" as keyof Operador,

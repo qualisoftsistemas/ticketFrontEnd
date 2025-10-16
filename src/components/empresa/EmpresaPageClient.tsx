@@ -105,7 +105,22 @@ export default function EmpresaPageClient() {
 
   const columns: Column<Empresa>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (empresa: Empresa) => (
+        <div className="flex items-center gap-2">
+          {empresa.foto && (
+            <img
+              src={String(empresa.foto.url)}
+              alt={empresa.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{empresa.nome}</span>
+        </div>
+      ),
+    },
     {
       header: "Ações",
       key: "actions" as keyof Empresa,

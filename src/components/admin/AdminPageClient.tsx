@@ -104,7 +104,23 @@ export default function AdminPageClient() {
 
   const columns: Column<Admin>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (admin: Admin) => (
+        <div className="flex items-center gap-2">
+          {admin.foto && (
+            <img
+              src={String(admin.foto.url)}
+              alt={admin.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{admin.nome}</span>
+        </div>
+      ),
+    },
+
     {
       header: "Ações",
       key: "actions" as keyof Admin,

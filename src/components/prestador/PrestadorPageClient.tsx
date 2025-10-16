@@ -101,7 +101,22 @@ export default function PrestadorPageClient() {
 
   const columns: Column<Prestador>[] = [
     { header: "ID", key: "id" },
-    { header: "Nome", key: "nome" },
+    {
+      header: "Nome",
+      key: "nome",
+      render: (prestador: Prestador) => (
+        <div className="flex items-center gap-2">
+          {prestador.foto && (
+            <img
+              src={String(prestador.foto.url)}
+              alt={prestador.nome}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          )}
+          <span>{prestador.nome}</span>
+        </div>
+      ),
+    },
     {
       header: "Ações",
       key: "actions" as keyof Prestador,
