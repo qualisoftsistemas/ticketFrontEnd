@@ -193,9 +193,11 @@ const Header: React.FC<HeaderProps> = ({
                         className="cursor-pointer"
                         onClick={() => setEmpresaSelecionadaAndReload(empresa)}
                       >
-                        <Avatar>
-                          <AvatarImage src={empresa.foto?.url} />
-                        </Avatar>{" "}
+                        <img
+                          src={String(empresa.foto?.url)}
+                          alt={empresa.nome}
+                          className="w-6 h-6 rounded-full object-cover"
+                        />
                         <span>{empresa.nome}</span>
                       </DropdownMenuItem>
                     ))}
@@ -225,7 +227,10 @@ const Header: React.FC<HeaderProps> = ({
                 <Avatar>
                   <AvatarImage src={user.foto?.url} />
                   <AvatarFallback>
-                    <Icon icon="/Icons/UserCircle.svg" className="w-8 h-8 bg-[var(--secondary-foreground)]" />
+                    <Icon
+                      icon="/Icons/UserCircle.svg"
+                      className="w-8 h-8 bg-[var(--secondary-foreground)]"
+                    />
                   </AvatarFallback>{" "}
                 </Avatar>
                 <h1 className="font-bold">{user.nome}</h1>
