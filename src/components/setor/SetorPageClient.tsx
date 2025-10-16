@@ -104,7 +104,7 @@ export default function SetorPageClient() {
   };
 
   const columns: Column<Setor>[] = [
-    { header: "ID", key: "id" },
+    { header: "ID", key: "incremental" },
     { header: "Nome", key: "nome" },
     {
       header: "Ações",

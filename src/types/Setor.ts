@@ -4,6 +4,7 @@ export interface Setor {
   id: number;
   nome: string;
   ativo: number;
+  incremental: number;
 }
 
 export interface SetorApiResponse {

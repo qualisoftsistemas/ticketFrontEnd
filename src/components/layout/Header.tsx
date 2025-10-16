@@ -193,6 +193,9 @@ const Header: React.FC<HeaderProps> = ({
                         className="cursor-pointer"
                         onClick={() => setEmpresaSelecionadaAndReload(empresa)}
                       >
+                        <Avatar>
+                          <AvatarImage src={empresa.foto?.url} />
+                        </Avatar>{" "}
                         <span>{empresa.nome}</span>
                       </DropdownMenuItem>
                     ))}
@@ -221,7 +224,9 @@ const Header: React.FC<HeaderProps> = ({
               <div className="flex items-center gap-2 cursor-pointer">
                 <Avatar>
                   <AvatarImage src={user.foto?.url} />
-                  <AvatarFallback>{user.nome[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    <Icon icon="/Icons/UserCircle.svg" className="w-8 h-8 bg-[var(--secondary-foreground)]" />
+                  </AvatarFallback>{" "}
                 </Avatar>
                 <h1 className="font-bold">{user.nome}</h1>
                 <Icon

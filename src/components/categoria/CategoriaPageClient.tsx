@@ -105,7 +105,7 @@ export default function CategoriaPageClient() {
   };
 
   const columns: Column<Categoria>[] = [
-    { header: "ID", key: "id" },
+    { header: "ID", key: "incremental" },
     { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
     { header: "Nome", key: "nome" },
     {

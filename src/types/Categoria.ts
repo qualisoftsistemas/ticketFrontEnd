@@ -5,6 +5,7 @@ export interface Categoria {
   nome: string;
   ativo: number;
   setor_id: number;
+  incremental: number;
   setor: {
     id: number;
     nome: string;
