@@ -179,14 +179,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const sistemaLinks: NavItem[] = [
-    {
-      label: "Sistema",
-      icon: "/Icons/Master.svg",
-      subItems: [
-        { label: "Prestadores", href: "/prestador" },
-        { label: "Master", href: "/master" },
-      ],
-    },
+    { label: "Prestadores", href: "/prestador", icon: "/Icons/Buildings.svg" },
+    { label: "Master", href: "/master", icon: "/Icons/Master.svg" },
   ];
 
   const navItems: NavItem[] = (() => {
