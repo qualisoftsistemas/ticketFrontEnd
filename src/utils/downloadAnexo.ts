@@ -16,12 +16,15 @@ export const downloadAnexo = async (anexo: Anexo) => {
     // }
 
     if (anexo.id) {
-      const res = await fetch(`${API_BASE_URL}/arquivo/download/${anexo.arquivo?.id}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await fetch(
+        `${API_BASE_URL}/arquivo/download/${anexo.arquivo?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (!res.ok) throw new Error("Falha ao baixar o arquivo");
 

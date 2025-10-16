@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import Tiptap from "../ui/richText";
@@ -7,6 +7,7 @@ import FileBadge from "../ui/fileBadge";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "../ui/button";
+import { X } from "lucide-react";
 
 const schema = z.object({
   mensagem: z.string().min(1, "Mensagem obrigatória"),
@@ -29,6 +30,8 @@ const RespostaChamado = ({
     handleSubmit,
     control,
     reset,
+    getValues,
+    setValue,
     formState: { errors },
   } = useForm<RespostaFormData>({
     resolver: zodResolver(schema),
@@ -39,10 +42,17 @@ const RespostaChamado = ({
   });
 
   const onSubmit = (data: RespostaFormData) => {
-    console.log(data.mensagem);
     handleResponder(data, uploadedFiles);
     reset();
     setUploadedFiles([]);
+  };
+
+  const handleRemoveFile = (fileId: number) => {
+    setUploadedFiles((prev) => prev.filter((f) => f.id !== fileId));
+
+    const currentIds = getValues("arquivos_ids") || [];
+    const newIds = currentIds.filter((id) => id !== fileId);
+    setValue("arquivos_ids", newIds, { shouldValidate: true });
   };
 
   return (
@@ -51,6 +61,7 @@ const RespostaChamado = ({
       className="flex flex-col gap-4 mt-4"
       onSubmit={handleSubmit(onSubmit)}
     >
+      {/* Campo de mensagem */}
       <Controller
         name="mensagem"
         control={control}
@@ -67,6 +78,7 @@ const RespostaChamado = ({
         </p>
       )}
 
+      {/* Upload de arquivos */}
       <Controller
         name="arquivos_ids"
         control={control}
@@ -74,37 +86,48 @@ const RespostaChamado = ({
           <InputFile
             multiple
             onUpload={(uploaded) => {
-              field.onChange([
-                ...(field.value || []),
-                ...uploaded.map((u) => u.id),
-              ]);
+              const newIds = uploaded.map((u) => u.id);
+              field.onChange([...(field.value || []), ...newIds]);
               setUploadedFiles((prev) => [...prev, ...uploaded]);
             }}
           />
         )}
       />
 
+      {/* Lista de anexos com overlay */}
       <div className="flex flex-wrap gap-2">
         {uploadedFiles.map((file) => (
-          <FileBadge
-            key={file.id}
-            file={file}
-            fileIcon={
-              file.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
-                <img
-                  src="/icons/Eye.svg"
-                  alt="Eye"
-                  className="w-6 h-6 object-contain"
-                />
-              ) : (
-                <img
-                  src="/icons/Download.svg"
-                  alt="Download"
-                  className="w-6 h-6 object-contain"
-                />
-              )
-            }
-          />
+          <div key={file.id} className="relative group">
+            <FileBadge
+              file={file}
+              fileIcon={
+                file.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
+                  <img
+                    src="/Icons/Image.svg"
+                    alt="Preview"
+                    className="w-5 h-5"
+                  />
+                ) : (
+                  <img
+                    src="/Icons/File.svg"
+                    alt="Arquivo"
+                    className="w-5 h-5"
+                  />
+                )
+              }
+            />
+
+            <button
+              type="button"
+              onClick={() => handleRemoveFile(file.id)}
+              className="absolute cursor-pointer top-0 right-0 bg-[var(--destructive)] text-white rounded-full p-1 
+                         opacity-0 group-hover:opacity-100 transition-opacity duration-200 
+                         translate-x-1/4 -translate-y-1/4 shadow-md"
+              title="Remover anexo"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         ))}
       </div>
 

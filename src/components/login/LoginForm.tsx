@@ -53,7 +53,7 @@ const LoginForm: React.FC = () => {
       }
 
       if (user.tipo === "ADMIN" || user.tipo === "FUNCIONÁRIO") {
-        router.push("/selecionar-empresa");
+        router.push("/chamados");
       } else if (user.tipo === "SISTEMA") {
         router.push("/prestador");
       } else {

@@ -172,13 +172,15 @@ export default function CadastroOperador({
                 </Button>
               </div>
             ) : (
-              <Button
-                variant="default"
-                type="button"
-                onClick={() => setOpenModalImage(true)}
-              >
-                Enviar Foto
-              </Button>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="default"
+                  type="button"
+                  onClick={() => setOpenModalImage(true)}
+                >
+                  Enviar Foto
+                </Button>
+              </div>
             )}
           </div>
 

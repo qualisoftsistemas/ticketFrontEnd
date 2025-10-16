@@ -72,7 +72,7 @@ const InfoChamado: React.FC<Props> = ({
             </div>
           )}
 
-          {!showRespostaInput && (role === "Operador" || role === "Master") && chamado.status !== "concluido" && (
+          { (role === "Operador" || role === "Master") && chamado.status !== "concluido" && (
             <div className="flex justify-center mt-4">
               <Button
                 type="button"
