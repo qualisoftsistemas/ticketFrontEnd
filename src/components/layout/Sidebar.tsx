@@ -160,18 +160,18 @@ const Sidebar: React.FC<SidebarProps> = ({
       icon: "/Icons/Master.svg",
       subItems: [
         {
-          label: "Clientes",
-          type: "section",
-          items: masterClienteItems,
-        },
-        {
-          label: "Cadastro",
+          label: "Meu Serviço",
           type: "section",
           items: [
             { label: "Setor", href: "/setor" },
             { label: "Categoria", href: "/categoria" },
             { label: "Operadores", href: "/operador" },
           ],
+        },
+        {
+          label: "Meus Clientes",
+          type: "section",
+          items: masterClienteItems,
         },
       ],
     },
@@ -213,7 +213,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className=" mt-20 ">
         {role === "Operador" ||
           (role === "Master" && (
-            <h2 className="mx-auto mb-4 font-bold text-center">
+            <h2 className="mx-auto mb-2 font-bold text-center">
               {user.prestador.nome ?? ""}
             </h2>
           ))}
