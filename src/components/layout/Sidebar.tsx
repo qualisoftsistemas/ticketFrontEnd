@@ -63,7 +63,7 @@ const DropdownNavItem: React.FC<DropdownNavItemProps> = ({ item }) => {
           <p>{item.label}</p>
         </div>
         <img
-          src={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
+          src={open ? "/icons/ArrowUp.svg" : "/icons/ArrowDown.svg"}
           alt="Dropdown Arrow"
           className="w-4 h-4"
         />
@@ -142,15 +142,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const links: NavItem[] = [
-    { label: "Ticket", href: "/chamados", icon: "/Icons/Message.svg" },
-    { label: "DICE", href: "/arquivos", icon: "/Icons/FileAnalytics.svg" },
+    { label: "Ticket", href: "/chamados", icon: "/icons/Message.svg" },
+    { label: "DICE", href: "/arquivos", icon: "/icons/FileAnalytics.svg" },
   ];
 
   const adminLinks: NavItem[] = [
     {
       label: "Funcionários",
       href: "/funcionario",
-      icon: "/Icons/Employee.svg",
+      icon: "/icons/Employee.svg",
     },
     ...links,
   ];
@@ -169,7 +169,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const masterLinks: NavItem[] = [
     {
       label: "Master",
-      icon: "/Icons/Master.svg",
+      icon: "/icons/Master.svg",
       subItems: [
         {
           label: "Meu Serviço",
@@ -191,8 +191,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const sistemaLinks: NavItem[] = [
-    { label: "Prestadores", href: "/prestador", icon: "/Icons/Buildings.svg" },
-    { label: "Master", href: "/master", icon: "/Icons/Master.svg" },
+    { label: "Prestadores", href: "/prestador", icon: "/icons/Buildings.svg" },
+    { label: "Master", href: "/master", icon: "/icons/Master.svg" },
   ];
 
   const navItems: NavItem[] = (() => {
@@ -233,15 +233,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className="mt-auto sm:hidden w-full py-2 px-2 flex flex-col gap-2 text-sm">
         <div className="w-full flex justify-center border-b border-[var(--primary-foreground)]/50 items-center gap-6 px-2 py-2">
           <Link href="/sobre">
-            <img src="/Icons/Settings.svg" alt="config" className="w-6 h-6" />
+            <img src="/icons/Settings.svg" alt="config" className="w-6 h-6" />
           </Link>
           <Link href="/notificacoes">
-            <img src="/Icons/Bell.svg" alt="bell" className="w-6 h-6" />
+            <img src="/icons/bell.svg" alt="bell" className="w-6 h-6" />
           </Link>
         </div>
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
+            <img src="/icons/UserCircle.svg" alt="user" className="w-8 h-8" />
             <p className="font-bold">{user?.nome}</p>
           </div>
           <button

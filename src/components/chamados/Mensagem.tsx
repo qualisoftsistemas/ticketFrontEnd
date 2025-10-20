@@ -118,7 +118,7 @@ const Mensagem: React.FC<MensagemProps> = ({
                   /(jpg|jpeg|png|gif|bmp|webp)$/i
                 ) ? (
                   <img
-                    src="/Icons/Eye.svg"
+                    src="/icons/Eye.svg"
                     alt="Eye"
                     className={`w-6 h-6 object-contain ${
                       isDispensado ? "opacity-40" : ""
@@ -126,7 +126,7 @@ const Mensagem: React.FC<MensagemProps> = ({
                   />
                 ) : (
                   <img
-                    src="/Icons/Download.svg"
+                    src="/icons/Download.svg"
                     alt="Download"
                     className={`w-6 h-6 object-contain ${
                       isDispensado ? "opacity-40" : ""

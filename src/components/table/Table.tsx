@@ -132,7 +132,7 @@ function Table<T extends Record<string, any>>({
             <Input
               icon={
                 <Image
-                  src="/Icons/Search.svg"
+                  src="/icons/search.svg"
                   alt="Search"
                   width={24}
                   height={24}

@@ -127,17 +127,17 @@ export default function AdminPageClient() {
       render: (admin: Admin) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(admin)}
           />
           <Icon
-            icon="/Icons/Trash.svg"
+            icon="/icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(admin.id)}
           />
           <Icon
-            icon={admin.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            icon={admin.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"}
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(admin)}
           />
@@ -147,11 +147,11 @@ export default function AdminPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
-    { icon: "/Icons/Trash.svg", label: "Excluir" },
-    { icon: "/Icons/Whatsapp.svg", label: "Whatsapp" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Trash.svg", label: "Excluir" },
+    { icon: "/icons/Whatsapp.svg", label: "Whatsapp" },
   ];
 
   if (loading && admins.length === 0)

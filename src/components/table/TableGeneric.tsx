@@ -66,7 +66,7 @@ export default function TableGeneric<T>({
       //     <EmptyHeader>
       //       <EmptyMedia variant="icon">
       //         <Icon
-      //           icon="/Icons/Warning.svg"
+      //           icon="/icons/Warning.svg"
       //           className="w-24 h-24 bg-[var(--primary-foreground)]"
       //         />
       //       </EmptyMedia>

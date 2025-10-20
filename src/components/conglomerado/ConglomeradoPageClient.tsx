@@ -118,18 +118,18 @@ export default function ConglomeradoPageClient() {
       render: (conglomerado: Conglomerado) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(conglomerado)}
           />
           <Icon
-            icon="/Icons/Trash.svg"
+            icon="/icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(conglomerado.id)}
           />
           <Icon
             icon={
-              conglomerado.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+              conglomerado.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"
             }
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(conglomerado)}
@@ -140,10 +140,10 @@ export default function ConglomeradoPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
-    { icon: "/Icons/Trash.svg", label: "Excluir" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Trash.svg", label: "Excluir" },
   ];
 
   if (loading && conglomerados.length === 0)

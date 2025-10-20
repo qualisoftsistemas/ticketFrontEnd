@@ -47,13 +47,13 @@ const InfoChamado: React.FC<Props> = ({
         <div className="space-y-2">
           <div className="flex items-center gap-2 bg-[var(--primary)] rounded">
             <span className="bg-[var(--secondary)] p-1 rounded-l">
-              <img src="/Icons/Whatsapp.svg" alt="Icone de Email" />
+              <img src="/icons/Whatsapp.svg" alt="Icone de Email" />
             </span>
             <p className="p-1">{chamado.operador?.whatsapp}</p>
           </div>
           <div className="flex items-center bg-[var(--primary)] rounded">
             <span className="bg-[var(--secondary)] p-1 rounded-l">
-              <img src="/Icons/Mail.svg" alt="Icone de Email" />
+              <img src="/icons/Mail.svg" alt="Icone de Email" />
             </span>
             <p className="p-1">{chamado.operador?.email}</p>
           </div>

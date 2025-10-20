@@ -112,23 +112,23 @@ export default function SetorPageClient() {
       render: (setor: Setor) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(setor)}
           />
           <Icon
-            icon={setor.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            icon={setor.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"}
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(setor)}
           />
 
           <Icon
-            icon="/Icons/Trash.svg"
+            icon="/icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(setor.id)}
           />
           <Icon
-            icon="/Icons/CategoryTag.svg"
+            icon="/icons/CategoryTag.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => console.log("Tag", setor)}
           />
@@ -138,11 +138,11 @@ export default function SetorPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
-    { icon: "/Icons/Trash.svg", label: "Excluir" },
-    { icon: "/Icons/CategoryTag.svg", label: "Categorias Relacionadas" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Trash.svg", label: "Excluir" },
+    { icon: "/icons/CategoryTag.svg", label: "Categorias Relacionadas" },
   ];
 
   if (loading && setores.length === 0)

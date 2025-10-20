@@ -80,7 +80,7 @@ export default function RotinasPage() {
       render: () => (
         <div className="flex justify-center">
           <Icon
-            icon="/Icons/Eye.svg"
+            icon="/icons/Eye.svg"
             className="w-5 h-5 cursor-pointer bg-[var(--primary-foreground)]"
           />
         </div>
@@ -140,7 +140,7 @@ export default function RotinasPage() {
               <div className="flex justify-start gap-4 py-1">
                 <Icon
                   icon={
-                    rotina.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+                    rotina.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"
                   }
                   className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
                   onClick={() => handleToggleAtivo(rotina)}

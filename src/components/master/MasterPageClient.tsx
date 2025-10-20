@@ -126,12 +126,12 @@ export default function MasterPageClient() {
       render: (master: Master) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(master)}
           />
           <Icon
-            icon={master.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            icon={master.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"}
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(master)}
           />
@@ -141,9 +141,9 @@ export default function MasterPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
   ];
 
   if (loading && masters.length === 0)

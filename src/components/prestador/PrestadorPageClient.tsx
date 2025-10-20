@@ -123,13 +123,13 @@ export default function PrestadorPageClient() {
       render: (prestador: Prestador) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(prestador)}
           />
           <Icon
             icon={
-              prestador.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"
+              prestador.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"
             }
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(prestador)}
@@ -140,9 +140,9 @@ export default function PrestadorPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
   ];
 
   if (loading && prestadores.length === 0)

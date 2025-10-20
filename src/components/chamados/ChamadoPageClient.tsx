@@ -111,7 +111,7 @@ export default function ChamadoPageClient() {
       key: "id",
       render: (chamado) => (
         <div className="flex items-center gap-2">
-          <Icon icon="/Icons/Eye.svg" className="w-5 h-5 bg-white" />
+          <Icon icon="/icons/Eye.svg" className="w-5 h-5 bg-white" />
           <span>{chamado.id}</span>
         </div>
       ),

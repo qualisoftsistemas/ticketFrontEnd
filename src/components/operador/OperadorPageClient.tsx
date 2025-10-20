@@ -155,22 +155,22 @@ export default function OperadorPageClient() {
       render: (operador: Operador) => (
         <div className="flex justify-start gap-4 py-1">
           <Icon
-            icon="/Icons/Edit.svg"
+            icon="/icons/Edit.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleEdit(operador)}
           />
           <Icon
-            icon="/Icons/Trash.svg"
+            icon="/icons/Trash.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleDeleteClick(operador.id)}
           />
           <Icon
-            icon="/Icons/SectorTree.svg"
+            icon="/icons/SectorTree.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleSelectSetores(operador)}
           />
           <Icon
-            icon={operador.ativo ? "/Icons/LightOn.svg" : "/Icons/LightOff.svg"}
+            icon={operador.ativo ? "/icons/LightOn.svg" : "/icons/LightOff.svg"}
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
             onClick={() => handleToggleAtivo(operador)}
           />
@@ -180,11 +180,11 @@ export default function OperadorPageClient() {
   ];
 
   const legendas = [
-    { icon: "/Icons/Edit.svg", label: "Editar" },
-    { icon: "/Icons/LightOff.svg", label: "Ativar (Desativado)" },
-    { icon: "/Icons/LightOn.svg", label: "Desativar (Ativado)" },
-    { icon: "/Icons/Trash.svg", label: "Excluir" },
-    { icon: "/Icons/SectorTree.svg", label: "Atribuir Setores" },
+    { icon: "/icons/Edit.svg", label: "Editar" },
+    { icon: "/icons/LightOff.svg", label: "Ativar (Desativado)" },
+    { icon: "/icons/LightOn.svg", label: "Desativar (Ativado)" },
+    { icon: "/icons/Trash.svg", label: "Excluir" },
+    { icon: "/icons/SectorTree.svg", label: "Atribuir Setores" },
   ];
 
   if (loading && operadores.length === 0)

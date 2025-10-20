@@ -103,13 +103,13 @@ const RespostaChamado = ({
               fileIcon={
                 file.extension?.match(/(jpg|jpeg|png|gif|bmp|webp)$/i) ? (
                   <img
-                    src="/Icons/Image.svg"
+                    src="/icons/Image.svg"
                     alt="Preview"
                     className="w-5 h-5"
                   />
                 ) : (
                   <img
-                    src="/Icons/File.svg"
+                    src="/icons/File.svg"
                     alt="Arquivo"
                     className="w-5 h-5"
                   />

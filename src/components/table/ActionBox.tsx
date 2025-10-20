@@ -15,19 +15,19 @@ const ActionBox: React.FC<Props> = ({
   return (
     <div className="flex gap-6 rounded-t-md px-4 py-1 bg-[var(--secondary)]">
       <img
-        src="/Icons/Filter.svg"
+        src="/icons/filter.svg"
         alt="Filtrar"
         className="w-5 h-5 cursor-pointer hover:scale-105"
         onClick={onToggleFilter}
       />
       <img
-        src="/Icons/FilePDF.svg"
+        src="/icons/FilePDF.svg"
         alt="Exportar PDF"
         className="w-5 h-5 cursor-pointer hover:scale-105"
         onClick={onExportPDF}
       />
       <img
-        src="/Icons/FileCSV.svg"
+        src="/icons/FileCSV.svg"
         alt="Exportar CSV"
         className="w-5 h-5 cursor-pointer hover:scale-105"
         onClick={onExportExcel}

@@ -85,13 +85,13 @@ const Header: React.FC<HeaderProps> = ({
         <button onClick={toggleSidebar} className="cursor-pointer">
           {isOpen ? (
             <img
-              src="/Icons/CloseSidebar.svg"
+              src="/icons/CloseSidebar.svg"
               alt="menu"
               className="w-10 h-10"
             />
           ) : (
             <img
-              src="/icons/OpenSidebar.svg"
+              src="/icons/openSidebar.svg"
               alt="menu"
               className="w-10 h-10"
             />
@@ -105,7 +105,7 @@ const Header: React.FC<HeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <div className="flex gap-2 items-center cursor-pointer">
                 <img
-                  src="/Icons/BuildingFill.svg"
+                  src="/icons/BuildingFill.svg"
                   alt="empresa"
                   className="w-8 h-8"
                 />
@@ -119,12 +119,12 @@ const Header: React.FC<HeaderProps> = ({
                 </div>
                 {open ? (
                   <Icon
-                    icon="/Icons/ArrowUp.svg"
+                    icon="/icons/ArrowUp.svg"
                     className="w-6 h-6 sm:w-4 sm:h-4 sm:ml-2 bg-[var(--secondary-foreground)]"
                   />
                 ) : (
                   <Icon
-                    icon="/Icons/ArrowDown.svg"
+                    icon="/icons/ArrowDown.svg"
                     className="w-6 h-6 sm:w-4 sm:h-4 sm:ml-2 bg-[var(--secondary-foreground)]"
                   />
                 )}
@@ -154,7 +154,7 @@ const Header: React.FC<HeaderProps> = ({
         {role !== "Sistema" && role !== "Admin" && role !== "Funcionario" && (
           <div className="flex items-center gap-2">
             <img
-              src="/Icons/BuildingFill.svg"
+              src="/icons/BuildingFill.svg"
               alt="empresa"
               className="w-8 h-8 cursor-pointer"
               onClick={() => router.push("/conglomerado")}
@@ -172,7 +172,7 @@ const Header: React.FC<HeaderProps> = ({
                     </h1>
                   </div>
                   <Icon
-                    icon={open ? "/Icons/ArrowUp.svg" : "/Icons/ArrowDown.svg"}
+                    icon={open ? "/icons/ArrowUp.svg" : "/icons/ArrowDown.svg"}
                     className="w-6 h-6 sm:w-4 sm:h-4 ml-2 bg-[var(--secondary-foreground)]"
                   />
                 </div>
@@ -208,14 +208,14 @@ const Header: React.FC<HeaderProps> = ({
 
         <div className="hidden md:flex items-center gap-6">
           <Link href="/sobre">
-            <img src="/Icons/Settings.svg" alt="config" className="w-6 h-6" />
+            <img src="/icons/Settings.svg" alt="config" className="w-6 h-6" />
           </Link>
           <Link href="/notificacoes">
-            <img src="/Icons/Bell.svg" alt="bell" className="w-6 h-6" />
+            <img src="/icons/bell.svg" alt="bell" className="w-6 h-6" />
           </Link>
           {role == "Master" && (
             <Button variant={"ghost"} onClick={handleShowSectorTree}>
-              <img src="/Icons/SectorTree.svg" alt="bell" className="w-6 h-6" />
+              <img src="/icons/SectorTree.svg" alt="bell" className="w-6 h-6" />
             </Button>
           )}
         </div>
@@ -228,14 +228,14 @@ const Header: React.FC<HeaderProps> = ({
                   <AvatarImage src={user?.foto?.url} />
                   <AvatarFallback>
                     <Icon
-                      icon="/Icons/UserCircle.svg"
+                      icon="/icons/UserCircle.svg"
                       className="w-8 h-8 bg-[var(--secondary-foreground)]"
                     />
                   </AvatarFallback>{" "}
                 </Avatar>
                 <h1 className="font-bold">{user?.nome}</h1>
                 <Icon
-                  icon="/Icons/ArrowDown.svg"
+                  icon="/icons/ArrowDown.svg"
                   className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"
                 />
               </div>
