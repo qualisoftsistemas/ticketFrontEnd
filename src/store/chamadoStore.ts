@@ -47,7 +47,7 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
   ) => {
     set({ loading: true, error: null });
     try {
-      let query = new URLSearchParams();
+      const query = new URLSearchParams();
       query.set("page", String(options.page ?? 1));
 
       if (options.assunto) query.set("assunto", options.assunto);
@@ -86,12 +86,14 @@ export const useChamadoStore = create<ChamadoState>((set, get) => ({
         statusQtde: response.status_counts || null,
         loading: false,
       });
-    } catch (err: any) {
-      console.error(err);
-      set({
-        error: err instanceof Error ? err.message : "Erro desconhecido",
-        loading: false,
-      });
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        set({ error: err.message || "Erro ao buscar admins", loading: false });
+      } else {
+        console.error(err);
+        set({ error: "Erro desconhecido", loading: false });
+      }
     }
   },
 

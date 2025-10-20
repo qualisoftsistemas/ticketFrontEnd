@@ -6,8 +6,7 @@ import { Column } from "@/components/table/TableGeneric";
 import { Categoria } from "@/types/Categoria";
 import ModalCadastroCategoria from "./CadastroCategoria";
 import ModalDeletar from "@/components/ui/modalDelete";
-import { Button } from "@/components/ui/button";
-import Table from "../table/Table";
+ import Table from "../table/Table";
 import Icon from "../ui/icon";
 
 export default function CategoriaPageClient() {

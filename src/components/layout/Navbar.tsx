@@ -5,6 +5,7 @@ import Header from "./Header";
 import { useUserRole } from "@/hooks/useUserRole";
 import TableSelectSetores from "../ui/tableSelect";
 import apiFetchClient from "@/service/api";
+import { UserLogin } from "@/types/UserLogin";
 
 interface NavbarProps {
   children: ReactNode;
@@ -15,7 +16,7 @@ const Navbar: React.FC<NavbarProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [showTableSetores, setShowTableSetores] = useState(false);
   const [masterId, setMasterId] = useState<number | null>(null);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<UserLogin | null>(null);
   const toggleSidebar = () => setIsOpen((prev) => !prev);
 
   useEffect(() => {

@@ -33,8 +33,7 @@ const InfoChamado: React.FC<Props> = ({
   handleResponder,
   handleReabrir,
   showReabertura,
-  showRespostaInput,
-  role,
+   role,
   handleFinalizar,
 }) => {
   if (!chamado) return null;

@@ -66,11 +66,10 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
         uploads: response.uploads || [],
         loading: false,
       });
-    } catch (error: any) {
-      set({
-        error: error.message || "Erro ao carregar rotinas.",
-        loading: false,
-      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao carregar rotinas.";
+      set({ error: message, loading: false });
     }
   },
 
@@ -83,11 +82,10 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
         data,
       });
       await get().fetchRotinas();
-    } catch (error: any) {
-      set({
-        error: error.message || "Erro ao enviar rotina.",
-        loading: false,
-      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao criar rotina.";
+      set({ error: message, loading: false });
     } finally {
       set({ loading: false });
     }
@@ -102,11 +100,10 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
         data,
       });
       await get().fetchRotinas();
-    } catch (error: any) {
-      set({
-        error: error.message || "Erro ao enviar rotina.",
-        loading: false,
-      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao enviar rotina.";
+      set({ error: message, loading: false });
     } finally {
       set({ loading: false });
     }
@@ -121,11 +118,10 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
         data,
       });
       await get().fetchRotinas();
-    } catch (error: any) {
-      set({
-        error: error.message || "Erro ao dispensar rotina.",
-        loading: false,
-      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao dispensar rotina.";
+      set({ error: message, loading: false });
     } finally {
       set({ loading: false });
     }
@@ -139,11 +135,10 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
         endpoint: `/rotina/toggle/${id}`,
       });
       await get().fetchRotinas();
-    } catch (error: any) {
-      set({
-        error: error.message || "Erro ao dispensar rotina.",
-        loading: false,
-      });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Erro ao alternar rotina.";
+      set({ error: message, loading: false });
     } finally {
       set({ loading: false });
     }
@@ -152,18 +147,21 @@ export const useRotinaStore = create<RotinaState>((set, get) => ({
   desconsiderarArquivo: async (id: number) => {
     set({ loading: true, error: null });
     try {
-      apiFetchClient({
+      await apiFetchClient({
         method: "PATCH",
         endpoint: `/arquivo/desconsiderar/${id}`,
       });
       showRequestToast("success", "Arquivo desconsiderado com sucesso!");
-      get().fetchRotinas();
-    } catch (error: any) {
-      showRequestToast("error", "Erro ao desconsiderar arquivo!");
-      set({
-        error: error.message || "Erro ao desconsiderar arquivo.",
-        loading: false,
-      });
+      await get().fetchRotinas();
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Erro ao desconsiderar arquivo.";
+      showRequestToast("error", message);
+      set({ error: message, loading: false });
+    } finally {
+      set({ loading: false });
     }
   },
 

@@ -73,6 +73,7 @@ const CadastroChamado = () => {
           console.log("saved", saved);
           if (saved) {
             try {
+              // eslint-disable-next-line
               const parsed = JSON.parse(saved) as any;
               const savedEmpresaId = parsed?.state?.empresaSelecionada?.id;
               if (savedEmpresaId) {

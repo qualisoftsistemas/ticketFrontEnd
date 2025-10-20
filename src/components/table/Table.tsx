@@ -29,17 +29,20 @@ interface TableProps<T> {
   onRowClick?: (row: T) => void;
   onSearchChange: (term: string) => void;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  // eslint-disable-next-line
   onApplyFilters?: (filters: Record<string, any>) => void;
   onClearFilters?: () => void;
   renderFilters?: (props: {
+    // eslint-disable-next-line
     filters: Record<string, any>;
+    // eslint-disable-next-line
     setFilters: React.Dispatch<React.SetStateAction<Record<string, any>>>;
     onApply: () => void;
     onClear: () => void;
   }) => React.ReactNode;
   legendasAcoes?: { icon: string; label: string }[];
 }
-
+// eslint-disable-next-line
 function Table<T extends Record<string, any>>({
   nomeCadastro = "Cadastro",
   columns,
@@ -59,8 +62,7 @@ function Table<T extends Record<string, any>>({
 }: TableProps<T>) {
   // Estado para mostrar/ocultar filtros
   const [showFilters, setShowFilters] = useState(false);
-
-  // Estado para os filtros aplicados
+  // eslint-disable-next-line
   const [filters, setFilters] = useState<Record<string, any>>({});
 
   const toggleFilters = () => {
@@ -90,6 +92,7 @@ function Table<T extends Record<string, any>>({
 
   const handleExportExcel = () => {
     const tableData = data.map((row) => {
+      // eslint-disable-next-line
       const obj: Record<string, any> = {};
       columns.forEach((col) => {
         obj[col.header] = col.render

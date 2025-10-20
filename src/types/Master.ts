@@ -16,6 +16,7 @@ export interface Master {
   setores: Setor[];
   foto_id?: number;
   foto?: Foto;
+  master: Master;
 }
 
 export interface MasterApiResponse {

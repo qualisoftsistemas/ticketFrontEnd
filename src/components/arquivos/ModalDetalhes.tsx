@@ -14,8 +14,7 @@ import {
   File,
   Image,
   FileText,
-  X,
-  ExternalLink,
+   ExternalLink,
   CheckCircle,
   XCircle,
   Clock,
@@ -84,8 +83,7 @@ const ModalDetalhes = ({
   open,
   onClose,
   modalData,
-  setModalData,
-}: ModalDataProps) => {
+ }: ModalDataProps) => {
   const [imageViewer, setImageViewer] = useState<{
     isOpen: boolean;
     imageUrl: string;

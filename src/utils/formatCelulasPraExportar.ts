@@ -1,6 +1,6 @@
 import React from "react";
 
-export const extractTextFromRender = (rendered: any): string => {
+export const extractTextFromRender = (rendered: unknown): string => {
   if (typeof rendered === "string" || typeof rendered === "number") {
     return String(rendered);
   }
@@ -18,7 +18,7 @@ export const extractTextFromRender = (rendered: any): string => {
 };
 
 // Garante formatação para valores simples, datas, etc.
-export const formatCellValue = (value: any): string => {
+export const formatCellValue = (value: unknown): string => {
   if (value === null || value === undefined) return "—";
   if (typeof value === "object") {
     // Se for objeto, tenta extrair propriedades comuns

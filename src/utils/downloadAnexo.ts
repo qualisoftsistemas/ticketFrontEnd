@@ -1,7 +1,8 @@
 import { Anexo } from "@/components/chamados/Mensagem";
 import { API_BASE_URL } from "@/service/api";
+import { Arquivo } from "@/types/Arquivo";
 
-export const downloadAnexo = async (anexo: Anexo) => {
+export const downloadAnexo = async (anexo: Anexo | Arquivo) => {
   if (!anexo.arquivo && !anexo.id) {
     throw new Error("Anexo inválido");
   }

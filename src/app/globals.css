@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+/* :root {
+   --primary: #222222;
+  --primary-foreground: #cacdcd;
+  --secondary: #eec50c;
+  --secondary-foreground: #352d23;
+  --destructive: #ac0709;
+  --foreground: #cacdcd;
+  --neutral: #cacdcd;
+  --success: #549604;
+  --extra: #ffffff;
+} */
+
 :root {
   --primary: #052a37;
   --primary-foreground: #cacdcd;
@@ -11,6 +23,7 @@
   --success: #549604;
   --extra: #fbe9d0;
 }
+
 
 .font1 {
   font-family: "Sansation", sans-serif;

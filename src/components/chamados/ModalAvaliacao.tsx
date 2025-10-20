@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "../ui/modal";
 import { Button } from "../ui/button";
 import StarRating from "../ui/stars";
-import { useRouter } from "next/navigation";
 import { Chamado } from "@/types/Chamado";
 
 interface Props {
@@ -18,8 +17,7 @@ interface Props {
 export default function ModalAvaliacao({
   isOpen,
   onClose,
-  chamado,
-  onConfirm,
+   onConfirm,
   totalStars = 5,
 }: Props) {
   const [rating, setRating] = useState(0);

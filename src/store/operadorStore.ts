@@ -11,7 +11,7 @@ interface OperadorState {
   operadorSelecionado: Operador | null;
   pagination: Pagination | null;
 
-  fetchOperadores:  (options?: FetchOperadorOptions) => Promise<void>;
+  fetchOperadores: (options?: FetchOperadorOptions) => Promise<void>;
   fetchOperadorById: (id: number) => Promise<void>;
   createOperador: (data: Partial<Operador>) => Promise<void>;
   updateOperador: (data: Partial<Operador>) => Promise<void>;

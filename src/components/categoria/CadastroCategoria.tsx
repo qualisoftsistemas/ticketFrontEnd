@@ -68,7 +68,6 @@ export default function CadastroCategoria({
     label: s.nome,
   }));
 
-  const setorIdValue = watch("setor_id");
   const nomeValue = watch("nome");
 
   return (

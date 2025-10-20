@@ -1,3 +1,4 @@
+import { UploadedFile } from "@/components/ui/inputFile";
 import { Categoria } from "./Categoria";
 
 export interface Empresa {
@@ -22,8 +23,9 @@ export interface User {
 /** Arquivo enviado na rotina */
 export interface Arquivo {
   id: number;
-  name: string; // ⚠️ corresponde ao JSON do backend
+  name: string;  
   url: string;
+  arquivo?: UploadedFile;
 }
 
 /** Upload de um arquivo para uma rotina */

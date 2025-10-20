@@ -9,24 +9,17 @@ import { Rotina, Upload } from "@/types/Arquivo";
 import { useUserRole } from "@/hooks/useUserRole";
 import Select from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
-import { useConglomeradoStore } from "@/store/conglomeradoStore";
 import { getStatusColor } from "./ModalDetalhes";
 
 import ModalCadastroDice from "./ModalCadastroDICE";
-import Modal from "../ui/modal";
 import ModalEnviarArquivo from "./ModalEnviar";
 import Icon from "../ui/icon";
 
 export default function RotinasPage() {
   const { rotinas, uploads, fetchRotinas, loading, toggleRotina } =
     useRotinaStore();
-  const {
-    empresas,
-    fetchEmpresas,
-    loading: loadingEmpresas,
-    empresaSelecionada,
-    setEmpresaSelecionada,
-  } = useEmpresaStore();
+  const { empresas, empresaSelecionada, setEmpresaSelecionada } =
+    useEmpresaStore();
 
   const [showModalEnviar, setShowModalEnviar] = useState(false);
   const [modalData, setModalData] = useState<Upload | null>(null);

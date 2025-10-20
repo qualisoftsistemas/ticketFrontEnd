@@ -5,7 +5,6 @@ import InputText from "@/components/ui/inputText";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { API_BASE_URL } from "@/service/api";
-import { toastSuccess } from "@/utils/toastService";
 import { showRequestToast } from "../ui/toast";
 
 const LoginForm: React.FC = () => {

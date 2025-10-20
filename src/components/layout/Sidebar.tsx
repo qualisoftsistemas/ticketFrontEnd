@@ -5,11 +5,12 @@ import { Role } from "@/hooks/useUserRole";
 import Icon from "../ui/icon";
 import { useEmpresaStore } from "@/store/empresaStore";
 import { UserLogin } from "@/types/UserLogin";
+import apiFetchClient from "@/service/api";
 
 interface SidebarProps {
   role: Role;
   isOpen: boolean;
-  user: UserLogin;
+  user: UserLogin | null;
   toggleSidebar: () => void;
 }
 
@@ -124,12 +125,20 @@ const Sidebar: React.FC<SidebarProps> = ({
   const hasConglomerado = Boolean(conglomeradoSelecionado);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("empresa-store");
-    localStorage.removeItem("conglomeradoSelecionado");
+    try {
+      apiFetchClient({
+        method: "POST",
+        endpoint: "/logout",
+      });
 
-    window.location.href = "/";
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("empresa-store");
+      localStorage.removeItem("conglomeradoSelecionado");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
   };
 
   const links: NavItem[] = [
@@ -211,7 +220,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         {role === "Operador" ||
           (role === "Master" && (
             <h2 className="mx-auto mb-2 font-bold text-center">
-              {user.prestador.nome ?? ""}
+              {user?.prestador?.nome ?? ""}
             </h2>
           ))}
         <nav className="flex flex-col gap-1 w-full   p-1 overflow-y-auto">
@@ -233,7 +242,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <img src="/Icons/UserCircle.svg" alt="user" className="w-8 h-8" />
-            <p className="font-bold">{user.nome}</p>
+            <p className="font-bold">{user?.nome}</p>
           </div>
           <button
             onClick={handleLogout}

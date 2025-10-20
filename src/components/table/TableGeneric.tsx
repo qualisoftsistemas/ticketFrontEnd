@@ -2,15 +2,7 @@
 
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyTitle,
-  EmptyDescription,
-  EmptyContent,
-  EmptyMedia,
-} from "@/components/ui/empty";
-import Icon from "../ui/icon";
+
 export interface Column<T> {
   header: string;
   key: keyof T;

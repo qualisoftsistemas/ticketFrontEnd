@@ -105,9 +105,11 @@ const apiFetchClient = async <T>({
     }
 
     return res.json();
-  } catch (error: any) {
-    console.error("API fetch client error:", error);
-    throw error;
+  } catch (error: unknown) {
+    throw {
+      message: error instanceof Error ? error.message : "Erro desconhecido",
+      originalError: error,
+    };
   }
 };
 

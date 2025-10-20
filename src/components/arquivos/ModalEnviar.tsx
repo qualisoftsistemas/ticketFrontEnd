@@ -8,11 +8,12 @@ import InputText from "../ui/inputText";
 import InputFile, { UploadedFile } from "../ui/inputFile";
 import FileBadge from "../ui/fileBadge";
 import { showRequestToast } from "../ui/toast";
+import { Rotina } from "@/types/Arquivo";
 
 interface ModalEnviarArquivoProps {
   open: boolean;
   onClose: () => void;
-  rotina: any | null;
+  rotina: Rotina | null;
   mes: number;
   conglomeradoId: number;
   empresaId: number;

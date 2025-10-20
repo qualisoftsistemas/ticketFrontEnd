@@ -7,7 +7,7 @@ import Select, { SelectOption } from "../ui/select";
 import { useEmpresaStore } from "@/store/empresaStore";
 import Modal from "../ui/modal";
 
-const SelectEmpresa: React.FC = () => {
+const SelectEmpresa = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [selectedEmpresa, setSelectedEmpresa] = useState<SelectOption | null>(
@@ -40,9 +40,7 @@ const SelectEmpresa: React.FC = () => {
     }
   };
 
-  return (
-    Modal
-  );
+  return Modal;
 };
 
 export default SelectEmpresa;

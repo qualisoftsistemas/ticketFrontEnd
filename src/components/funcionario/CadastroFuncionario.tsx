@@ -8,10 +8,8 @@ import { Funcionario } from "@/types/Funcionario";
 import { Button } from "../ui/button";
 import InputText from "../ui/inputText";
 import InputCPF from "../ui/inputCpf";
-import ModalImage from "../ui/modalImage";
-import { showRequestToast } from "../ui/toast";
+
 import InputFile, { UploadedFile } from "../ui/inputFile";
-import FileBadge from "../ui/fileBadge";
 
 // 🔹 Schema com validação condicional
 const schema = z
@@ -76,8 +74,6 @@ export default function CadastroFuncionario({
   const [fotoAtual, setFotoAtual] = useState<string | null>(
     initialData?.foto?.url || null
   );
-
-  const [openModalImage, setOpenModalImage] = useState(false);
 
   useEffect(() => {
     reset({

@@ -21,7 +21,7 @@ type HeaderProps = {
   toggleSidebar: () => void;
   isOpen: boolean;
   role: Role;
-  user: UserLogin;
+  user: UserLogin | null;
   handleShowSectorTree: () => void;
 };
 
@@ -225,7 +225,7 @@ const Header: React.FC<HeaderProps> = ({
             <DropdownMenuTrigger asChild>
               <div className="flex items-center gap-2 cursor-pointer">
                 <Avatar>
-                  <AvatarImage src={user.foto?.url} />
+                  <AvatarImage src={user?.foto?.url} />
                   <AvatarFallback>
                     <Icon
                       icon="/Icons/UserCircle.svg"
@@ -233,7 +233,7 @@ const Header: React.FC<HeaderProps> = ({
                     />
                   </AvatarFallback>{" "}
                 </Avatar>
-                <h1 className="font-bold">{user.nome}</h1>
+                <h1 className="font-bold">{user?.nome}</h1>
                 <Icon
                   icon="/Icons/ArrowDown.svg"
                   className="w-4 h-4 ml-2 bg-[var(--secondary-foreground)]"

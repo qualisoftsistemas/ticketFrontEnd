@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Master, MasterApiResponse } from "@/types/Master";
+import { Master } from "@/types/Master";
 import apiFetchClient from "@/service/api";
 import { Pagination } from "@/types/Pagination";
 import { showRequestToast } from "@/components/ui/toast";
@@ -72,7 +72,7 @@ export const useMasterStore = create<MasterState>((set, get) => ({
         endpoint: `/master/${id}`,
       });
 
-      set({ masterSelecionado: response, loading: false });
+      set({ masterSelecionado: response.master, loading: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
