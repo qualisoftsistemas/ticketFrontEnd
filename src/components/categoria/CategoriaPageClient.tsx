@@ -212,27 +212,6 @@ export default function CategoriaPageClient() {
     fetchCategorias({ page: 1, nome: "", setor_id: undefined });
   };
 
-  const renderFilters = ({ onApply, onClear }: any) => (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="flex w-full gap-2 flex-wrap">
-        <div className="flex-1">
-          <Select
-            label="Setor"
-            options={setorOptions}
-            placeholder="Selecione o setor"
-            selectedOption={selectedSetor}
-            onSelect={(option) => setSelectedSetor(option)}
-          />
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <Button onClick={onApply}>Aplicar Filtros</Button>
-        <Button onClick={onClear}>Limpar Tudo</Button>
-      </div>
-    </div>
-  );
-
   if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -255,7 +234,26 @@ export default function CategoriaPageClient() {
         legendasAcoes={legendas}
         onApplyFilters={onApplyFilters}
         onClearFilters={onClearFilters}
-        renderFilters={renderFilters}
+        renderFilters={({ onApply, onClear }) => (
+          <div className="flex flex-col gap-4 w-full">
+            <div className="flex w-full gap-2 flex-wrap">
+              <div className="flex-1">
+                <Select
+                  label="Setor"
+                  options={setorOptions}
+                  placeholder="Selecione o setor"
+                  selectedOption={selectedSetor}
+                  onSelect={(option) => setSelectedSetor(option)}
+                />
+              </div>
+            </div>
+
+            <div className="flex gap-2">
+              <Button onClick={onApply}>Aplicar Filtros</Button>
+              <Button onClick={onClear}>Limpar Tudo</Button>
+            </div>
+          </div>
+        )}
       />
 
       {showModal && (
