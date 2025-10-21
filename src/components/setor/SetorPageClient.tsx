@@ -6,6 +6,7 @@ import { Column } from "@/components/table/TableGeneric";
 import { Setor } from "@/types/Setor";
 import ModalCadastroSetor from "./CadastroSetor";
 import ModalDeletar from "@/components/ui/modalDelete";
+import { useRouter } from "next/navigation";
 
 import Table from "../table/Table";
 import Icon from "../ui/icon";
@@ -29,6 +30,8 @@ export default function SetorPageClient() {
   const [deleteSetorId, setDeleteSetorId] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const router = useRouter();
 
   // Memoriza fetchTableData para não criar nova função a cada render
   const fetchTableData = useCallback(
@@ -130,7 +133,7 @@ export default function SetorPageClient() {
           <Icon
             icon="/icons/CategoryTag.svg"
             className="w-5 h-5 cursor-pointer hover:brightness-200 hover:scale-105 bg-[var(--primary-foreground)]"
-            onClick={() => console.log("Tag", setor)}
+            onClick={() => router.push(`/categoria?setor_id=${setor.id}`)}
           />
         </div>
       ),

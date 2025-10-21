@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useSetorStore } from "@/store/setorStore";
 import { useOperadorStore } from "@/store/operadorStore";
+import { useMasterStore } from "@/store/masterStore";
 import Modal from "./modal";
 import { Button } from "../ui/button";
-import { useMasterStore } from "@/store/masterStore";
 
 interface TableSelectSetoresProps {
   isOpen: boolean;
@@ -26,11 +26,12 @@ const TableSelectSetores = ({
 }: TableSelectSetoresProps) => {
   const { setores, fetchSetores } = useSetorStore();
   const { operadorSelecionado, fetchOperadorById } = useOperadorStore();
+  const { masterSelecionado, fetchMasterById } = useMasterStore();
+
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedSetores, setSelectedSetores] = useState<number[]>([]);
-  const { fetchMasterById, masterSelecionado } = useMasterStore();
 
-  // Busca operador e setores selecionados
+  // Busca operador ou master
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,24 +41,21 @@ const TableSelectSetores = ({
           await fetchMasterById(masterId);
         }
       } catch (error) {
-        console.error("Erro ao buscar operador:", error);
+        console.error("Erro ao buscar operador/master:", error);
       }
     };
-
     fetchData();
-  }, [prestadorId, fetchOperadorById]);
+  }, [prestadorId, masterId, fetchOperadorById, fetchMasterById]);
 
   useEffect(() => {
-    if (!operadorSelecionado) return;
-    console.log(operadorSelecionado);
-    setSelectedSetores(operadorSelecionado.setores.map((s) => s.id));
-  }, [operadorSelecionado]);
-
-  useEffect(() => {
-    if (!masterSelecionado) return;
-    console.log(masterSelecionado);
-    setSelectedSetores(masterSelecionado.master.setores.map((s) => s.id));
-  }, [masterSelecionado]);
+    if (operadorSelecionado?.setores) {
+      setSelectedSetores(operadorSelecionado.setores.map((s) => s.id));
+    } else if (masterSelecionado?.setores) {
+      setSelectedSetores(masterSelecionado.setores.map((s) => s.id));
+    } else {
+      setSelectedSetores([]);
+    }
+  }, [operadorSelecionado, masterSelecionado]);
 
   useEffect(() => {
     fetchSetores();
@@ -67,15 +65,20 @@ const TableSelectSetores = ({
   const currentSetores = setores.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   const totalPages = Math.ceil(setores.length / ITEMS_PER_PAGE);
 
+  // Toggle de seleção individual
   const toggleSelect = (setorId: number) => {
-    if (selectedSetores.includes(setorId)) {
-      setSelectedSetores(selectedSetores.filter((id) => id !== setorId));
+    const current = selectedSetores || [];
+    if (current.includes(setorId)) {
+      setSelectedSetores(current.filter((id) => id !== setorId));
     } else {
-      setSelectedSetores([...selectedSetores, setorId]);
+      setSelectedSetores([...current, setorId]);
     }
   };
+
+  // Toggle de seleção de todos
   const toggleSelectAll = () => {
-    if (selectedSetores.length === setores.length) {
+    const current = selectedSetores || [];
+    if (current.length === setores.length) {
       setSelectedSetores([]);
     } else {
       setSelectedSetores(setores.map((s) => s.id));
@@ -83,26 +86,27 @@ const TableSelectSetores = ({
   };
 
   const removeSelected = (id: number) => {
-    setSelectedSetores(selectedSetores.filter((s) => s !== id));
+    setSelectedSetores((current) => current.filter((s) => s !== id));
   };
 
   const handleConfirm = () => {
-    onConfirm(selectedSetores);
+    onConfirm(selectedSetores || []);
     onClose();
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <div className="flex gap-4">
+        {/* Lista de setores */}
         <div className="flex-1">
           <h2 className="font-semibold font-lg mb-2">{title}</h2>
           <div className="flex justify-between mb-2">
             <Button variant="default" size="sm" onClick={toggleSelectAll}>
-              {selectedSetores.length === setores.length
+              {selectedSetores?.length === setores.length
                 ? "Desmarcar Todos"
                 : "Selecionar Todos"}
             </Button>
-            <span>{selectedSetores.length} selecionados</span>
+            <span>{selectedSetores?.length || 0} selecionados</span>
           </div>
 
           <table className="w-full border-collapse">
@@ -116,7 +120,7 @@ const TableSelectSetores = ({
                 <tr
                   key={setor.id}
                   className={`cursor-pointer text-xs ${
-                    selectedSetores.includes(setor.id)
+                    selectedSetores?.includes(setor.id)
                       ? "bg-[var(--secondary)]/60 text-[var(--secondary-foreground)]"
                       : ""
                   }`}
@@ -155,7 +159,7 @@ const TableSelectSetores = ({
         <div className="flex-1 flex flex-col gap-2">
           <h4 className="font-semibold">Selecionados:</h4>
           <div className="flex flex-wrap gap-2">
-            {selectedSetores.map((id) => {
+            {selectedSetores?.map((id) => {
               const setor = setores.find((s) => s.id === id);
               if (!setor) return null;
               return (
@@ -179,7 +183,7 @@ const TableSelectSetores = ({
             variant="confirm"
             className="mt-auto"
             onClick={handleConfirm}
-            disabled={selectedSetores.length === 0}
+            disabled={selectedSetores?.length === 0}
           >
             Confirmar
           </Button>

@@ -14,6 +14,7 @@ import { getStatusColor } from "./ModalDetalhes";
 import ModalCadastroDice from "./ModalCadastroDICE";
 import ModalEnviarArquivo from "./ModalEnviar";
 import Icon from "../ui/icon";
+import { showRequestToast } from "../ui/toast";
 
 export default function RotinasPage() {
   const { rotinas, uploads, fetchRotinas, loading, toggleRotina } =
@@ -209,11 +210,19 @@ export default function RotinasPage() {
         }
         legendasAcoes={[]}
         pagination={null}
-        onRowClick={(rotina) =>
-          role === "Admin" || role === "Funcionario"
-            ? handleShowModalEnviar(rotina)
-            : undefined
-        }
+        onRowClick={(rotina) => {
+          if (role === "Admin" || role === "Funcionario") {
+            handleShowModalEnviar(rotina);
+          } else {
+            const key = `${rotina.id}-${mes}-${ano}`;
+            const upload = uploadsMap.get(key);
+            if (upload) {
+              setModalData(upload);
+            } else {
+              showRequestToast("error", "Nehum arquivo foi enviado");
+            }
+          }
+        }}
         onPageChange={() => {}}
         searchTerm={""}
         onSearchChange={() => {}}

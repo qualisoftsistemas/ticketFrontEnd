@@ -5,9 +5,13 @@ import { useCategoriaStore } from "@/store/categoriaStore";
 import { Column } from "@/components/table/TableGeneric";
 import { Categoria } from "@/types/Categoria";
 import ModalCadastroCategoria from "./CadastroCategoria";
+import { useSetorStore } from "@/store/setorStore";
 import ModalDeletar from "@/components/ui/modalDelete";
- import Table from "../table/Table";
+import Table from "../table/Table";
 import Icon from "../ui/icon";
+import { useSearchParams } from "next/navigation";
+import Select, { SelectOption } from "../ui/select";
+import { Button } from "../ui/button";
 
 export default function CategoriaPageClient() {
   const {
@@ -22,9 +26,13 @@ export default function CategoriaPageClient() {
     pagination,
   } = useCategoriaStore();
 
+  const { setores, fetchSetores } = useSetorStore();
+
+  const searchParams = useSearchParams();
+  const setorIdFromUrl = searchParams.get("setor_id");
+
   const [showModal, setShowModal] = useState(false);
   const [editCategoria, setEditCategoria] = useState<Categoria | null>(null);
-
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteCategoriaId, setDeleteCategoriaId] = useState<number | null>(
     null
@@ -33,15 +41,53 @@ export default function CategoriaPageClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchTableData = useCallback(
-    (page: number, nome = "") => fetchCategorias({ page, nome }),
-    [fetchCategorias]
-  );
+  const [selectedSetor, setSelectedSetor] = useState<SelectOption | null>(null);
+  const setorIdNumber = setorIdFromUrl ? Number(setorIdFromUrl) : undefined;
+
+  // 🔹 Monta as opções de setores para o Select
+  const setorOptions: SelectOption[] = setores.map((s) => ({
+    label: s.nome,
+    id: s.id,
+  }));
 
   useEffect(() => {
-    fetchTableData(1);
-  }, [fetchTableData]);
+    fetchSetores();
+  }, [fetchSetores]);
 
+  // 🔹 Busca categorias conforme o setor_id da URL
+  useEffect(() => {
+    const setorId = setorIdFromUrl ? Number(setorIdFromUrl) : undefined;
+
+    fetchCategorias({
+      page: 1,
+      nome: searchTerm,
+      setor_id: setorId,
+    });
+
+    if (setorId && setores.length > 0) {
+      const setor = setores.find((s) => s.id === setorId);
+      if (setor) {
+        setSelectedSetor({ id: setor.id, label: setor.nome });
+      } else {
+        setSelectedSetor({ id: setorId, label: `Setor ${setorId}` });
+      }
+    }
+  }, [fetchCategorias, setorIdFromUrl, setores]);
+
+  const fetchTableData = useCallback(
+    (page: number, nome = "") =>
+      fetchCategorias({
+        page,
+        nome,
+        setor_id:
+          selectedSetor?.id !== undefined
+            ? Number(selectedSetor.id)
+            : setorIdNumber,
+      }),
+    [fetchCategorias, selectedSetor, setorIdNumber]
+  );
+
+  // 🔹 Excluir
   const handleDeleteClick = (id: number) => {
     setDeleteCategoriaId(id);
     setShowDeleteModal(true);
@@ -56,15 +102,18 @@ export default function CategoriaPageClient() {
     }
   };
 
+  // 🔹 Paginação
   const handlePageChange = (page: number) => {
     fetchTableData(page, searchTerm);
   };
 
+  // 🔹 Pesquisa
   const handleSearchChange = (term: string) => {
     setSearchTerm(term);
     fetchTableData(1, term);
   };
 
+  // 🔹 Criar / Editar
   const handleSubmit = async (data: Partial<Categoria>) => {
     setIsSubmitting(true);
     try {
@@ -80,6 +129,8 @@ export default function CategoriaPageClient() {
       setEditCategoria(null);
     }
   };
+
+  // 🔹 Alternar ativo
   const handleToggleAtivo = (categoria: Categoria) => {
     const newAtivo = categoria.ativo ? 0 : 1;
 
@@ -103,6 +154,7 @@ export default function CategoriaPageClient() {
     setShowModal(true);
   };
 
+  // 🔹 Colunas da tabela
   const columns: Column<Categoria>[] = [
     { header: "ID", key: "incremental" },
     { header: "Setor", key: "setor", render: (c) => c.setor?.nome ?? "-" },
@@ -141,6 +193,46 @@ export default function CategoriaPageClient() {
     { icon: "/icons/Trash.svg", label: "Excluir" },
   ];
 
+  // 🔹 Filtros
+  const onApplyFilters = () => {
+    fetchCategorias({
+      page: 1,
+      nome: searchTerm,
+      setor_id: selectedSetor?.id
+        ? Number(selectedSetor.id)
+        : setorIdFromUrl
+        ? Number(setorIdFromUrl)
+        : undefined,
+    });
+  };
+
+  const onClearFilters = () => {
+    setSelectedSetor(null);
+    setSearchTerm("");
+    fetchCategorias({ page: 1, nome: "", setor_id: undefined });
+  };
+
+  const renderFilters = ({ onApply, onClear }: any) => (
+    <div className="flex flex-col gap-4 w-full">
+      <div className="flex w-full gap-2 flex-wrap">
+        <div className="flex-1">
+          <Select
+            label="Setor"
+            options={setorOptions}
+            placeholder="Selecione o setor"
+            selectedOption={selectedSetor}
+            onSelect={(option) => setSelectedSetor(option)}
+          />
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <Button onClick={onApply}>Aplicar Filtros</Button>
+        <Button onClick={onClear}>Limpar Tudo</Button>
+      </div>
+    </div>
+  );
+
   if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
@@ -161,6 +253,9 @@ export default function CategoriaPageClient() {
         searchTerm={searchTerm}
         onSearchChange={handleSearchChange}
         legendasAcoes={legendas}
+        onApplyFilters={onApplyFilters}
+        onClearFilters={onClearFilters}
+        renderFilters={renderFilters}
       />
 
       {showModal && (

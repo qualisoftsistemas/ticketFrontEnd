@@ -25,7 +25,6 @@ interface FetchSetoresOptions {
   page?: number;
   withPagination?: boolean;
   nome?: string;
- 
 }
 
 export const useSetorStore = create<SetorState>((set, get) => ({
