@@ -211,7 +211,7 @@ export default function CategoriaPageClient() {
     setSearchTerm("");
     fetchCategorias({ page: 1, nome: "", setor_id: undefined });
   };
-
+  
   if (loading && categorias.length === 0)
     return <p className="text-[var(--primary)]">Carregando categorias...</p>;
   if (error) return <p className="text-[var(--destructive)]">{error}</p>;
