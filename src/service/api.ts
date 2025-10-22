@@ -1,5 +1,5 @@
 // service/apiClient.ts
-export const API_BASE_URL = "http://192.168.5.46:8000/api";
+export const API_BASE_URL = "http://localhost:8080/api";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 
